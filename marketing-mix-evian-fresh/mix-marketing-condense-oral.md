@@ -23,7 +23,7 @@
 ## Distribution
 
 **Sélective au lancement**
-- CHR haut de gamme, corners bio, vente en ligne — pas de grande distribution tout de suite
+- CHR haut de gamme, épiceries bio, vente en ligne — pas de grande distribution tout de suite
 - Stratégie inspirée du luxe, pour garder le contrôle sur l'image
 
 **Omnicanale et évolutive**
