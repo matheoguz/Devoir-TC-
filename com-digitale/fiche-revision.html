@@ -1,0 +1,342 @@
+<title>Fiche Com digitale</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Caveat:wght@600&display=swap">
+<style>
+/* Mise en page : une feuille Seyès (grands carreaux), marge rouge à gauche, une colonne de lecture + sommaire collant sur grand écran */
+:root{
+  --paper:#f7f9fc; --grid:#dde5f2; --margin:#e7a3a8;
+  --ink:#1d2433; --soft:#556079; --blue:#2348a8; --red:#b8323f; --hl:#d8f0b8; --card:#ffffff; --line:#cdd6e6;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --hand:"Caveat", "Comic Sans MS", cursive;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#141925; --grid:#1e2638; --margin:#6b2f37;
+  --ink:#e6eaf3; --soft:#9aa5bd; --blue:#8fb0ff; --red:#ff8a95; --hl:#2f4a22; --card:#1b2232; --line:#2c3650; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#141925; --grid:#1e2638; --margin:#6b2f37;
+  --ink:#e6eaf3; --soft:#9aa5bd; --blue:#8fb0ff; --red:#ff8a95; --hl:#2f4a22; --card:#1b2232; --line:#2c3650; color-scheme:dark}
+
+body{
+  background-color:var(--paper);
+  background-image:
+    linear-gradient(90deg, transparent 0 calc(max(16px, env(safe-area-inset-left,0px)) - 6px), var(--margin) calc(max(16px, env(safe-area-inset-left,0px)) - 6px) calc(max(16px, env(safe-area-inset-left,0px)) - 4px), transparent 0),
+    linear-gradient(var(--grid) 1px, transparent 1px);
+  background-size:100% 100%, 100% 32px;
+  color:var(--ink); font-family:var(--body); font-size:16.5px; line-height:1.6;
+  padding-left:max(16px, env(safe-area-inset-left,0px)); padding-right:max(16px, env(safe-area-inset-right,0px));
+  padding-block:24px 64px;
+}
+.wrap{max-width:1080px; margin:0 auto; display:grid; grid-template-columns:220px minmax(0,1fr); gap:40px}
+@media (max-width:860px){.wrap{grid-template-columns:minmax(0,1fr)} nav.toc{position:static !important}}
+
+header.top{grid-column:1/-1; display:flex; flex-direction:column; gap:6px; padding-left:8px}
+.eyebrow{font-family:var(--hand); color:var(--red); font-size:1.5rem; line-height:1}
+h1{font-family:var(--display); font-weight:800; font-size:clamp(2rem,5vw,3.1rem); line-height:1.05; margin:0; text-wrap:balance; color:var(--blue)}
+.sub{color:var(--soft); max-width:62ch; margin:0}
+
+nav.toc{position:sticky; top:calc(env(safe-area-inset-top,0px) + 16px); align-self:start; font-size:.95rem}
+nav.toc ol{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:4px; counter-reset:t}
+nav.toc a{display:flex; gap:10px; color:var(--ink); text-decoration:none; padding:6px 10px; border-radius:6px}
+nav.toc a:hover, nav.toc a:focus-visible{background:var(--card); outline:2px solid var(--blue); outline-offset:-2px}
+nav.toc .n{font-family:var(--display); font-weight:700; color:var(--red); min-width:1.6em}
+
+main{display:flex; flex-direction:column; gap:48px; min-width:0}
+section{display:flex; flex-direction:column; gap:16px; scroll-margin-top:16px}
+h2{font-family:var(--display); font-weight:700; font-size:1.65rem; margin:0; color:var(--red); display:flex; gap:12px; align-items:baseline; text-wrap:balance}
+h2 .n{font-size:1rem; color:var(--soft); font-weight:500}
+h3{font-family:var(--display); font-weight:700; font-size:1.15rem; margin:0; color:var(--blue)}
+p{margin:0; max-width:68ch}
+ul,ol{margin:0; padding-left:1.25em; display:flex; flex-direction:column; gap:4px; max-width:68ch}
+mark{background:var(--hl); color:inherit; padding:0 3px; border-radius:2px}
+.def{font-weight:700; color:var(--red)}
+
+.box{background:var(--card); border:1px solid var(--line); border-radius:10px; padding:16px 18px; display:flex; flex-direction:column; gap:10px; min-width:0}
+.tag{display:inline-block; font-family:var(--display); font-weight:700; font-size:.85rem; letter-spacing:.06em; padding:2px 10px; border:2px solid var(--red); border-radius:4px; background:var(--hl); color:var(--ink); align-self:flex-start}
+.grid2{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px}
+.grid3{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px}
+@media (max-width:640px){.grid2,.grid3{grid-template-columns:minmax(0,1fr)}}
+.retiens{border-left:4px solid var(--red); padding:8px 14px; background:var(--card); border-radius:0 8px 8px 0; font-weight:700}
+.chips{display:flex; flex-wrap:wrap; gap:8px; list-style:none; padding:0}
+.chips li{border:1px solid var(--line); background:var(--card); border-radius:999px; padding:2px 12px; font-size:.93rem}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse; width:100%; min-width:520px; background:var(--card); font-size:.95rem}
+th,td{border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top}
+th{font-family:var(--display); color:var(--blue); background:var(--paper)}
+.margin-note{font-family:var(--hand); color:var(--red); font-size:1.25rem; line-height:1.2}
+
+/* Entonnoir */
+.funnel{display:flex; flex-direction:column; align-items:center; gap:6px; width:100%}
+.funnel div{color:#fff; text-align:center; padding:10px 12px; border-radius:6px; font-weight:700; max-width:100%}
+.funnel small{display:block; font-weight:400; opacity:.92}
+.f1{width:100%; background:#2348a8}.f2{width:78%; background:#5a4fb0}.f3{width:56%; background:#b8323f}
+.steps{counter-reset:s; list-style:none; padding:0}
+.steps li{counter-increment:s; display:flex; gap:10px}
+.steps li::before{content:counter(s); font-family:var(--display); font-weight:800; color:var(--red); min-width:1.2em}
+
+/* Quiz */
+details{background:var(--card); border:1px solid var(--line); border-radius:8px; padding:10px 14px}
+summary{cursor:pointer; font-weight:700}
+summary:focus-visible{outline:2px solid var(--blue); outline-offset:3px}
+details[open] summary{color:var(--blue); margin-bottom:6px}
+.quiz{display:flex; flex-direction:column; gap:8px}
+footer{grid-column:1/-1; color:var(--soft); font-size:.88rem; padding-left:8px}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <span class="eyebrow">BUT TC · Com digitale · L. Perraud</span>
+    <h1>Fiche de révision : communication digitale</h1>
+    <p class="sub">Tout le cours en une page : principes, pub digitale, inbound / outbound, démarche marketing, persona et tunnel de conversion. Quiz à la fin pour se tester.</p>
+  </header>
+
+  <nav class="toc" aria-label="Sommaire">
+    <ol>
+      <li><a href="#principes"><span class="n">I</span>Principes</a></li>
+      <li><a href="#pub"><span class="n">II</span>Pub digitale</a></li>
+      <li><a href="#inbound"><span class="n">→</span>Push / pull, inbound</a></li>
+      <li><a href="#demarche"><span class="n">↳</span>Démarche marketing</a></li>
+      <li><a href="#persona"><span class="n">III</span>Le persona</a></li>
+      <li><a href="#tunnel"><span class="n">IV</span>Tunnel de conversion</a></li>
+      <li><a href="#quiz"><span class="n">?</span>Quiz</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <!-- I -->
+    <section id="principes">
+      <h2><span class="n">I</span>Principes de la communication digitale</h2>
+      <div class="box">
+        <h3>Les 3 questions du cours</h3>
+        <ul>
+          <li>Comment <mark>générer du trafic</mark> ?</li>
+          <li>Comment <mark>fidéliser</mark> des clients sur Internet ?</li>
+          <li>Comment <mark>transformer les visiteurs en clients</mark> ?</li>
+        </ul>
+      </div>
+      <h3>Supports et moyens de com digitale</h3>
+      <ul class="chips">
+        <li>SEA</li><li>SEO</li><li>Webinar</li><li>Blog</li><li>Chat et messagerie</li><li>Pub</li><li>Étude de cas</li><li>Comptes médias sociaux</li><li>Études sectorielles</li>
+      </ul>
+      <div class="grid2">
+        <div class="box"><span class="tag">PUB</span><p>C'est la <span class="def">location d'un espace pour diffuser une annonce</span> (ex : social ads).</p></div>
+        <div class="box"><span class="tag">COMMUNICATION</span><p>C'est <span class="def">faire savoir quelque chose à quelqu'un, peu importe la manière</span> (avec location d'espace ou non).</p></div>
+      </div>
+      <p class="retiens">La pub est une partie de la com : toute pub est de la com, mais toute com n'est pas de la pub.</p>
+      <div class="box">
+        <h3>Les acteurs de la pub</h3>
+        <ul>
+          <li><b>L'annonceur</b> : l'entreprise qui veut communiquer</li>
+          <li><b>L'agence de pub</b></li>
+          <li><b>La régie pub</b> : vend les espaces d'un support</li>
+          <li><b>L'agence média / centrale d'achat d'espace</b></li>
+          <li><b>Le fournisseur de l'annonce / agence de création</b></li>
+          <li><b>Les associations professionnelles</b> : ARPP, Union des marques (UDM)</li>
+          <li><b>L'éditeur / le support</b></li>
+          <li><b>L'internaute</b></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- II -->
+    <section id="pub">
+      <h2><span class="n">II</span>La publicité digitale</h2>
+      <div class="grid2">
+        <div class="box">
+          <h3>Les 3 leviers (types) de pub digitale</h3>
+          <ul>
+            <li><b>Search</b> (SEA / SEO) : moteurs de recherche</li>
+            <li><b>Native Ad</b> sur les médias sociaux</li>
+            <li><b>Display</b> : bannières, visuels</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>Les supports de pub digitale</h3>
+          <ul>
+            <li>Moteurs de recherche</li>
+            <li>Comparateurs</li>
+            <li>Sites éditeurs (presse, blogs)</li>
+            <li>Applications</li>
+            <li>Messageries (instantanées ou non)</li>
+            <li>Médias sociaux</li>
+          </ul>
+        </div>
+      </div>
+      <div class="box">
+        <h3>Média social ≠ réseau social</h3>
+        <div class="scroll"><table>
+          <thead><tr><th></th><th>Média social</th><th>Réseau social</th></tr></thead>
+          <tbody>
+            <tr><th>Centré sur</th><td>Le <b>contenu</b></td><td>Le <b>lien social</b> : les interactions entre les gens (liens d'amis)</td></tr>
+            <tr><th>Lien</th><td>Catégorie large</td><td><b>Sous-catégorie</b> du média social</td></tr>
+            <tr><th>Exemples</th><td>Wiki, forums, blogs, X, Pinterest, YouTube</td><td>Facebook, LinkedIn, TikTok, Instagram</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </section>
+
+    <!-- Push / pull -->
+    <section id="inbound">
+      <h2><span class="n">→</span>Push / pull, outbound / inbound</h2>
+      <div class="scroll"><table>
+        <thead><tr><th></th><th>PUSH = outbound</th><th>PULL = inbound</th></tr></thead>
+        <tbody>
+          <tr><th>Principe</th><td><b>Pousser le produit</b> vers le conso, de la marque vers le conso</td><td><b>« Tirer » le conso</b> vers le produit : c'est le conso qui commence à chercher</td></tr>
+          <tr><th>Par quels moyens ?</th><td>Réductions, distribution gratuite d'échantillons, segmentation, fichiers (data mining). Sur tous les supports</td><td>Message pub (non personnalisé), contenus. Approche centrée sur l'internaute, moyens digitaux</td></tr>
+          <tr><th>Pour qui ?</th><td>Entreprises avec <b>peu de budget</b></td><td><b>Grands groupes</b> à forte notoriété</td></tr>
+          <tr><th>Pour quoi ?</th><td>Faire acheter le produit : objectif <b>conatif</b>, court terme</td><td>Faire adhérer à <b>long terme</b> : objectifs <b>cognitif et affectif</b></td></tr>
+          <tr><th>Nature</th><td>Stratégie <b>intrusive</b></td><td>Stratégie <b>non intrusive</b>, attirer de façon naturelle</td></tr>
+        </tbody>
+      </table></div>
+
+      <div class="grid2">
+        <div class="box">
+          <h3>Modèle AIDA</h3>
+          <ul class="steps">
+            <li><span><b>A</b>ttention : l'accroche</span></li>
+            <li><span><b>I</b>ntérêt</span></li>
+            <li><span><b>D</b>ésir</span></li>
+            <li><span><b>A</b>ction</span></li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>L'inbound en 4 étapes</h3>
+          <ul class="steps">
+            <li><span><b>Attirer</b> : produire du contenu de qualité pour atteindre la bonne cible (site, blog, digital).</span></li>
+            <li><span><b>Convertir</b> : une fois le trafic généré, récupérer les données grâce à un contenu à forte valeur, en échange (ex : landing page).</span></li>
+            <li><span><b>Conclure</b> : une fois les données des prospects récupérées, faire aboutir la relation : le prospect devient client.</span></li>
+            <li><span><b>Fidéliser / enchanter</b> : avec des contenus à forte valeur, entretenir la relation et transformer le client en <mark>ambassadeur</mark>.</span></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Démarche -->
+    <section id="demarche">
+      <h2><span class="n">↳</span>La démarche marketing en 5 étapes</h2>
+      <div class="scroll"><table>
+        <thead><tr><th>Marketing…</th><th>Étapes</th></tr></thead>
+        <tbody>
+          <tr><th>Analytique</th><td>1. Étude de marché</td></tr>
+          <tr><th>Stratégique</th><td>2. Fixer des objectifs structurés / chiffrés, pour calculer le <b>ROI</b><br>3. Définir des personae (cibles)</td></tr>
+          <tr><th>Opérationnel</th><td>4. Opérationnaliser la stratégie de content marketing<br>5. Mettre en place un tunnel de conversion</td></tr>
+        </tbody>
+      </table></div>
+      <div class="grid2">
+        <div class="box">
+          <h3>A. Étude externe : le marché de l'entreprise</h3>
+          <ul>
+            <li><b>Macro</b> : l'environnement</li>
+            <li><b>Méso</b> : l'offre sur le marché (segments produits), concurrents, distributeurs</li>
+            <li><b>Micro</b> : la demande, les consommateurs, la segmentation conso</li>
+            <li><b>Conclusion</b> : opportunités / menaces</li>
+          </ul>
+        </div>
+        <div class="box">
+          <h3>B. Étude interne : l'entreprise</h3>
+          <ul>
+            <li>Ciblage</li><li>Positionnement</li><li>Prix</li><li>Produit</li><li>Distribution</li><li>Communication</li><li><b>Forces / faiblesses</b></li>
+          </ul>
+        </div>
+      </div>
+      <p class="retiens">Externe → opportunités / menaces. Interne → forces / faiblesses. Les deux ensemble donnent un SWOT.</p>
+    </section>
+
+    <!-- III -->
+    <section id="persona">
+      <h2><span class="n">III</span>Le persona (connaître sa cible)</h2>
+      <div class="box">
+        <p><span class="def">Persona</span> : personne fictive = <b>client type</b>, le <mark>cœur de cible</mark>. Il sert à créer des scénarios d'utilisation du produit / service.</p>
+        <p>C'est une <b>représentation semi-fictive du client idéal, fondée sur des études de marché</b> : le stéréotype idéal du cœur de cible.</p>
+      </div>
+      <div class="box">
+        <h3>Pour construire un persona</h3>
+        <ul>
+          <li>Faire une étude documentaire</li>
+          <li>Des entretiens individuels semi-directifs</li>
+          <li>De l'observation</li>
+        </ul>
+        <p>→ Collecter des infos sur la cible et les prospects.</p>
+      </div>
+      <h3>Les 5 étapes</h3>
+      <ol class="steps">
+        <li><span><b>Établir le profil général de la cible</b> : infos signalétiques, contexte d'activité / professionnel, portrait de la personne (traits de caractère, centres d'intérêt).</span></li>
+        <li><span><b>Cerner le problème de la cible par rapport à l'offre</b> : comprendre ses préoccupations et ses freins, se mettre à sa place (ses contraintes), puis se tourner vers notre offre : en quoi elle peut aider la cible ? Quelle est sa valeur ajoutée par rapport aux concurrents ?</span></li>
+        <li><span><b>Identifier l'attitude de la cible à notre égard</b> : pourquoi ma cible n'achète pas chez moi ? Citer ses objections.</span></li>
+        <li><span><b>Préciser les habitudes d'achat</b> : comprendre son comportement d'achat pour mieux préparer la vente. Est-il impulsif ? réfléchi ? raisonnable ? Ses expressions favorites, sa façon de parler, son ton. Trouver des <b>verbatims</b>.</span></li>
+        <li><span><b>Présenter votre offre à votre persona</b> : mettre au point un discours adapté à ses attentes, avec son niveau de spécialisation et ses mots ; écrire les avantages de l'offre ; rédiger le pitch et un argumentaire de vente de quelques minutes.</span></li>
+      </ol>
+      <p class="margin-note">Le persona se construit sur des données réelles, pas sur des suppositions.</p>
+    </section>
+
+    <!-- IV -->
+    <section id="tunnel">
+      <h2><span class="n">IV</span>Le tunnel de conversion</h2>
+      <div class="box">
+        <p><span class="def">Tunnel de conversion</span> = entonnoir de conversion = tunnel marketing.</p>
+        <p>C'est la <b>modélisation des étapes par lesquelles le visiteur devient client</b> : le parcours, du premier contact jusqu'à la demande (l'achat).</p>
+      </div>
+      <div class="grid2">
+        <div class="box">
+          <h3>Le découpage</h3>
+          <div class="funnel" role="img" aria-label="Entonnoir : TOFU, puis MOFU, puis BOFU">
+            <div class="f1">TOFU <small>Top of funnel : internautes attirés par l'intérêt de vos contenus</small></div>
+            <div class="f2">MOFU <small>Middle : ils interagissent avec vos contenus et deviennent des prospects</small></div>
+            <div class="f3">BOFU <small>Bottom : les prospects deviennent des clients</small></div>
+          </div>
+        </div>
+        <div class="box">
+          <h3>Les 4 étapes d'achat</h3>
+          <ul class="steps">
+            <li><span>Éveil et reconnaissance du besoin : <b>prise de conscience</b></span></li>
+            <li><span>Recherche d'infos</span></li>
+            <li><span>Évaluation des possibilités : <b>examen</b></span></li>
+            <li><span>Achat et usage : <b>décision</b></span></li>
+          </ul>
+          <p class="margin-note">Ex : article de blog → page produit → produit dans le panier → achat</p>
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="box">
+          <span class="tag">TOFU</span>
+          <p><b>Objectif : acquisition</b>, faire que les internautes deviennent des visiteurs.</p>
+          <ul>
+            <li>Attirer les internautes qui vous cherchent…</li>
+            <li>… et ceux qui ne vous cherchent pas.</li>
+            <li>Faire prendre conscience du problème aux visiteurs non qualifiés, donc leur apporter des réponses.</li>
+          </ul>
+          <p><b>Comment ?</b> SEO, réseaux sociaux (les moyens de base de l'inbound), SEA, création de contenu (informatif, varié), faire de la pub, multiplier les supports.</p>
+        </div>
+        <div class="box">
+          <span class="tag">MOFU</span>
+          <p><b>Objectif :</b> transformer les visiteurs en <mark>prospects qualifiés</mark>.</p>
+          <p><span class="def">Prospect qualifié</span> : prospect sur lequel on dispose des données pour confirmer qu'il appartient à notre cible et pour estimer son potentiel de conversion.</p>
+          <p><b>Comment ?</b> En demandant des infos via un formulaire, en échange d'un livre blanc, d'un ebook, d'un webinaire…</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Quiz -->
+    <section id="quiz">
+      <h2><span class="n">?</span>Quiz : teste-toi</h2>
+      <p>Réponds dans ta tête, puis clique pour voir la réponse.</p>
+      <div class="quiz">
+        <details><summary>1. Quelle est la différence entre pub et communication ?</summary>La pub, c'est louer un espace pour diffuser une annonce. La com, c'est faire savoir quelque chose à quelqu'un, peu importe la manière (avec ou sans location).</details>
+        <details><summary>2. Cite 5 acteurs de la pub.</summary>Annonceur, agence de pub, régie pub, agence média / centrale d'achat d'espace, agence de création, associations professionnelles (ARPP, UDM), éditeur / support, internaute.</details>
+        <details><summary>3. Quels sont les 3 leviers de la pub digitale ?</summary>Search (SEA / SEO), Native Ad sur les médias sociaux, Display.</details>
+        <details><summary>4. Média social ou réseau social : YouTube ? LinkedIn ?</summary>YouTube : média social (centré sur le contenu). LinkedIn : réseau social (centré sur le lien entre les personnes). Le réseau social est une sous-catégorie du média social.</details>
+        <details><summary>5. Push ou pull : une distribution d'échantillons gratuits ?</summary>Push (outbound) : on pousse le produit vers le conso, objectif d'achat à court terme, stratégie intrusive.</details>
+        <details><summary>6. Que veut dire AIDA ?</summary>Attention (accroche), Intérêt, Désir, Action.</details>
+        <details><summary>7. Quelles sont les 4 étapes de l'inbound ?</summary>Attirer, Convertir, Conclure, Fidéliser (enchanter : faire du client un ambassadeur).</details>
+        <details><summary>8. Les 5 étapes de la démarche marketing ?</summary>1 Étude de marché (analytique), 2 Objectifs chiffrés pour le ROI, 3 Personae (stratégique), 4 Content marketing, 5 Tunnel de conversion (opérationnel).</details>
+        <details><summary>9. Macro, méso, micro : c'est quoi ?</summary>Macro : l'environnement. Méso : l'offre (segments, concurrents, distributeurs). Micro : la demande (consommateurs, segmentation).</details>
+        <details><summary>10. Définis un persona et cite 3 façons de le construire.</summary>Une représentation semi-fictive du client idéal (cœur de cible), fondée sur des études de marché. Étude documentaire, entretiens individuels semi-directifs, observation.</details>
+        <details><summary>11. Que signifient TOFU, MOFU, BOFU ?</summary>Top, Middle et Bottom of funnel : internaute attiré, puis prospect, puis client.</details>
+        <details><summary>12. Qu'est-ce qu'un prospect qualifié ? Comment l'obtenir ?</summary>Un prospect sur lequel on a assez de données pour confirmer qu'il est dans notre cible et estimer son potentiel de conversion. On l'obtient en demandant des infos via un formulaire (livre blanc, ebook, webinaire en échange).</details>
+      </div>
+    </section>
+  </main>
+
+  <footer>Fiche faite à partir des notes de cours (6 pages). Le BOFU n'a pas encore été détaillé en cours.</footer>
+</div>
