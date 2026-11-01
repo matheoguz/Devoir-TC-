@@ -123,6 +123,16 @@ select{padding:4px 8px; border-radius:6px; border:1px solid var(--line); backgro
 .review{list-style:none; padding:0; gap:10px}
 .review li{border-left:4px solid var(--ko); padding:6px 12px; background:var(--paper); border-radius:0 6px 6px 0}
 .review li.nr{border-left-color:var(--soft)}
+.hint{font-size:.9rem; color:var(--soft); margin:-4px 0 4px}
+.opt .mark{margin-left:auto; font-size:.8rem; font-weight:700; white-space:nowrap; padding-left:8px}
+.opt.good .mark{color:var(--ok)} .opt.bad .mark{color:var(--ko)} .opt.missed .mark{color:var(--ok)}
+.opt.missed{border:2px dashed var(--ok); background:var(--okbg)}
+.explain{display:flex; flex-direction:column; gap:6px}
+.whyt{font-weight:700; color:var(--ko)}
+.why{gap:4px}
+.rule{border-top:1px solid var(--line); padding-top:6px}
+.badtxt{color:var(--ko); font-size:.93rem}
+@media (max-width:520px){.opt{flex-wrap:wrap}.opt .mark{margin-left:28px; padding-left:0}}
 footer{grid-column:1/-1; color:var(--soft); font-size:.88rem}
 @media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
 </style>
@@ -421,7 +431,7 @@ footer{grid-column:1/-1; color:var(--soft); font-size:.88rem}
       <h2><span class="n">?</span>QCM à points négatifs</h2>
 
       <div id="start" class="qcm-head">
-        <p>Comme demain : <b>une seule bonne réponse par question</b>. Une bonne réponse rapporte des points, une mauvaise en <b>enlève</b>. Si tu n'es pas sûr, clique sur « Je ne sais pas » : ça vaut 0.</p>
+        <p>Comme demain : <b>coche la ou les bonnes réponses</b>. Certaines questions ont une seule bonne réponse, d'autres plusieurs, et on ne te dit pas lesquelles. Pour gagner le point, il faut cocher <b>toutes</b> les bonnes réponses et <b>aucune</b> fausse. Une erreur <b>enlève</b> des points. Si tu n'es pas sûr, clique sur « Je ne sais pas » : ça vaut 0.</p>
         <p>Les questions arrivent <b>une par une</b>, tirées au hasard dans une banque de <b id="banksize"></b> questions. Le QCM pioche d'abord celles que tu n'as pas encore vues, pour ne jamais retomber sur les mêmes.</p>
         <div class="settings">
           <label for="bareme">Barème
@@ -470,109 +480,724 @@ footer{grid-column:1/-1; color:var(--soft); font-size:.88rem}
 
 <script>
 const BANK = [
- {q:"La publicité, c'est :", a:["La location d'un espace pour diffuser une annonce","Faire savoir quelque chose à quelqu'un, peu importe la manière","Uniquement les posts gratuits sur les réseaux sociaux","Le référencement naturel d'un site"], e:"Définition du cours : la pub = location d'un espace pour diffuser une annonce."},
- {q:"La communication, c'est :", a:["Faire savoir quelque chose à quelqu'un, peu importe la manière","Uniquement la location d'un espace publicitaire","Uniquement la communication payante","Uniquement la communication sur Internet"], e:"La com, c'est faire savoir quelque chose, avec ou sans location d'espace. La pub n'en est qu'une partie."},
- {q:"Quelle affirmation est juste ?", a:["Toute pub est de la communication, mais toute communication n'est pas de la pub","Toute communication est de la pub","La pub et la communication sont la même chose","La pub n'est jamais de la communication"], e:"La pub est une partie de la com : ce qui la distingue, c'est l'achat ou la location d'espace."},
- {q:"Qui achète l'espace publicitaire pour le compte de l'annonceur ?", a:["L'agence média / la centrale d'achat d'espace","La régie publicitaire","L'éditeur / le support","L'ARPP"], e:"La centrale d'achat (agence média) achète l'espace pour l'annonceur. La régie, elle, le vend."},
- {q:"Qui vend les espaces publicitaires d'un support ?", a:["La régie publicitaire","La centrale d'achat d'espace","L'annonceur","L'internaute"], e:"La régie vend l'espace, côté support."},
- {q:"L'annonceur est :", a:["L'entreprise qui veut communiquer et paie la campagne","Le site qui diffuse la pub","L'organisme qui régule la publicité","La personne qui voit la pub"], e:"L'annonceur est l'entreprise à l'origine de la campagne."},
- {q:"L'ARPP et l'UDM sont :", a:["Des associations professionnelles","Des régies publicitaires","Des agences de création","Des réseaux sociaux"], e:"Ce sont les associations professionnelles citées en cours parmi les acteurs de la pub."},
- {q:"Le SEA, c'est :", a:["Le référencement payant (liens sponsorisés dans les moteurs de recherche)","Le référencement naturel","La pub par bannières sur les sites","L'envoi d'e-mails de prospection"], e:"SEA = Search Engine Advertising : on paie pour apparaître dans les résultats."},
- {q:"Le SEO, c'est :", a:["Le référencement naturel (gratuit)","Le référencement payant","Une pub native sur les réseaux sociaux","Une régie publicitaire"], e:"SEO = Search Engine Optimization : optimiser son site pour remonter sans payer."},
- {q:"Lequel n'est PAS un des 3 leviers de pub digitale vus en cours ?", a:["L'affichage sur un panneau dans la rue","Search","Display","Native Ad sur les médias sociaux"], e:"Les 3 leviers : Search (SEA/SEO), Native Ad sur les médias sociaux, Display."},
- {q:"Le Display, c'est :", a:["Les bannières et visuels affichés sur les sites","Les liens sponsorisés de Google","Le référencement naturel","Les messages privés"], e:"Display = pub visuelle (bannières) sur les sites."},
- {q:"Une Native Ad est :", a:["Une pub qui prend la forme du contenu autour d'elle (ex : post sponsorisé)","Une bannière clignotante en haut d'un site","Un lien sponsorisé dans Google","Un e-mail commercial"], e:"La pub native s'intègre au contenu du support et en a l'apparence."},
- {q:"Lequel de ces supports de pub digitale a été cité en cours ?", a:["Les comparateurs","La radio FM","Les prospectus en boîte aux lettres","Les panneaux 4x3"], e:"Supports cités : moteurs de recherche, comparateurs, sites éditeurs, applications, messageries, médias sociaux."},
- {q:"Quelle est la différence entre média social et réseau social ?", a:["Le réseau social est une sous-catégorie du média social, centrée sur le lien entre les personnes","Le média social est une sous-catégorie du réseau social","Il n'y a aucune différence","Le réseau social est centré sur le contenu"], e:"Média social = accent sur le contenu ; réseau social = sous-catégorie, accent sur le lien social."},
- {q:"Lequel est un réseau social (et pas seulement un média social) ?", a:["LinkedIn","Un wiki","Un forum","Un blog"], e:"Exemples de réseaux sociaux du cours : Facebook, LinkedIn, TikTok, Instagram."},
- {q:"Selon le cours, YouTube est classé comme :", a:["Un média social","Un réseau social uniquement","Une régie publicitaire","Un moteur de recherche payant"], e:"Dans le cours, YouTube est donné en exemple de média social (accent sur le contenu)."},
- {q:"La distribution gratuite d'échantillons relève d'une stratégie :", a:["Push","Pull","Inbound","SEO"], e:"Push : on pousse le produit vers le consommateur (réductions, échantillons…)."},
- {q:"La stratégie push s'adresse surtout :", a:["Aux entreprises avec peu de budget","Aux grands groupes à forte notoriété","Uniquement aux associations","Uniquement aux sites e-commerce"], e:"Push : petit budget. Pull : grands groupes à forte notoriété."},
- {q:"L'objectif d'une stratégie pull est :", a:["Faire adhérer à long terme (objectifs cognitif et affectif)","Faire acheter tout de suite (objectif conatif court terme)","Envoyer un maximum d'échantillons","Être le plus intrusif possible"], e:"Pull = adhésion à long terme, objectifs cognitif et affectif."},
- {q:"Un objectif conatif consiste à :", a:["Faire agir (acheter, s'inscrire…)","Faire connaître","Faire aimer","Faire oublier un concurrent"], e:"Cognitif = connaître, affectif = aimer, conatif = agir."},
- {q:"Le marketing outbound est :", a:["Intrusif, il va de la marque vers le consommateur","Non intrusif, c'est le consommateur qui cherche","Toujours gratuit","Centré uniquement sur le SEO"], e:"Outbound = push : de la marque vers le conso, sur tous les supports, intrusif."},
- {q:"Dans l'inbound marketing :", a:["C'est le consommateur qui est à l'origine : il commence à chercher","La marque appelle les prospects un par un","On achète un maximum d'espace TV","On distribue des échantillons dans la rue"], e:"Inbound = pull : approche centrée sur l'internaute, non intrusive, long terme."},
- {q:"Que veut dire AIDA ?", a:["Attention, Intérêt, Désir, Action","Achat, Intérêt, Décision, Action","Attention, Information, Désir, Achat","Acquisition, Intérêt, Désir, Adhésion"], e:"A = Attention (accroche), I = Intérêt, D = Désir, A = Action."},
- {q:"Dans AIDA, le premier « A » correspond à :", a:["L'accroche : capter l'attention","L'achat","L'action","L'adhésion"], e:"Le premier A, c'est l'Attention, obtenue grâce à l'accroche."},
- {q:"Quel est l'ordre des 4 étapes de l'inbound ?", a:["Attirer, Convertir, Conclure, Fidéliser","Convertir, Attirer, Conclure, Fidéliser","Attirer, Conclure, Convertir, Fidéliser","Fidéliser, Attirer, Convertir, Conclure"], e:"Attirer → Convertir → Conclure → Fidéliser (enchanter)."},
- {q:"L'étape « Convertir » de l'inbound consiste à :", a:["Récupérer les données des visiteurs en échange d'un contenu à forte valeur","Transformer le client en ambassadeur","Signer la vente","Produire du contenu pour attirer du trafic"], e:"Convertir = récupérer des données (visiteur → prospect). La vente, c'est « Conclure »."},
- {q:"L'étape « Fidéliser / enchanter » de l'inbound vise à :", a:["Transformer le client en ambassadeur","Attirer de nouveaux internautes","Récupérer des adresses e-mail","Baisser les prix"], e:"On entretient la relation avec des contenus à forte valeur pour faire du client un ambassadeur."},
- {q:"L'étude de marché relève du marketing :", a:["Analytique","Stratégique","Opérationnel","Relationnel"], e:"Étape 1 = étude de marché = marketing analytique."},
- {q:"Définir des personae relève du marketing :", a:["Stratégique","Analytique","Opérationnel","Direct"], e:"Stratégique : fixer les objectifs chiffrés et définir les personae."},
- {q:"Mettre en place un tunnel de conversion relève du marketing :", a:["Opérationnel","Analytique","Stratégique","Cognitif"], e:"Opérationnel : content marketing et tunnel de conversion."},
- {q:"Pourquoi fixe-t-on des objectifs structurés et chiffrés ?", a:["Pour pouvoir calculer le ROI","Pour choisir la couleur du logo","Pour remplacer l'étude de marché","Pour éviter de définir des personae"], e:"Des objectifs chiffrés permettent de mesurer le retour sur investissement (ROI)."},
- {q:"Dans l'étude externe, l'analyse des concurrents et des distributeurs se fait au niveau :", a:["Méso","Macro","Micro","Interne"], e:"Méso = l'offre : segments de produits, concurrents, distributeurs."},
- {q:"Le niveau « micro » de l'étude externe porte sur :", a:["La demande : les consommateurs et leur segmentation","L'environnement général","Les concurrents","Les forces de l'entreprise"], e:"Micro = la demande (consommateurs, segmentation conso)."},
- {q:"Le niveau « macro » de l'étude externe porte sur :", a:["L'environnement","La demande","L'offre","Le prix de l'entreprise"], e:"Macro = environnement."},
- {q:"La conclusion de l'étude externe donne :", a:["Les opportunités et les menaces","Les forces et les faiblesses","Le persona","Le modèle AIDA"], e:"Externe → opportunités / menaces. Interne → forces / faiblesses."},
- {q:"Lequel fait partie de l'étude INTERNE ?", a:["Le positionnement de l'entreprise","L'environnement économique","La segmentation des consommateurs du marché","Les distributeurs du marché"], e:"Interne : ciblage, positionnement, prix, produit, distribution, communication, forces / faiblesses."},
- {q:"Un persona est :", a:["Une représentation semi-fictive du client idéal, fondée sur des études de marché","Un vrai client choisi au hasard","L'ensemble de la population française","Un concurrent direct"], e:"Le persona = client type, cœur de cible, semi-fictif mais fondé sur des données réelles."},
- {q:"Le persona représente :", a:["Le cœur de cible","Tous les clients possibles","Les clients perdus","Les fournisseurs"], e:"C'est le stéréotype idéal du cœur de cible."},
- {q:"Laquelle de ces méthodes sert à construire un persona selon le cours ?", a:["Des entretiens individuels semi-directifs","Un spot TV","L'achat d'espace publicitaire","Du SEA"], e:"Méthodes : étude documentaire, entretiens individuels semi-directifs, observation."},
- {q:"« Pourquoi ma cible n'achète pas chez moi ? » correspond à l'étape :", a:["Identifier l'attitude de la cible à notre égard (ses objections)","Établir le profil général","Préciser les habitudes d'achat","Présenter l'offre au persona"], e:"Étape 3 : identifier l'attitude de la cible, citer ses objections."},
- {q:"Chercher des verbatims (phrases exactes de la cible) sert surtout à :", a:["Connaître sa façon de parler et son comportement d'achat","Calculer le ROI","Fixer le prix","Choisir une régie"], e:"Étape 4 (habitudes d'achat) : expressions favorites, façon de parler, ton, verbatims."},
- {q:"Les infos signalétiques et les centres d'intérêt de la cible font partie de l'étape :", a:["Établir le profil général de la cible","Cerner le problème de la cible","Identifier ses objections","Présenter l'offre"], e:"Étape 1 : infos signalétiques, contexte d'activité, portrait (caractère, centres d'intérêt)."},
- {q:"Le tunnel de conversion, c'est :", a:["La modélisation des étapes par lesquelles un visiteur devient client","La liste de tous les clients","Un outil de paiement en ligne","Un type de bannière"], e:"Tunnel de conversion = entonnoir de conversion = tunnel marketing."},
- {q:"Quel autre nom désigne le tunnel de conversion ?", a:["L'entonnoir de conversion","Le mix marketing","Le modèle AIDA","La régie"], e:"Tunnel de conversion = entonnoir de conversion = tunnel marketing."},
- {q:"Que signifie MOFU ?", a:["Middle of funnel","Most of funnel","Marketing of funnel","Move of funnel"], e:"TOFU = Top, MOFU = Middle, BOFU = Bottom of funnel."},
- {q:"L'objectif du TOFU est :", a:["L'acquisition : que les internautes deviennent des visiteurs","Transformer les visiteurs en prospects qualifiés","Transformer les prospects en clients","Faire des clients des ambassadeurs"], e:"TOFU = acquisition (internaute → visiteur)."},
- {q:"L'objectif du MOFU est :", a:["Transformer les visiteurs en prospects qualifiés","L'acquisition de trafic","Faire des clients des ambassadeurs","Choisir une régie"], e:"MOFU = visiteurs → prospects qualifiés."},
- {q:"Au BOFU :", a:["Les prospects deviennent des clients","Les internautes découvrent la marque","On fait l'étude de marché","On définit le persona"], e:"BOFU = Bottom of funnel : prospect → client."},
- {q:"Un prospect qualifié est :", a:["Un prospect dont on a assez de données pour confirmer qu'il est dans la cible et estimer son potentiel de conversion","N'importe quel visiteur du site","Un client fidèle","Un prospect qui a déjà acheté deux fois"], e:"Définition du cours, à connaître par cœur."},
- {q:"Proposer un livre blanc en échange d'un formulaire rempli, c'est une action du :", a:["MOFU","TOFU","BOFU","Marketing analytique"], e:"MOFU : demander des infos via formulaire, livre blanc, ebook, webinaire."},
- {q:"Le SEO, les réseaux sociaux et la création de contenu informatif sont surtout utilisés au :", a:["TOFU","MOFU","BOFU","Moment de la fidélisation uniquement"], e:"TOFU : SEO, réseaux sociaux, SEA, contenu, pub, multiplier les supports."},
- {q:"Au TOFU, il faut attirer :", a:["Les internautes qui vous cherchent et ceux qui ne vous cherchent pas","Seulement les clients déjà fidèles","Seulement les internautes qui vous cherchent","Seulement les prospects qualifiés"], e:"Le cours insiste : attirer ceux qui vous cherchent ET ceux qui ne vous cherchent pas."},
- {q:"La première étape d'achat (éveil, reconnaissance du besoin) correspond à :", a:["La prise de conscience","La décision","L'examen","La fidélisation"], e:"Étapes d'achat : prise de conscience → recherche d'info → examen → décision."},
- {q:"Laquelle n'est PAS une des 3 questions de l'introduction du cours ?", a:["Comment fixer le prix d'un produit en magasin ?","Comment générer du trafic ?","Comment fidéliser des clients sur Internet ?","Comment transformer des visiteurs en clients ?"], e:"Les 3 questions : générer du trafic, fidéliser, transformer les visiteurs en clients."},
- {q:"Le webinar est :", a:["Un support / moyen de communication digitale","Une régie publicitaire","Un objectif conatif","Une étape du modèle AIDA"], e:"Webinar, blog, SEA, SEO, chat… font partie des supports de com digitale."},
- {q:"Les études de cas et les études sectorielles sont :", a:["Des supports / moyens de communication digitale","Des acteurs de la pub","Des associations professionnelles","Des étapes du tunnel de conversion"], e:"Elles sont citées dans la liste des supports et moyens de com digitale."},
- {q:"Le fournisseur de l'annonce est aussi appelé :", a:["L'agence de création","La régie","La centrale d'achat","L'éditeur"], e:"Fournisseur de l'annonce / agence de création : il fabrique l'annonce."},
- {q:"L'éditeur / le support, c'est :", a:["Le média qui diffuse la pub (site, appli, réseau…)","L'entreprise qui paie la campagne","L'organisme qui régule la pub","L'agence qui conçoit la stratégie"], e:"L'éditeur est le support qui diffuse l'annonce."},
- {q:"Parmi les acteurs de la pub, l'internaute est :", a:["Celui qui reçoit la pub : la cible","Celui qui vend l'espace","Celui qui achète l'espace","Celui qui régule la pub"], e:"L'internaute est le destinataire de la publicité."},
- {q:"Un post sponsorisé sur Instagram qui ressemble aux autres posts du fil, c'est :", a:["De la Native Ad","Du Display","Du SEO","Du marketing outbound par téléphone"], e:"La Native Ad prend la forme du contenu qui l'entoure."},
- {q:"Apparaître dans les résultats « Sponsorisé » en haut de Google, c'est :", a:["Du SEA","Du SEO","Du Display","De la Native Ad"], e:"SEA = référencement payant."},
- {q:"Améliorer les textes de son site pour mieux remonter dans Google sans payer, c'est :", a:["Du SEO","Du SEA","Du Display","Un achat d'espace"], e:"SEO = référencement naturel, gratuit."},
- {q:"Selon le cours, Pinterest est donné en exemple de :", a:["Média social","Réseau social uniquement","Régie publicitaire","Moteur de recherche payant"], e:"Exemples de médias sociaux : wiki, forums, blogs, X, Pinterest, YouTube."},
- {q:"Un forum de discussion est :", a:["Un média social, mais pas un réseau social","Un réseau social","Une régie","Une association professionnelle"], e:"Le forum est cité comme média social (accent sur le contenu)."},
- {q:"« Tous les réseaux sociaux sont des médias sociaux. »", a:["Vrai","Faux : c'est l'inverse","Faux : il n'y a aucun lien","Vrai seulement pour Facebook"], e:"Le réseau social est une sous-catégorie du média social."},
- {q:"Le réseau social met l'accent sur :", a:["Les interactions et les liens entre les personnes","Le contenu publié","Le prix des produits","L'achat d'espace"], e:"Réseau social = lien social. Média social = contenu."},
- {q:"Proposer des réductions de prix pour faire acheter vite relève d'une stratégie :", a:["Push","Pull","Inbound","Cognitive"], e:"Push : réductions, échantillons, segmentation, data mining."},
- {q:"Utiliser des fichiers clients (data mining) pour cibler une offre relève d'une stratégie :", a:["Push","Pull","Inbound","SEO"], e:"Le data mining fait partie des moyens du push cités en cours."},
- {q:"Une grande marque très connue qui veut que les consommateurs viennent d'eux-mêmes utilise plutôt :", a:["Une stratégie pull","Une stratégie push","Une stratégie outbound","Un objectif conatif court terme"], e:"Pull : grands groupes à forte notoriété, long terme."},
- {q:"Un objectif cognitif consiste à :", a:["Faire connaître","Faire agir","Faire aimer","Faire acheter tout de suite"], e:"Cognitif = connaître, affectif = aimer, conatif = agir."},
- {q:"Un objectif affectif consiste à :", a:["Faire aimer la marque","Faire connaître la marque","Faire acheter le produit","Récupérer des données"], e:"Affectif = faire aimer (image, attachement)."},
- {q:"La stratégie push vise un résultat :", a:["À court terme","À long terme","Uniquement de fidélisation","Uniquement de notoriété"], e:"Push = faire acheter, objectif conatif, court terme."},
- {q:"Quelle stratégie est non intrusive ?", a:["L'inbound (pull)","L'outbound (push)","La distribution d'échantillons","La prospection par fichiers"], e:"Inbound : on attire de façon naturelle, l'internaute vient de lui-même."},
- {q:"Dans AIDA, le Désir arrive :", a:["Après l'Intérêt et avant l'Action","Avant l'Attention","En tout premier","Après l'Action"], e:"Attention → Intérêt → Désir → Action."},
- {q:"Une landing page avec un formulaire sert surtout à l'étape inbound :", a:["Convertir","Attirer","Conclure","Fidéliser"], e:"Convertir = récupérer les données du visiteur en échange d'un contenu."},
- {q:"Publier des articles de blog de qualité pour toucher la bonne cible correspond à l'étape :", a:["Attirer","Convertir","Conclure","Fidéliser"], e:"Attirer = produire du contenu de qualité pour atteindre la cible."},
- {q:"À quelle étape de l'inbound le prospect devient-il client ?", a:["Conclure","Attirer","Convertir","Fidéliser"], e:"Conclure = faire aboutir la relation : le prospect devient client."},
- {q:"Combien d'étapes compte la démarche marketing vue en cours ?", a:["5","3","4","7"], e:"Étude de marché, objectifs, personae, content marketing, tunnel de conversion."},
- {q:"Opérationnaliser la stratégie de content marketing relève du marketing :", a:["Opérationnel","Analytique","Stratégique","Affectif"], e:"Étapes 4 et 5 = marketing opérationnel."},
- {q:"Que veut dire ROI ?", a:["Retour sur investissement","Rapport des objectifs internes","Réseau d'offres internet","Revenu des opérations intérieures"], e:"ROI = Return On Investment = retour sur investissement."},
- {q:"Le prix pratiqué par l'entreprise est analysé dans :", a:["L'étude interne","L'étude externe, niveau macro","L'étude externe, niveau méso","L'étude externe, niveau micro"], e:"Interne : ciblage, positionnement, prix, produit, distribution, communication."},
- {q:"La segmentation des consommateurs est étudiée au niveau :", a:["Micro","Macro","Méso","Interne"], e:"Micro = la demande et la segmentation conso."},
- {q:"Les segments de produits présents sur le marché sont étudiés au niveau :", a:["Méso","Micro","Macro","Interne"], e:"Méso = l'offre sur le marché (segments produits), concurrents, distributeurs."},
- {q:"Opportunités, menaces, forces et faiblesses réunies forment :", a:["Un SWOT","Le modèle AIDA","Le tunnel de conversion","Le ROI"], e:"Externe (opportunités/menaces) + interne (forces/faiblesses) = SWOT."},
- {q:"« Semi-fictive » dans la définition du persona veut dire :", a:["La personne est inventée mais fondée sur de vraies données","La personne est totalement inventée, sans données","C'est une vraie personne","C'est un groupe de clients"], e:"Le persona est inventé (nom, portrait) mais construit à partir d'études de marché."},
- {q:"Le persona sert notamment à :", a:["Créer des scénarios d'utilisation du produit / service","Calculer le ROI","Choisir une régie","Acheter de l'espace pub"], e:"Persona = client type, pour imaginer des scénarios d'utilisation."},
- {q:"L'étude documentaire, les entretiens semi-directifs et l'observation servent à :", a:["Collecter des infos pour construire le persona","Acheter de l'espace publicitaire","Calculer la note d'un QCM","Choisir un réseau social"], e:"Ce sont les 3 méthodes de collecte pour construire un persona."},
- {q:"La valeur ajoutée de l'offre par rapport aux concurrents est analysée à l'étape :", a:["Cerner le problème de la cible par rapport à l'offre","Établir le profil général","Préciser les habitudes d'achat","Identifier l'attitude de la cible"], e:"Étape 2 : en quoi l'offre aide la cible, quelle valeur ajoutée face aux concurrents."},
- {q:"Savoir si la cible est impulsive, réfléchie ou raisonnable relève de l'étape :", a:["Préciser les habitudes d'achat","Établir le profil général","Identifier ses objections","Présenter l'offre"], e:"Étape 4 : comportement en situation d'achat."},
- {q:"Rédiger un argumentaire de vente de quelques minutes relève de l'étape :", a:["Présenter l'offre au persona","Établir le profil général","Identifier les objections","Préciser les habitudes d'achat"], e:"Étape 5 : discours adapté, avantages, pitch, argumentaire."},
- {q:"Combien d'étapes compte la création d'un persona dans le cours ?", a:["5","3","4","6"], e:"Profil, problème, attitude, habitudes d'achat, présentation de l'offre."},
- {q:"Les visiteurs « non qualifiés » se trouvent surtout :", a:["En haut du tunnel (TOFU)","Au milieu du tunnel (MOFU)","En bas du tunnel (BOFU)","Après l'achat"], e:"TOFU : faire prendre conscience du problème aux visiteurs non qualifiés."},
- {q:"Un ebook à télécharger en échange de son adresse e-mail est une action du :", a:["MOFU","TOFU","BOFU","Marketing push"], e:"MOFU : formulaire, livre blanc, ebook, webinaire."},
- {q:"S'inscrire à un webinaire en laissant ses coordonnées correspond au :", a:["MOFU","TOFU","BOFU","Marketing analytique"], e:"Le webinaire contre des infos sert à qualifier le prospect : MOFU."},
- {q:"Dans l'exemple du cours, quelle étape vient juste avant l'achat ?", a:["La mise du produit dans le panier","La lecture d'un article de blog","La visite de la page produit","La découverte de la marque"], e:"Article de blog → page produit → panier → achat."},
- {q:"Quel est le bon ordre des étapes d'achat ?", a:["Prise de conscience, recherche d'info, examen, décision","Recherche d'info, prise de conscience, décision, examen","Examen, prise de conscience, recherche d'info, décision","Décision, examen, recherche d'info, prise de conscience"], e:"1 besoin (prise de conscience), 2 recherche d'info, 3 évaluation (examen), 4 achat (décision)."},
- {q:"« L'évaluation des possibilités » correspond à :", a:["L'examen","La décision","La prise de conscience","La fidélisation"], e:"Étape 3 d'achat : évaluation des possibilités = examen."},
- {q:"Que signifie TOFU ?", a:["Top of funnel","Total of funnel","Top of fund","Tunnel of funnel"], e:"Top / Middle / Bottom of funnel."},
- {q:"Faire de la pub et multiplier les supports sert surtout au :", a:["TOFU","MOFU","BOFU","Marketing analytique"], e:"TOFU : SEO, réseaux sociaux, SEA, contenu, pub, multiplier les supports."}
+/* ---------- I. Principes ---------- */
+{q:"La publicité, c'est :", o:[
+ ["La location d'un espace pour diffuser une annonce",1],
+ ["Faire savoir quelque chose à quelqu'un, peu importe la manière",0,"Ça, c'est la définition de la communication, pas de la pub."],
+ ["Uniquement les posts gratuits sur les réseaux sociaux",0,"Un post gratuit n'est pas de la pub : il n'y a pas de location d'espace."],
+ ["Le référencement naturel d'un site",0,"Le référencement naturel, c'est le SEO, un levier gratuit : pas de location d'espace."]],
+ e:"Définition du cours : la pub = location d'un espace pour diffuser une annonce."},
+{q:"La communication, c'est :", o:[
+ ["Faire savoir quelque chose à quelqu'un, peu importe la manière",1],
+ ["Uniquement la location d'un espace publicitaire",0,"La location d'espace, c'est la pub. La com est plus large : avec ou sans location."],
+ ["Uniquement la communication payante",0,"La com peut être gratuite (post, blog…). C'est la pub qui est payante."],
+ ["Uniquement la communication sur Internet",0,"La com existe partout, pas seulement sur Internet."]],
+ e:"La com, c'est faire savoir quelque chose, avec ou sans location d'espace. La pub n'en est qu'une partie."},
+{q:"Quelles affirmations sont justes ?", o:[
+ ["Toute pub est de la communication",1],
+ ["La pub implique la location d'un espace",1],
+ ["Toute communication est de la pub",0,"C'est l'inverse : la com peut se faire sans louer d'espace (un post, un blog), donc toute com n'est pas de la pub."],
+ ["Un post gratuit sur le compte de la marque est de la pub",0,"Pas de location d'espace, donc ce n'est pas de la pub : c'est de la communication."]],
+ e:"La pub est une partie de la com ; ce qui la distingue, c'est la location d'espace."},
+{q:"Laquelle n'est PAS une des 3 questions de l'introduction du cours ?", o:[
+ ["Comment fixer le prix d'un produit en magasin ?",1],
+ ["Comment générer du trafic ?",0,"C'est bien une des 3 questions du cours."],
+ ["Comment fidéliser des clients sur Internet ?",0,"C'est bien une des 3 questions du cours."],
+ ["Comment transformer des visiteurs en clients ?",0,"C'est bien une des 3 questions du cours."]],
+ e:"Les 3 questions : générer du trafic, fidéliser, transformer les visiteurs en clients."},
+{q:"Lesquels sont des supports / moyens de communication digitale cités en cours ?", o:[
+ ["Le webinar",1],["Le blog",1],["Les études de cas",1],
+ ["Le ROI",0,"Le ROI (retour sur investissement) est un indicateur de résultat, pas un support de com."]],
+ e:"Supports cités : SEA, SEO, webinar, blog, chat et messagerie, pub, étude de cas, comptes médias sociaux, études sectorielles."},
+{q:"Le webinar est :", o:[
+ ["Un support / moyen de communication digitale",1],
+ ["Une régie publicitaire",0,"Une régie vend des espaces pub ; un webinar est une conférence en ligne, donc un support de com."],
+ ["Un objectif conatif",0,"Un objectif conatif = faire agir. Le webinar est un moyen, pas un objectif."],
+ ["Une étape du modèle AIDA",0,"AIDA = Attention, Intérêt, Désir, Action. Le webinar n'en fait pas partie."]],
+ e:"Webinar, blog, SEA, SEO, chat… font partie des supports de com digitale."},
+{q:"Les études de cas et les études sectorielles sont :", o:[
+ ["Des supports / moyens de communication digitale",1],
+ ["Des acteurs de la pub",0,"Les acteurs sont des personnes ou organismes (annonceur, régie…), pas des documents."],
+ ["Des associations professionnelles",0,"Les associations pro citées sont l'ARPP et l'UDM."],
+ ["Des étapes du tunnel de conversion",0,"Les étapes du tunnel sont TOFU, MOFU, BOFU."]],
+ e:"Elles sont citées dans la liste des supports et moyens de com digitale."},
+{q:"Qui achète l'espace publicitaire pour le compte de l'annonceur ?", o:[
+ ["L'agence média / la centrale d'achat d'espace",1],
+ ["La régie publicitaire",0,"La régie fait l'inverse : elle VEND l'espace, côté support."],
+ ["L'éditeur / le support",0,"L'éditeur possède l'espace et le diffuse, il ne l'achète pas pour l'annonceur."],
+ ["L'ARPP",0,"L'ARPP est une association qui régule la pub, elle n'achète pas d'espace."]],
+ e:"La centrale d'achat (agence média) achète l'espace pour l'annonceur. La régie, elle, le vend."},
+{q:"Qui vend les espaces publicitaires d'un support ?", o:[
+ ["La régie publicitaire",1],
+ ["La centrale d'achat d'espace",0,"La centrale fait l'inverse : elle ACHÈTE l'espace pour l'annonceur."],
+ ["L'annonceur",0,"L'annonceur paie la campagne, il ne vend pas d'espace."],
+ ["L'internaute",0,"L'internaute reçoit la pub, il ne vend rien."]],
+ e:"La régie vend l'espace, côté support."},
+{q:"L'annonceur est :", o:[
+ ["L'entreprise qui veut communiquer et paie la campagne",1],
+ ["Le site qui diffuse la pub",0,"Le site qui diffuse, c'est l'éditeur / le support."],
+ ["L'organisme qui régule la publicité",0,"La régulation, c'est le rôle des associations pro comme l'ARPP."],
+ ["La personne qui voit la pub",0,"Celui qui voit la pub, c'est l'internaute."]],
+ e:"L'annonceur est l'entreprise à l'origine de la campagne."},
+{q:"Lesquels font partie des acteurs de la pub cités en cours ?", o:[
+ ["L'annonceur",1],["La régie pub",1],["L'internaute",1],
+ ["Le persona",0,"Le persona est un client type imaginé pour le marketing, pas un acteur de la pub."]],
+ e:"Acteurs : annonceur, agence de pub, régie, agence média / centrale d'achat, agence de création, associations pro, éditeur / support, internaute."},
+{q:"Quelles sont les associations professionnelles citées en cours ?", o:[
+ ["L'ARPP",1],["L'UDM (Union des marques)",1],
+ ["La régie publicitaire",0,"La régie vend de l'espace, ce n'est pas une association professionnelle."],
+ ["La centrale d'achat d'espace",0,"La centrale achète de l'espace, ce n'est pas une association professionnelle."]],
+ e:"Associations professionnelles : ARPP et UDM."},
+{q:"L'ARPP et l'UDM sont :", o:[
+ ["Des associations professionnelles",1],
+ ["Des régies publicitaires",0,"Les régies vendent de l'espace ; l'ARPP et l'UDM encadrent le métier."],
+ ["Des agences de création",0,"Les agences de création fabriquent les annonces ; l'ARPP et l'UDM n'en fabriquent pas."],
+ ["Des réseaux sociaux",0,"Aucun rapport : les réseaux sociaux sont Facebook, LinkedIn, TikTok, Instagram…"]],
+ e:"Ce sont les associations professionnelles citées en cours parmi les acteurs de la pub."},
+{q:"Le fournisseur de l'annonce est aussi appelé :", o:[
+ ["L'agence de création",1],
+ ["La régie",0,"La régie vend l'espace, elle ne fabrique pas l'annonce."],
+ ["La centrale d'achat",0,"La centrale achète l'espace, elle ne fabrique pas l'annonce."],
+ ["L'éditeur",0,"L'éditeur diffuse l'annonce, il ne la fabrique pas."]],
+ e:"Fournisseur de l'annonce / agence de création : il fabrique l'annonce."},
+{q:"L'éditeur / le support, c'est :", o:[
+ ["Le média qui diffuse la pub (site, appli, réseau…)",1],
+ ["L'entreprise qui paie la campagne",0,"Celle qui paie, c'est l'annonceur."],
+ ["L'organisme qui régule la pub",0,"La régulation, c'est l'ARPP (association pro)."],
+ ["L'agence qui conçoit la stratégie",0,"Ça, c'est l'agence de pub."]],
+ e:"L'éditeur est le support qui diffuse l'annonce."},
+{q:"Parmi les acteurs de la pub, l'internaute est :", o:[
+ ["Celui qui reçoit la pub : la cible",1],
+ ["Celui qui vend l'espace",0,"Celui qui vend l'espace, c'est la régie."],
+ ["Celui qui achète l'espace",0,"Celui qui achète l'espace, c'est la centrale d'achat / agence média."],
+ ["Celui qui régule la pub",0,"La régulation, c'est l'ARPP."]],
+ e:"L'internaute est le destinataire de la publicité."},
+{q:"Le SEA, c'est :", o:[
+ ["Le référencement payant (liens sponsorisés dans les moteurs de recherche)",1],
+ ["Le référencement naturel",0,"Le référencement naturel, c'est le SEO. Le « A » de SEA = Advertising = payant."],
+ ["La pub par bannières sur les sites",0,"Les bannières, c'est le Display."],
+ ["L'envoi d'e-mails de prospection",0,"L'e-mailing n'est pas du référencement."]],
+ e:"SEA = Search Engine Advertising : on paie pour apparaître dans les résultats."},
+{q:"Le SEO, c'est :", o:[
+ ["Le référencement naturel (gratuit)",1],
+ ["Le référencement payant",0,"Le payant, c'est le SEA. Le « O » de SEO = Optimization = on optimise sans payer."],
+ ["Une pub native sur les réseaux sociaux",0,"Ça, c'est la Native Ad."],
+ ["Une régie publicitaire",0,"Une régie vend de l'espace ; le SEO n'achète aucun espace."]],
+ e:"SEO = Search Engine Optimization : optimiser son site pour remonter sans payer."},
+{q:"Apparaître dans les résultats « Sponsorisé » en haut de Google, c'est :", o:[
+ ["Du SEA",1],
+ ["Du SEO",0,"« Sponsorisé » veut dire qu'on a payé : c'est du SEA. Le SEO est gratuit."],
+ ["Du Display",0,"Le Display, ce sont des bannières sur des sites, pas des résultats de recherche."],
+ ["De la Native Ad",0,"La Native Ad est sur les médias sociaux, pas dans les résultats Google."]],
+ e:"SEA = référencement payant."},
+{q:"Améliorer les textes de son site pour mieux remonter dans Google sans payer, c'est :", o:[
+ ["Du SEO",1],
+ ["Du SEA",0,"Le SEA est payant ; ici on ne paie rien."],
+ ["Du Display",0,"Le Display, ce sont des bannières pub."],
+ ["Un achat d'espace",0,"On n'achète aucun espace : c'est de l'optimisation gratuite."]],
+ e:"SEO = référencement naturel, gratuit."},
+/* ---------- II. Pub digitale ---------- */
+{q:"Quels sont les leviers de la pub digitale vus en cours ?", o:[
+ ["Search (SEA / SEO)",1],["Display",1],["Native Ad sur les médias sociaux",1],
+ ["L'affichage sur un panneau dans la rue",0,"Un panneau dans la rue, ce n'est pas du digital."]],
+ e:"Les 3 leviers : Search, Native Ad sur les médias sociaux, Display."},
+{q:"Lequel n'est PAS un des leviers de pub digitale vus en cours ?", o:[
+ ["L'affichage sur un panneau dans la rue",1],
+ ["Search",0,"Search (SEA / SEO) est bien un levier du cours."],
+ ["Display",0,"Display est bien un levier du cours."],
+ ["Native Ad sur les médias sociaux",0,"La Native Ad est bien un levier du cours."]],
+ e:"Les 3 leviers : Search (SEA/SEO), Native Ad sur les médias sociaux, Display."},
+{q:"Le Display, c'est :", o:[
+ ["Les bannières et visuels affichés sur les sites",1],
+ ["Les liens sponsorisés de Google",0,"Les liens sponsorisés, c'est le SEA (Search)."],
+ ["Le référencement naturel",0,"Le référencement naturel, c'est le SEO."],
+ ["Les messages privés",0,"Les messageries sont un support, pas le Display."]],
+ e:"Display = pub visuelle (bannières) sur les sites."},
+{q:"Une Native Ad est :", o:[
+ ["Une pub qui prend la forme du contenu autour d'elle (ex : post sponsorisé)",1],
+ ["Une bannière en haut d'un site",0,"Une bannière, c'est du Display : elle ne se fond pas dans le contenu."],
+ ["Un lien sponsorisé dans Google",0,"Ça, c'est du SEA."],
+ ["Un e-mail commercial",0,"Un e-mail n'est pas une Native Ad sur les médias sociaux."]],
+ e:"La pub native s'intègre au contenu du support et en a l'apparence."},
+{q:"Un post sponsorisé sur Instagram qui ressemble aux autres posts du fil, c'est :", o:[
+ ["De la Native Ad",1],
+ ["Du Display",0,"Le Display, ce sont des bannières qui se voient comme de la pub."],
+ ["Du SEO",0,"Le SEO est gratuit et concerne les moteurs de recherche."],
+ ["Du marketing outbound par téléphone",0,"Aucun téléphone ici : c'est une pub intégrée au fil."]],
+ e:"La Native Ad prend la forme du contenu qui l'entoure."},
+{q:"Lesquels sont des supports de pub digitale cités en cours ?", o:[
+ ["Les comparateurs",1],["Les applications",1],["Les messageries (instantanées ou non)",1],
+ ["Les panneaux 4x3 dans la rue",0,"Ce n'est pas digital."]],
+ e:"Supports cités : moteurs de recherche, comparateurs, sites éditeurs (presse, blogs), applications, messageries, médias sociaux."},
+{q:"Lequel de ces supports de pub digitale a été cité en cours ?", o:[
+ ["Les comparateurs",1],
+ ["La radio FM",0,"La radio FM n'est pas un support digital."],
+ ["Les prospectus en boîte aux lettres",0,"Le prospectus papier n'est pas digital."],
+ ["Les panneaux 4x3",0,"L'affichage dans la rue n'est pas digital."]],
+ e:"Supports cités : moteurs de recherche, comparateurs, sites éditeurs, applications, messageries, médias sociaux."},
+{q:"Quelle est la différence entre média social et réseau social ?", o:[
+ ["Le réseau social est une sous-catégorie du média social, centrée sur le lien entre les personnes",1],
+ ["Le média social est une sous-catégorie du réseau social",0,"C'est l'inverse : le réseau social est la sous-catégorie."],
+ ["Il n'y a aucune différence",0,"Il y en a une : média = contenu, réseau = lien social."],
+ ["Le réseau social est centré sur le contenu",0,"Le contenu, c'est le média social. Le réseau social est centré sur le lien entre les gens."]],
+ e:"Média social = accent sur le contenu ; réseau social = sous-catégorie, accent sur le lien social."},
+{q:"Lesquels sont des réseaux sociaux (et pas seulement des médias sociaux) ?", o:[
+ ["LinkedIn",1],["TikTok",1],["Instagram",1],
+ ["Wikipédia",0,"Un wiki est centré sur le contenu : c'est un média social, pas un réseau social."]],
+ e:"Réseaux sociaux du cours : Facebook, LinkedIn, TikTok, Instagram."},
+{q:"Lequel est un réseau social (et pas seulement un média social) ?", o:[
+ ["LinkedIn",1],
+ ["Un wiki",0,"Un wiki est centré sur le contenu : média social."],
+ ["Un forum",0,"Un forum est cité comme média social."],
+ ["Un blog",0,"Un blog est centré sur le contenu : média social."]],
+ e:"Exemples de réseaux sociaux du cours : Facebook, LinkedIn, TikTok, Instagram."},
+{q:"Lesquels sont donnés en cours comme exemples de médias sociaux ?", o:[
+ ["Les wikis",1],["Les forums",1],["YouTube",1],
+ ["Une régie publicitaire",0,"Une régie vend de l'espace pub : ce n'est pas un média social."]],
+ e:"Médias sociaux du cours : wiki, forums, blogs, X, Pinterest, YouTube."},
+{q:"Selon le cours, YouTube est classé comme :", o:[
+ ["Un média social",1],
+ ["Un réseau social uniquement",0,"Dans le cours, YouTube est donné en exemple de média social (centré sur le contenu)."],
+ ["Une régie publicitaire",0,"YouTube n'est pas une régie dans ce cours."],
+ ["Un moteur de recherche payant",0,"Ce n'est pas comme ça que le cours le classe."]],
+ e:"Dans le cours, YouTube est donné en exemple de média social."},
+{q:"Selon le cours, Pinterest est donné en exemple de :", o:[
+ ["Média social",1],
+ ["Réseau social uniquement",0,"Le cours le range dans les médias sociaux (contenu)."],
+ ["Régie publicitaire",0,"Ce n'est pas une régie."],
+ ["Moteur de recherche payant",0,"Ce n'est pas comme ça que le cours le classe."]],
+ e:"Exemples de médias sociaux : wiki, forums, blogs, X, Pinterest, YouTube."},
+{q:"Un forum de discussion est :", o:[
+ ["Un média social, mais pas un réseau social",1],
+ ["Un réseau social",0,"Le forum est centré sur le contenu (les sujets), pas sur les liens d'amis."],
+ ["Une régie",0,"Un forum ne vend pas d'espace pub."],
+ ["Une association professionnelle",0,"Les associations pro sont l'ARPP et l'UDM."]],
+ e:"Le forum est cité comme média social (accent sur le contenu)."},
+{q:"« Tous les réseaux sociaux sont des médias sociaux. »", o:[
+ ["Vrai",1],
+ ["Faux : c'est l'inverse",0,"Non : le réseau social est une sous-catégorie du média social, donc tout réseau social est un média social."],
+ ["Faux : il n'y a aucun lien",0,"Il y a un lien : l'un est une sous-catégorie de l'autre."],
+ ["Vrai seulement pour Facebook",0,"C'est vrai pour tous les réseaux sociaux."]],
+ e:"Le réseau social est une sous-catégorie du média social."},
+{q:"Le réseau social met l'accent sur :", o:[
+ ["Les interactions et les liens entre les personnes",1],
+ ["Le contenu publié",0,"Le contenu, c'est ce qui caractérise le média social."],
+ ["Le prix des produits",0,"Aucun rapport avec la définition."],
+ ["L'achat d'espace",0,"L'achat d'espace concerne la pub, pas la définition du réseau social."]],
+ e:"Réseau social = lien social. Média social = contenu."},
+/* ---------- Push / pull ---------- */
+{q:"Lesquels sont des moyens d'une stratégie push ?", o:[
+ ["Les réductions de prix",1],["La distribution gratuite d'échantillons",1],["Le data mining sur des fichiers clients",1],
+ ["Des contenus utiles que le conso vient chercher lui-même",0,"Si c'est le conso qui vient chercher, c'est du pull (inbound)."]],
+ e:"Push : réductions, échantillons, segmentation, data mining."},
+{q:"La distribution gratuite d'échantillons relève d'une stratégie :", o:[
+ ["Push",1],
+ ["Pull",0,"Le pull attire le conso qui vient de lui-même ; ici on pousse le produit vers lui."],
+ ["Inbound",0,"Inbound = pull. Les échantillons, c'est pousser le produit : push / outbound."],
+ ["SEO",0,"Le SEO est du référencement naturel, rien à voir avec des échantillons."]],
+ e:"Push : on pousse le produit vers le consommateur (réductions, échantillons…)."},
+{q:"Proposer des réductions de prix pour faire acheter vite relève d'une stratégie :", o:[
+ ["Push",1],
+ ["Pull",0,"Le pull vise le long terme ; faire acheter vite avec une réduction, c'est du push."],
+ ["Inbound",0,"Inbound = pull, non intrusif, long terme."],
+ ["Cognitive",0,"Cognitif = faire connaître ; ici on veut faire acheter (conatif)."]],
+ e:"Push : réductions, échantillons, segmentation, data mining."},
+{q:"Utiliser des fichiers clients (data mining) pour cibler une offre relève d'une stratégie :", o:[
+ ["Push",1],
+ ["Pull",0,"Le cours range le data mining dans les moyens du push."],
+ ["Inbound",0,"Inbound = pull : c'est le conso qui vient."],
+ ["SEO",0,"Le SEO est du référencement, pas du ciblage par fichier."]],
+ e:"Le data mining fait partie des moyens du push cités en cours."},
+{q:"La stratégie push s'adresse surtout :", o:[
+ ["Aux entreprises avec peu de budget",1],
+ ["Aux grands groupes à forte notoriété",0,"Les grands groupes à forte notoriété, c'est le pull."],
+ ["Uniquement aux associations",0,"Le cours ne dit pas ça."],
+ ["Uniquement aux sites e-commerce",0,"Le cours ne dit pas ça."]],
+ e:"Push : petit budget. Pull : grands groupes à forte notoriété."},
+{q:"Quelles caractéristiques correspondent à la stratégie pull ?", o:[
+ ["Elle concerne surtout les grands groupes à forte notoriété",1],
+ ["Elle vise le long terme",1],
+ ["Elle vise des objectifs cognitif et affectif",1],
+ ["Elle repose sur la distribution d'échantillons",0,"Les échantillons, c'est du push : on pousse le produit vers le conso."]],
+ e:"Pull : grands groupes, long terme, faire adhérer (cognitif + affectif)."},
+{q:"L'objectif d'une stratégie pull est :", o:[
+ ["Faire adhérer à long terme (objectifs cognitif et affectif)",1],
+ ["Faire acheter tout de suite (objectif conatif court terme)",0,"Ça, c'est l'objectif du push."],
+ ["Envoyer un maximum d'échantillons",0,"Les échantillons sont un moyen du push."],
+ ["Être le plus intrusif possible",0,"Le pull est non intrusif. L'intrusif, c'est le push / outbound."]],
+ e:"Pull = adhésion à long terme, objectifs cognitif et affectif."},
+{q:"Une grande marque très connue qui veut que les consommateurs viennent d'eux-mêmes utilise plutôt :", o:[
+ ["Une stratégie pull",1],
+ ["Une stratégie push",0,"Le push pousse le produit vers le conso ; ici le conso vient de lui-même."],
+ ["Une stratégie outbound",0,"Outbound = push."],
+ ["Un objectif conatif court terme",0,"Faire venir les gens d'eux-mêmes, c'est du long terme (pull)."]],
+ e:"Pull : grands groupes à forte notoriété, long terme."},
+{q:"La stratégie push vise un résultat :", o:[
+ ["À court terme",1],
+ ["À long terme",0,"Le long terme, c'est le pull."],
+ ["Uniquement de fidélisation",0,"Le push vise l'achat immédiat, pas la fidélisation."],
+ ["Uniquement de notoriété",0,"La notoriété (cognitif), c'est plutôt le pull."]],
+ e:"Push = faire acheter, objectif conatif, court terme."},
+{q:"Un objectif conatif consiste à :", o:[
+ ["Faire agir (acheter, s'inscrire…)",1],
+ ["Faire connaître",0,"Faire connaître = cognitif."],
+ ["Faire aimer",0,"Faire aimer = affectif."],
+ ["Faire oublier un concurrent",0,"Ce n'est pas un des 3 objectifs."]],
+ e:"Cognitif = connaître, affectif = aimer, conatif = agir."},
+{q:"Un objectif cognitif consiste à :", o:[
+ ["Faire connaître",1],
+ ["Faire agir",0,"Faire agir = conatif."],
+ ["Faire aimer",0,"Faire aimer = affectif."],
+ ["Faire acheter tout de suite",0,"Faire acheter = conatif."]],
+ e:"Cognitif = connaître, affectif = aimer, conatif = agir."},
+{q:"Un objectif affectif consiste à :", o:[
+ ["Faire aimer la marque",1],
+ ["Faire connaître la marque",0,"Faire connaître = cognitif."],
+ ["Faire acheter le produit",0,"Faire acheter = conatif."],
+ ["Récupérer des données",0,"Ce n'est pas un des 3 objectifs de communication."]],
+ e:"Affectif = faire aimer (image, attachement)."},
+{q:"Quelles caractéristiques correspondent à l'outbound ?", o:[
+ ["Stratégie intrusive",1],
+ ["Va de la marque vers le consommateur",1],
+ ["Utilise tous les supports",1],
+ ["C'est le consommateur qui commence à chercher",0,"Quand c'est le conso qui cherche, c'est de l'inbound."]],
+ e:"Outbound = push : de la marque vers le conso, sur tous les supports, intrusif."},
+{q:"Le marketing outbound est :", o:[
+ ["Intrusif, il va de la marque vers le consommateur",1],
+ ["Non intrusif, c'est le consommateur qui cherche",0,"Ça, c'est l'inbound."],
+ ["Toujours gratuit",0,"Le cours ne dit pas ça ; il peut coûter cher (pub, échantillons)."],
+ ["Centré uniquement sur le SEO",0,"Le SEO est un moyen de base de l'inbound."]],
+ e:"Outbound = push : de la marque vers le conso, sur tous les supports, intrusif."},
+{q:"Dans l'inbound marketing :", o:[
+ ["C'est le consommateur qui est à l'origine : il commence à chercher",1],
+ ["La marque appelle les prospects un par un",0,"Aller chercher les gens, c'est de l'outbound."],
+ ["On achète un maximum d'espace TV",0,"L'inbound attire naturellement par des moyens digitaux."],
+ ["On distribue des échantillons dans la rue",0,"Les échantillons, c'est du push."]],
+ e:"Inbound = pull : approche centrée sur l'internaute, non intrusive, long terme."},
+{q:"Quelle stratégie est non intrusive ?", o:[
+ ["L'inbound (pull)",1],
+ ["L'outbound (push)",0,"L'outbound est intrusif : la marque va vers le conso."],
+ ["La distribution d'échantillons",0,"C'est du push, donc intrusif."],
+ ["La prospection par fichiers",0,"C'est du push (data mining), donc intrusif."]],
+ e:"Inbound : on attire de façon naturelle, l'internaute vient de lui-même."},
+/* ---------- AIDA / inbound ---------- */
+{q:"Que veut dire AIDA ?", o:[
+ ["Attention, Intérêt, Désir, Action",1],
+ ["Achat, Intérêt, Décision, Action",0,"Le premier A = Attention (l'accroche), et le D = Désir."],
+ ["Attention, Information, Désir, Achat",0,"Le I = Intérêt et le dernier A = Action."],
+ ["Acquisition, Intérêt, Désir, Adhésion",0,"Acquisition et Adhésion ne font pas partie d'AIDA."]],
+ e:"A = Attention (accroche), I = Intérêt, D = Désir, A = Action."},
+{q:"Quels mots font partie du modèle AIDA ?", o:[
+ ["Attention",1],["Désir",1],
+ ["Achat",0,"Le dernier A, c'est Action (pas Achat)."],
+ ["Information",0,"Le I, c'est Intérêt (pas Information)."]],
+ e:"AIDA = Attention, Intérêt, Désir, Action."},
+{q:"Dans AIDA, le premier « A » correspond à :", o:[
+ ["L'accroche : capter l'attention",1],
+ ["L'achat",0,"Aucun A d'AIDA ne veut dire Achat."],
+ ["L'action",0,"L'action, c'est le DERNIER A."],
+ ["L'adhésion",0,"L'adhésion ne fait pas partie d'AIDA."]],
+ e:"Le premier A, c'est l'Attention, obtenue grâce à l'accroche."},
+{q:"Dans AIDA, le Désir arrive :", o:[
+ ["Après l'Intérêt et avant l'Action",1],
+ ["Avant l'Attention",0,"L'Attention est toujours la première étape."],
+ ["En tout premier",0,"En premier, c'est l'Attention."],
+ ["Après l'Action",0,"L'Action est la dernière étape."]],
+ e:"Attention → Intérêt → Désir → Action."},
+{q:"Quel est l'ordre des 4 étapes de l'inbound ?", o:[
+ ["Attirer, Convertir, Conclure, Fidéliser",1],
+ ["Convertir, Attirer, Conclure, Fidéliser",0,"Il faut d'abord attirer du trafic avant de pouvoir le convertir."],
+ ["Attirer, Conclure, Convertir, Fidéliser",0,"On convertit (récupère les données) AVANT de conclure (vendre)."],
+ ["Fidéliser, Attirer, Convertir, Conclure",0,"On ne peut pas fidéliser quelqu'un qui n'est pas encore client : c'est la dernière étape."]],
+ e:"Attirer → Convertir → Conclure → Fidéliser (enchanter)."},
+{q:"Lesquelles sont des étapes de l'inbound marketing ?", o:[
+ ["Attirer",1],["Convertir",1],["Fidéliser",1],
+ ["Pousser",0,"Pousser le produit, c'est le push (outbound), pas l'inbound."]],
+ e:"Les 4 étapes : Attirer, Convertir, Conclure, Fidéliser."},
+{q:"L'étape « Convertir » de l'inbound consiste à :", o:[
+ ["Récupérer les données des visiteurs en échange d'un contenu à forte valeur",1],
+ ["Transformer le client en ambassadeur",0,"Ça, c'est Fidéliser / enchanter."],
+ ["Signer la vente",0,"La vente, c'est Conclure. Convertir = visiteur → prospect."],
+ ["Produire du contenu pour attirer du trafic",0,"Ça, c'est Attirer."]],
+ e:"Convertir = récupérer des données (visiteur → prospect). La vente, c'est « Conclure »."},
+{q:"Une landing page avec un formulaire sert surtout à l'étape inbound :", o:[
+ ["Convertir",1],
+ ["Attirer",0,"Attirer = faire venir du trafic avec du contenu ; le formulaire sert ensuite à récupérer des données."],
+ ["Conclure",0,"Conclure = transformer le prospect en client."],
+ ["Fidéliser",0,"Fidéliser concerne les clients déjà acquis."]],
+ e:"Convertir = récupérer les données du visiteur en échange d'un contenu."},
+{q:"Publier des articles de blog de qualité pour toucher la bonne cible correspond à l'étape :", o:[
+ ["Attirer",1],
+ ["Convertir",0,"Convertir = récupérer des données, pas produire du contenu pour faire venir."],
+ ["Conclure",0,"Conclure = faire devenir client."],
+ ["Fidéliser",0,"Fidéliser = garder des clients existants."]],
+ e:"Attirer = produire du contenu de qualité pour atteindre la cible."},
+{q:"À quelle étape de l'inbound le prospect devient-il client ?", o:[
+ ["Conclure",1],
+ ["Attirer",0,"À Attirer, l'internaute devient seulement visiteur."],
+ ["Convertir",0,"À Convertir, le visiteur devient prospect (on a ses données), pas encore client."],
+ ["Fidéliser",0,"À Fidéliser, il est déjà client."]],
+ e:"Conclure = faire aboutir la relation : le prospect devient client."},
+{q:"L'étape « Fidéliser / enchanter » de l'inbound vise à :", o:[
+ ["Transformer le client en ambassadeur",1],
+ ["Attirer de nouveaux internautes",0,"Ça, c'est Attirer."],
+ ["Récupérer des adresses e-mail",0,"Ça, c'est Convertir."],
+ ["Baisser les prix",0,"Le cours parle de contenus à forte valeur, pas de baisse de prix."]],
+ e:"On entretient la relation avec des contenus à forte valeur pour faire du client un ambassadeur."},
+/* ---------- Démarche marketing ---------- */
+{q:"Combien d'étapes compte la démarche marketing vue en cours ?", o:[
+ ["5",1],
+ ["3",0,"3, c'est le nombre de types de marketing (analytique, stratégique, opérationnel), pas d'étapes."],
+ ["4",0,"Il y en a 5 : étude de marché, objectifs, personae, content marketing, tunnel."],
+ ["7",0,"Il y en a 5."]],
+ e:"Étude de marché, objectifs, personae, content marketing, tunnel de conversion."},
+{q:"L'étude de marché relève du marketing :", o:[
+ ["Analytique",1],
+ ["Stratégique",0,"Stratégique = objectifs chiffrés et personae."],
+ ["Opérationnel",0,"Opérationnel = content marketing et tunnel."],
+ ["Relationnel",0,"Ce type n'est pas dans la démarche du cours."]],
+ e:"Étape 1 = étude de marché = marketing analytique."},
+{q:"Quelles étapes relèvent du marketing stratégique ?", o:[
+ ["Fixer des objectifs structurés et chiffrés",1],
+ ["Définir des personae",1],
+ ["Réaliser l'étude de marché",0,"L'étude de marché, c'est le marketing analytique."],
+ ["Mettre en place un tunnel de conversion",0,"Le tunnel, c'est le marketing opérationnel."]],
+ e:"Stratégique = étapes 2 et 3 : objectifs chiffrés et personae."},
+{q:"Définir des personae relève du marketing :", o:[
+ ["Stratégique",1],
+ ["Analytique",0,"Analytique = l'étude de marché seulement."],
+ ["Opérationnel",0,"Opérationnel = content marketing et tunnel."],
+ ["Direct",0,"Ce type n'est pas dans la démarche du cours."]],
+ e:"Stratégique : fixer les objectifs chiffrés et définir les personae."},
+{q:"Quelles étapes relèvent du marketing opérationnel ?", o:[
+ ["Opérationnaliser la stratégie de content marketing",1],
+ ["Mettre en place un tunnel de conversion",1],
+ ["Définir des personae",0,"Les personae, c'est le marketing stratégique."],
+ ["Réaliser l'étude de marché",0,"L'étude de marché, c'est l'analytique."]],
+ e:"Opérationnel = étapes 4 et 5."},
+{q:"Mettre en place un tunnel de conversion relève du marketing :", o:[
+ ["Opérationnel",1],
+ ["Analytique",0,"Analytique = étude de marché."],
+ ["Stratégique",0,"Stratégique = objectifs et personae."],
+ ["Cognitif",0,"Cognitif est un objectif de com, pas un type de marketing de la démarche."]],
+ e:"Opérationnel : content marketing et tunnel de conversion."},
+{q:"Opérationnaliser la stratégie de content marketing relève du marketing :", o:[
+ ["Opérationnel",1],
+ ["Analytique",0,"Analytique = étude de marché."],
+ ["Stratégique",0,"Stratégique = objectifs et personae."],
+ ["Affectif",0,"Affectif est un objectif de com, pas un type de marketing."]],
+ e:"Étapes 4 et 5 = marketing opérationnel."},
+{q:"Pourquoi fixe-t-on des objectifs structurés et chiffrés ?", o:[
+ ["Pour pouvoir calculer le ROI",1],
+ ["Pour choisir la couleur du logo",0,"Aucun rapport avec la démarche marketing."],
+ ["Pour remplacer l'étude de marché",0,"Les objectifs viennent APRÈS l'étude de marché, ils ne la remplacent pas."],
+ ["Pour éviter de définir des personae",0,"Les personae sont l'étape suivante, on les définit quand même."]],
+ e:"Des objectifs chiffrés permettent de mesurer le retour sur investissement (ROI)."},
+{q:"Que veut dire ROI ?", o:[
+ ["Retour sur investissement",1],
+ ["Rapport des objectifs internes",0,"ROI = Return On Investment."],
+ ["Réseau d'offres internet",0,"ROI = Return On Investment."],
+ ["Revenu des opérations intérieures",0,"ROI = Return On Investment."]],
+ e:"ROI = Return On Investment = retour sur investissement."},
+{q:"Dans l'étude externe, que trouve-t-on au niveau méso ?", o:[
+ ["Les concurrents",1],["Les distributeurs",1],["Les segments de produits sur le marché",1],
+ ["L'environnement général",0,"L'environnement, c'est le niveau macro."]],
+ e:"Méso = l'offre : segments de produits, concurrents, distributeurs."},
+{q:"Dans l'étude externe, l'analyse des concurrents et des distributeurs se fait au niveau :", o:[
+ ["Méso",1],
+ ["Macro",0,"Macro = l'environnement."],
+ ["Micro",0,"Micro = la demande (consommateurs)."],
+ ["Interne",0,"Les concurrents sont hors de l'entreprise : c'est externe."]],
+ e:"Méso = l'offre : segments de produits, concurrents, distributeurs."},
+{q:"Le niveau « micro » de l'étude externe porte sur :", o:[
+ ["La demande : les consommateurs et leur segmentation",1],
+ ["L'environnement général",0,"L'environnement, c'est le macro."],
+ ["Les concurrents",0,"Les concurrents, c'est le méso."],
+ ["Les forces de l'entreprise",0,"Les forces, c'est l'étude interne."]],
+ e:"Micro = la demande (consommateurs, segmentation conso)."},
+{q:"Le niveau « macro » de l'étude externe porte sur :", o:[
+ ["L'environnement",1],
+ ["La demande",0,"La demande, c'est le micro."],
+ ["L'offre",0,"L'offre, c'est le méso."],
+ ["Le prix de l'entreprise",0,"Le prix de l'entreprise, c'est l'étude interne."]],
+ e:"Macro = environnement."},
+{q:"La segmentation des consommateurs est étudiée au niveau :", o:[
+ ["Micro",1],
+ ["Macro",0,"Macro = environnement."],
+ ["Méso",0,"Méso = l'offre (produits, concurrents, distributeurs)."],
+ ["Interne",0,"Les consommateurs du marché, c'est externe."]],
+ e:"Micro = la demande et la segmentation conso."},
+{q:"Les segments de produits présents sur le marché sont étudiés au niveau :", o:[
+ ["Méso",1],
+ ["Micro",0,"Micro = la demande (consommateurs), pas les produits."],
+ ["Macro",0,"Macro = environnement."],
+ ["Interne",0,"Les produits du marché (pas seulement les nôtres), c'est externe."]],
+ e:"Méso = l'offre sur le marché (segments produits), concurrents, distributeurs."},
+{q:"La conclusion de l'étude externe donne :", o:[
+ ["Les opportunités et les menaces",1],
+ ["Les forces et les faiblesses",0,"Forces / faiblesses = conclusion de l'étude INTERNE."],
+ ["Le persona",0,"Le persona est une autre étape de la démarche."],
+ ["Le modèle AIDA",0,"AIDA est un modèle de communication, pas une conclusion d'étude."]],
+ e:"Externe → opportunités / menaces. Interne → forces / faiblesses."},
+{q:"Lesquels font partie de l'étude INTERNE ?", o:[
+ ["Le prix",1],["Le positionnement",1],["La distribution",1],
+ ["La segmentation des consommateurs du marché",0,"Ça, c'est l'étude externe, niveau micro."]],
+ e:"Interne : ciblage, positionnement, prix, produit, distribution, communication, forces / faiblesses."},
+{q:"Lequel fait partie de l'étude INTERNE ?", o:[
+ ["Le positionnement de l'entreprise",1],
+ ["L'environnement économique",0,"C'est l'étude externe, niveau macro."],
+ ["La segmentation des consommateurs du marché",0,"C'est l'étude externe, niveau micro."],
+ ["Les distributeurs du marché",0,"C'est l'étude externe, niveau méso."]],
+ e:"Interne : ciblage, positionnement, prix, produit, distribution, communication, forces / faiblesses."},
+{q:"Le prix pratiqué par l'entreprise est analysé dans :", o:[
+ ["L'étude interne",1],
+ ["L'étude externe, niveau macro",0,"Macro = environnement."],
+ ["L'étude externe, niveau méso",0,"Méso = l'offre du marché, pas le prix de notre entreprise."],
+ ["L'étude externe, niveau micro",0,"Micro = la demande."]],
+ e:"Interne : ciblage, positionnement, prix, produit, distribution, communication."},
+{q:"Les forces et les faiblesses viennent de :", o:[
+ ["L'étude interne",1],
+ ["L'étude externe, niveau macro",0,"L'externe donne opportunités / menaces."],
+ ["L'étude externe, niveau micro",0,"L'externe donne opportunités / menaces."],
+ ["Le tunnel de conversion",0,"Le tunnel n'a rien à voir avec ce diagnostic."]],
+ e:"Interne → forces / faiblesses."},
+{q:"Opportunités, menaces, forces et faiblesses réunies forment :", o:[
+ ["Un SWOT",1],
+ ["Le modèle AIDA",0,"AIDA = Attention, Intérêt, Désir, Action."],
+ ["Le tunnel de conversion",0,"Le tunnel = TOFU, MOFU, BOFU."],
+ ["Le ROI",0,"Le ROI est un retour sur investissement."]],
+ e:"Externe (opportunités / menaces) + interne (forces / faiblesses) = SWOT."},
+/* ---------- Persona ---------- */
+{q:"Un persona est :", o:[
+ ["Une représentation semi-fictive du client idéal, fondée sur des études de marché",1],
+ ["Un vrai client choisi au hasard",0,"Le persona est semi-fictif, pas une vraie personne."],
+ ["L'ensemble de la population française",0,"Il représente le cœur de cible, pas tout le monde."],
+ ["Un concurrent direct",0,"Le persona est un client type, pas un concurrent."]],
+ e:"Le persona = client type, cœur de cible, semi-fictif mais fondé sur des données réelles."},
+{q:"Le persona représente :", o:[
+ ["Le cœur de cible",1],
+ ["Tous les clients possibles",0,"Il représente le cœur de cible, le client type, pas tout le monde."],
+ ["Les clients perdus",0,"Le cours ne dit pas ça."],
+ ["Les fournisseurs",0,"Le persona est un client, pas un fournisseur."]],
+ e:"C'est le stéréotype idéal du cœur de cible."},
+{q:"« Semi-fictive » dans la définition du persona veut dire :", o:[
+ ["La personne est inventée mais fondée sur de vraies données",1],
+ ["La personne est totalement inventée, sans données",0,"Non : il est fondé sur des études de marché."],
+ ["C'est une vraie personne",0,"Non : la personne est inventée."],
+ ["C'est un groupe de clients",0,"C'est un client type, présenté comme une seule personne."]],
+ e:"Le persona est inventé (nom, portrait) mais construit à partir d'études de marché."},
+{q:"Le persona sert notamment à :", o:[
+ ["Créer des scénarios d'utilisation du produit / service",1],
+ ["Calculer le ROI",0,"Le ROI se calcule avec les objectifs chiffrés."],
+ ["Choisir une régie",0,"Aucun rapport avec le persona."],
+ ["Acheter de l'espace pub",0,"Ça, c'est le rôle de la centrale d'achat."]],
+ e:"Persona = client type, pour imaginer des scénarios d'utilisation."},
+{q:"Quelles méthodes servent à construire un persona selon le cours ?", o:[
+ ["L'étude documentaire",1],["Les entretiens individuels semi-directifs",1],["L'observation",1],
+ ["Un spot publicitaire à la télévision",0,"Un spot TV sert à communiquer, pas à collecter des infos sur la cible."]],
+ e:"Méthodes : étude documentaire, entretiens individuels semi-directifs, observation."},
+{q:"Laquelle de ces méthodes sert à construire un persona selon le cours ?", o:[
+ ["Des entretiens individuels semi-directifs",1],
+ ["Un spot TV",0,"Un spot TV diffuse un message, il ne collecte pas d'infos sur la cible."],
+ ["L'achat d'espace publicitaire",0,"Acheter de l'espace sert à diffuser une pub, pas à connaître la cible."],
+ ["Du SEA",0,"Le SEA est du référencement payant, pas une méthode d'étude."]],
+ e:"Méthodes : étude documentaire, entretiens individuels semi-directifs, observation."},
+{q:"L'étude documentaire, les entretiens semi-directifs et l'observation servent à :", o:[
+ ["Collecter des infos pour construire le persona",1],
+ ["Acheter de l'espace publicitaire",0,"Ce sont des méthodes d'étude, pas d'achat."],
+ ["Calculer la note d'un QCM",0,"Aucun rapport."],
+ ["Choisir un réseau social",0,"Ce sont des méthodes pour connaître la cible."]],
+ e:"Ce sont les 3 méthodes de collecte pour construire un persona."},
+{q:"Combien d'étapes compte la création d'un persona dans le cours ?", o:[
+ ["5",1],
+ ["3",0,"Il y en a 5 : profil, problème, attitude, habitudes d'achat, présentation de l'offre."],
+ ["4",0,"Il y en a 5 : la 5e est présenter l'offre au persona."],
+ ["6",0,"Il y en a 5."]],
+ e:"Profil, problème, attitude, habitudes d'achat, présentation de l'offre."},
+{q:"Quelles infos font partie du « profil général » du persona (étape 1) ?", o:[
+ ["Les infos signalétiques (âge, lieu…)",1],
+ ["Le contexte d'activité / professionnel",1],
+ ["Les traits de caractère et centres d'intérêt",1],
+ ["Ses objections envers notre marque",0,"Les objections, c'est l'étape 3 (attitude de la cible à notre égard)."]],
+ e:"Étape 1 : infos signalétiques, contexte d'activité, portrait (caractère, centres d'intérêt)."},
+{q:"Les infos signalétiques et les centres d'intérêt de la cible font partie de l'étape :", o:[
+ ["Établir le profil général de la cible",1],
+ ["Cerner le problème de la cible",0,"L'étape 2 porte sur ses préoccupations, ses freins et notre valeur ajoutée."],
+ ["Identifier ses objections",0,"L'étape 3 porte sur pourquoi elle n'achète pas chez nous."],
+ ["Présenter l'offre",0,"L'étape 5 porte sur notre discours."]],
+ e:"Étape 1 : infos signalétiques, contexte d'activité, portrait (caractère, centres d'intérêt)."},
+{q:"La valeur ajoutée de l'offre par rapport aux concurrents est analysée à l'étape :", o:[
+ ["Cerner le problème de la cible par rapport à l'offre",1],
+ ["Établir le profil général",0,"Le profil décrit la personne, pas notre offre."],
+ ["Préciser les habitudes d'achat",0,"Les habitudes portent sur son comportement d'achat."],
+ ["Identifier l'attitude de la cible",0,"L'attitude porte sur ses objections envers nous."]],
+ e:"Étape 2 : en quoi l'offre aide la cible, quelle valeur ajoutée face aux concurrents."},
+{q:"« Pourquoi ma cible n'achète pas chez moi ? » correspond à l'étape :", o:[
+ ["Identifier l'attitude de la cible à notre égard (ses objections)",1],
+ ["Établir le profil général",0,"Le profil = qui est la personne."],
+ ["Préciser les habitudes d'achat",0,"Les habitudes = comment elle achète en général."],
+ ["Présenter l'offre au persona",0,"Présenter l'offre = notre discours, étape 5."]],
+ e:"Étape 3 : identifier l'attitude de la cible, citer ses objections."},
+{q:"Que cherche-t-on à l'étape « préciser les habitudes d'achat » ?", o:[
+ ["Savoir s'il est impulsif, réfléchi ou raisonnable",1],
+ ["Ses expressions favorites et le ton qu'il emploie",1],
+ ["Des verbatims (ses phrases exactes)",1],
+ ["La valeur ajoutée de notre offre face aux concurrents",0,"La valeur ajoutée, c'est l'étape 2 (cerner le problème par rapport à l'offre)."]],
+ e:"Étape 4 : comportement en situation d'achat, façon de parler, verbatims."},
+{q:"Chercher des verbatims (phrases exactes de la cible) sert surtout à :", o:[
+ ["Connaître sa façon de parler et son comportement d'achat",1],
+ ["Calculer le ROI",0,"Le ROI se calcule avec les objectifs chiffrés."],
+ ["Fixer le prix",0,"Le prix est un élément de l'étude interne."],
+ ["Choisir une régie",0,"Aucun rapport."]],
+ e:"Étape 4 (habitudes d'achat) : expressions favorites, façon de parler, ton, verbatims."},
+{q:"Savoir si la cible est impulsive, réfléchie ou raisonnable relève de l'étape :", o:[
+ ["Préciser les habitudes d'achat",1],
+ ["Établir le profil général",0,"Le profil porte sur qui elle est, pas sur comment elle achète."],
+ ["Identifier ses objections",0,"Les objections = pourquoi elle n'achète pas chez nous."],
+ ["Présenter l'offre",0,"Présenter l'offre = notre discours."]],
+ e:"Étape 4 : comportement en situation d'achat."},
+{q:"Rédiger un argumentaire de vente de quelques minutes relève de l'étape :", o:[
+ ["Présenter l'offre au persona",1],
+ ["Établir le profil général",0,"Le profil décrit la personne."],
+ ["Identifier les objections",0,"Les objections, on les identifie ; l'argumentaire vient à l'étape 5."],
+ ["Préciser les habitudes d'achat",0,"Les habitudes décrivent son comportement d'achat."]],
+ e:"Étape 5 : discours adapté, avantages, pitch, argumentaire."},
+/* ---------- Tunnel ---------- */
+{q:"Le tunnel de conversion, c'est :", o:[
+ ["La modélisation des étapes par lesquelles un visiteur devient client",1],
+ ["La liste de tous les clients",0,"Ce n'est pas une liste, c'est un parcours en étapes."],
+ ["Un outil de paiement en ligne",0,"Ce n'est pas un outil technique."],
+ ["Un type de bannière",0,"Les bannières, c'est le Display."]],
+ e:"Tunnel de conversion = entonnoir de conversion = tunnel marketing."},
+{q:"Quels sont les autres noms du tunnel de conversion ?", o:[
+ ["L'entonnoir de conversion",1],["Le tunnel marketing",1],
+ ["Le modèle AIDA",0,"AIDA est un modèle de communication (Attention, Intérêt, Désir, Action), pas le tunnel."],
+ ["Le mix marketing",0,"Le mix marketing est une autre notion (produit, prix, distribution, communication)."]],
+ e:"Tunnel de conversion = entonnoir de conversion = tunnel marketing."},
+{q:"Que signifie TOFU ?", o:[
+ ["Top of funnel",1],
+ ["Total of funnel",0,"T = Top (le haut de l'entonnoir)."],
+ ["Top of fund",0,"Funnel = entonnoir, pas fund."],
+ ["Tunnel of funnel",0,"T = Top."]],
+ e:"Top / Middle / Bottom of funnel."},
+{q:"Que signifie MOFU ?", o:[
+ ["Middle of funnel",1],
+ ["Most of funnel",0,"M = Middle (le milieu)."],
+ ["Marketing of funnel",0,"M = Middle (le milieu)."],
+ ["Move of funnel",0,"M = Middle (le milieu)."]],
+ e:"TOFU = Top, MOFU = Middle, BOFU = Bottom of funnel."},
+{q:"L'objectif du TOFU est :", o:[
+ ["L'acquisition : que les internautes deviennent des visiteurs",1],
+ ["Transformer les visiteurs en prospects qualifiés",0,"Ça, c'est le MOFU."],
+ ["Transformer les prospects en clients",0,"Ça, c'est le BOFU."],
+ ["Faire des clients des ambassadeurs",0,"Ça, c'est la fidélisation (inbound)."]],
+ e:"TOFU = acquisition (internaute → visiteur)."},
+{q:"Quels moyens sont utilisés au TOFU ?", o:[
+ ["Le SEO",1],["Les réseaux sociaux",1],["La création de contenu informatif",1],
+ ["Un formulaire à remplir contre un livre blanc",0,"Le formulaire + livre blanc sert à qualifier le prospect : c'est le MOFU."]],
+ e:"TOFU : SEO, réseaux sociaux, SEA, contenu, pub, multiplier les supports."},
+{q:"Le SEO, les réseaux sociaux et la création de contenu informatif sont surtout utilisés au :", o:[
+ ["TOFU",1],
+ ["MOFU",0,"Le MOFU utilise plutôt formulaires, livres blancs, ebooks, webinaires."],
+ ["BOFU",0,"Le BOFU transforme les prospects en clients."],
+ ["Moment de la fidélisation uniquement",0,"Ces moyens servent d'abord à attirer (TOFU)."]],
+ e:"TOFU : SEO, réseaux sociaux, SEA, contenu, pub, multiplier les supports."},
+{q:"Faire de la pub et multiplier les supports sert surtout au :", o:[
+ ["TOFU",1],
+ ["MOFU",0,"Le MOFU sert à qualifier des visiteurs déjà présents."],
+ ["BOFU",0,"Le BOFU sert à faire acheter des prospects."],
+ ["Marketing analytique",0,"Analytique = étude de marché."]],
+ e:"TOFU : SEO, réseaux sociaux, SEA, contenu, pub, multiplier les supports."},
+{q:"Au TOFU, il faut attirer :", o:[
+ ["Les internautes qui vous cherchent et ceux qui ne vous cherchent pas",1],
+ ["Seulement les clients déjà fidèles",0,"Les clients fidèles sont tout en bas du parcours."],
+ ["Seulement les internautes qui vous cherchent",0,"Le cours insiste : AUSSI ceux qui ne vous cherchent pas."],
+ ["Seulement les prospects qualifiés",0,"Les prospects qualifiés, c'est le MOFU."]],
+ e:"Le cours insiste : attirer ceux qui vous cherchent ET ceux qui ne vous cherchent pas."},
+{q:"Les visiteurs « non qualifiés » se trouvent surtout :", o:[
+ ["En haut du tunnel (TOFU)",1],
+ ["Au milieu du tunnel (MOFU)",0,"Au MOFU, on qualifie justement les visiteurs."],
+ ["En bas du tunnel (BOFU)",0,"Au BOFU, ce sont des prospects déjà qualifiés."],
+ ["Après l'achat",0,"Après l'achat, ce sont des clients."]],
+ e:"TOFU : faire prendre conscience du problème aux visiteurs non qualifiés."},
+{q:"L'objectif du MOFU est :", o:[
+ ["Transformer les visiteurs en prospects qualifiés",1],
+ ["L'acquisition de trafic",0,"L'acquisition, c'est le TOFU."],
+ ["Faire des clients des ambassadeurs",0,"C'est la fidélisation."],
+ ["Choisir une régie",0,"Aucun rapport."]],
+ e:"MOFU = visiteurs → prospects qualifiés."},
+{q:"Au BOFU :", o:[
+ ["Les prospects deviennent des clients",1],
+ ["Les internautes découvrent la marque",0,"Découvrir la marque, c'est le TOFU."],
+ ["On fait l'étude de marché",0,"L'étude de marché est l'étape 1 de la démarche, pas du tunnel."],
+ ["On définit le persona",0,"Le persona est une étape de la démarche marketing."]],
+ e:"BOFU = Bottom of funnel : prospect → client."},
+{q:"Qu'est-ce qui définit un prospect qualifié ?", o:[
+ ["On a des données qui confirment qu'il appartient à notre cible",1],
+ ["On a des données pour estimer son potentiel de conversion",1],
+ ["Il a déjà acheté chez nous",0,"S'il a déjà acheté, c'est un client, pas un prospect."],
+ ["C'est n'importe quel visiteur du site",0,"Un visiteur sans données n'est pas qualifié."]],
+ e:"Prospect qualifié : on a assez de données pour confirmer qu'il est dans la cible ET estimer son potentiel de conversion."},
+{q:"Un prospect qualifié est :", o:[
+ ["Un prospect dont on a assez de données pour confirmer qu'il est dans la cible et estimer son potentiel de conversion",1],
+ ["N'importe quel visiteur du site",0,"Un simple visiteur, on n'a pas encore ses données."],
+ ["Un client fidèle",0,"Un client a déjà acheté : ce n'est plus un prospect."],
+ ["Un prospect qui a déjà acheté deux fois",0,"S'il a acheté, c'est un client."]],
+ e:"Définition du cours, à connaître par cœur."},
+{q:"Quels moyens sont utilisés au MOFU pour qualifier les visiteurs ?", o:[
+ ["Un formulaire",1],["Un livre blanc ou un ebook à télécharger",1],["Un webinaire",1],
+ ["Une bannière Display pour se faire connaître",0,"Se faire connaître, c'est attirer : TOFU."]],
+ e:"MOFU : demander des infos via formulaire, livre blanc, ebook, webinaire."},
+{q:"Proposer un livre blanc en échange d'un formulaire rempli, c'est une action du :", o:[
+ ["MOFU",1],
+ ["TOFU",0,"Le TOFU attire ; ici on récupère des données pour qualifier : MOFU."],
+ ["BOFU",0,"Le BOFU transforme en client ; ici on qualifie seulement."],
+ ["Marketing analytique",0,"Analytique = étude de marché."]],
+ e:"MOFU : demander des infos via formulaire, livre blanc, ebook, webinaire."},
+{q:"Un ebook à télécharger en échange de son adresse e-mail est une action du :", o:[
+ ["MOFU",1],
+ ["TOFU",0,"Récupérer des données pour qualifier, c'est le MOFU."],
+ ["BOFU",0,"Le BOFU, c'est faire acheter."],
+ ["Marketing push",0,"Ce n'est pas intrusif : c'est un échange de contenu (inbound)."]],
+ e:"MOFU : formulaire, livre blanc, ebook, webinaire."},
+{q:"S'inscrire à un webinaire en laissant ses coordonnées correspond au :", o:[
+ ["MOFU",1],
+ ["TOFU",0,"On récupère des coordonnées pour qualifier : MOFU."],
+ ["BOFU",0,"Personne n'achète ici."],
+ ["Marketing analytique",0,"Analytique = étude de marché."]],
+ e:"Le webinaire contre des infos sert à qualifier le prospect : MOFU."},
+{q:"Quelles sont des étapes d'achat du client vues avec le tunnel ?", o:[
+ ["Prise de conscience du besoin",1],["Recherche d'informations",1],["Évaluation des possibilités (examen)",1],
+ ["Fidélisation",0,"Les 4 étapes d'achat sont : prise de conscience, recherche d'info, examen, décision. La fidélisation n'en fait pas partie."]],
+ e:"Étapes d'achat : prise de conscience → recherche d'info → examen → décision (achat et usage)."},
+{q:"Quel est le bon ordre des étapes d'achat ?", o:[
+ ["Prise de conscience, recherche d'info, examen, décision",1],
+ ["Recherche d'info, prise de conscience, décision, examen",0,"On prend d'abord conscience du besoin, et on examine avant de décider."],
+ ["Examen, prise de conscience, recherche d'info, décision",0,"On ne peut pas examiner avant d'avoir un besoin et des infos."],
+ ["Décision, examen, recherche d'info, prise de conscience",0,"C'est à l'envers : la décision est la dernière étape."]],
+ e:"1 besoin (prise de conscience), 2 recherche d'info, 3 évaluation (examen), 4 achat (décision)."},
+{q:"La première étape d'achat (éveil, reconnaissance du besoin) correspond à :", o:[
+ ["La prise de conscience",1],
+ ["La décision",0,"La décision est la 4e étape (achat et usage)."],
+ ["L'examen",0,"L'examen est la 3e étape (évaluation des possibilités)."],
+ ["La fidélisation",0,"Ce n'est pas une des étapes d'achat."]],
+ e:"Étapes d'achat : prise de conscience → recherche d'info → examen → décision."},
+{q:"« L'évaluation des possibilités » correspond à :", o:[
+ ["L'examen",1],
+ ["La décision",0,"La décision = achat et usage (étape 4)."],
+ ["La prise de conscience",0,"La prise de conscience = éveil du besoin (étape 1)."],
+ ["La fidélisation",0,"Ce n'est pas une étape d'achat."]],
+ e:"Étape 3 d'achat : évaluation des possibilités = examen."},
+{q:"Dans l'exemple du cours, quelle étape vient juste avant l'achat ?", o:[
+ ["La mise du produit dans le panier",1],
+ ["La lecture d'un article de blog",0,"Le blog est la première étape (haut du tunnel)."],
+ ["La visite de la page produit",0,"La page produit vient avant le panier."],
+ ["La découverte de la marque",0,"C'est le tout début du parcours."]],
+ e:"Article de blog → page produit → panier → achat."}
 ];
 
 const $ = id => document.getElementById(id);
-const KEY = 'qcm-com-digitale-vues';
+const KEY = 'qcm-com-digitale-v2';
 function load(){ try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch(e){ return []; } }
 function save(v){ try { localStorage.setItem(KEY, JSON.stringify(v)); } catch(e){} }
 let seenList = load();
@@ -590,8 +1215,7 @@ showSeen();
 
 function pick(n){
   const seen = new Set(seenList);
-  let unseen = shuffle(BANK.map((_, i) => i).filter(i => !seen.has(i)));
-  let chosen = unseen.slice(0, n);
+  let chosen = shuffle(BANK.map((_, i) => i).filter(i => !seen.has(i))).slice(0, n);
   if(chosen.length < n){
     seenList = [];
     const rest = shuffle(BANK.map((_, i) => i).filter(i => !chosen.includes(i)));
@@ -610,48 +1234,63 @@ $('launch').addEventListener('click', () => {
 
 function showQ(){
   const item = BANK[run.ids[run.i]];
-  run.opts = shuffle(item.a.map((t, k) => ({t, ok: k === 0})));
+  run.opts = shuffle(item.o.map(([t, ok, why]) => ({t, ok: !!ok, why: why || ''})));
   run.answered = false;
   const n = run.ids.length;
   $('counter').textContent = `Question ${run.i + 1} / ${n}`;
   $('live').textContent = `Points : ${fmt(run.good - run.bad * run.pen)}`;
   $('barfill').style.width = (run.i / n * 100) + '%';
-  $('qbox').innerHTML = `<legend><span>${esc(item.q)}</span></legend>` + run.opts.map((o, k) => `
-    <label class="opt" for="o${k}"><input type="radio" name="cur" id="o${k}" value="${k}"><span>${esc(o.t)}</span></label>`).join('');
+  $('qbox').innerHTML = `<legend><span>${esc(item.q)}</span></legend><p class="hint">Coche la ou les bonnes réponses.</p>` + run.opts.map((o, k) => `
+    <label class="opt" for="o${k}"><input type="checkbox" name="cur" id="o${k}" value="${k}"><span>${esc(o.t)}</span><span class="mark" id="m${k}"></span></label>`).join('');
   $('explain').hidden = true; $('validate').disabled = true; $('validate').hidden = false; $('skip').hidden = false; $('next').hidden = true;
 }
 
-$('qbox').addEventListener('change', () => { if(!run.answered) $('validate').disabled = false; });
+$('qbox').addEventListener('change', () => { if(!run.answered) $('validate').disabled = !document.querySelector('#qbox input:checked'); });
 
-function answer(k){
+function answer(checked){
   if(run.answered) return; run.answered = true;
   const item = BANK[run.ids[run.i]];
   document.querySelectorAll('#qbox input').forEach(i => i.disabled = true);
-  run.opts.forEach((o, j) => { if(o.ok) document.querySelector(`label[for="o${j}"]`).classList.add('good'); });
+  const sel = new Set(checked);
+  const wrongPicked = [], missed = [];
+  run.opts.forEach((o, k) => {
+    const lab = document.querySelector(`label[for="o${k}"]`), m = $('m'+k);
+    if(o.ok && sel.has(k)){ lab.classList.add('good'); m.textContent = 'Bonne réponse'; }
+    else if(o.ok){ lab.classList.add('missed'); m.textContent = 'Bonne réponse oubliée'; missed.push(o); }
+    else if(sel.has(k)){ lab.classList.add('bad'); m.textContent = 'Fausse'; wrongPicked.push(o); }
+  });
   let verdict, cls;
-  if(k === null){ run.empty++; verdict = 'Pas répondu : 0 point.'; cls = 'nr'; }
-  else if(run.opts[k].ok){ run.good++; verdict = 'Juste : +1.'; cls = 'ok'; }
-  else { run.bad++; document.querySelector(`label[for="o${k}"]`).classList.add('bad'); verdict = `Faux : −${fmt(run.pen)}.`; cls = 'ko'; }
-  if(cls !== 'ok') run.log.push({q: item.q, r: item.a[0], e: item.e, cls});
-  $('explain').innerHTML = `<span class="verdict ${cls}">${verdict}</span> ${esc(item.e)}`;
+  if(!checked.length){ run.empty++; verdict = 'Pas répondu : 0 point.'; cls = 'nr'; }
+  else if(!wrongPicked.length && !missed.length){ run.good++; verdict = 'Juste : +1.'; cls = 'ok'; }
+  else { run.bad++; verdict = `Faux : −${fmt(run.pen)}.`; cls = 'ko'; }
+  let why = '';
+  if(wrongPicked.length) why += `<p class="whyt">Pourquoi c'est faux :</p><ul class="why">${wrongPicked.map(o => `<li><b>« ${esc(o.t)} »</b> : ${esc(o.why)}</li>`).join('')}</ul>`;
+  if(missed.length && checked.length) why += `<p class="whyt">Tu as oublié de cocher :</p><ul class="why">${missed.map(o => `<li><b>« ${esc(o.t)} »</b></li>`).join('')}</ul>`;
+  const goodTxt = run.opts.filter(o => o.ok).map(o => '« ' + o.t + ' »').join(' + ');
+  if(cls !== 'ok') run.log.push({q: item.q, r: goodTxt, e: item.e, wrong: wrongPicked.map(o => ({t:o.t, why:o.why})), missed: checked.length ? missed.map(o => o.t) : [], cls});
+  $('explain').innerHTML = `<p><span class="verdict ${cls}">${verdict}</span></p>${why}<p class="rule"><b>À retenir :</b> ${esc(item.e)}</p>`;
   $('explain').hidden = false;
   $('live').textContent = `Points : ${fmt(run.good - run.bad * run.pen)}`;
   $('validate').hidden = true; $('skip').hidden = true;
   $('next').textContent = run.i + 1 < run.ids.length ? 'Question suivante' : 'Voir ma note';
   $('next').hidden = false; $('next').focus();
 }
-$('validate').addEventListener('click', () => { const c = document.querySelector('#qbox input:checked'); if(c) answer(Number(c.value)); });
-$('skip').addEventListener('click', () => answer(null));
+$('validate').addEventListener('click', () => { const c = [...document.querySelectorAll('#qbox input:checked')].map(i => Number(i.value)); if(c.length) answer(c); });
+$('skip').addEventListener('click', () => answer([]));
 $('next').addEventListener('click', () => { run.i++; if(run.i < run.ids.length) showQ(); else finish(); });
-$('quit').addEventListener('click', () => { if(run && run.i > 0 || (run && run.answered)) { if(!run.answered) run.ids = run.ids.slice(0, run.i); else run.ids = run.ids.slice(0, run.i + 1); finish(); } else { $('play').hidden = true; $('start').hidden = false; showSeen(); } });
+$('quit').addEventListener('click', () => {
+  const done = run.i + (run.answered ? 1 : 0);
+  if(done > 0){ run.ids = run.ids.slice(0, done); finish(); }
+  else { $('play').hidden = true; $('start').hidden = false; showSeen(); }
+});
 
 function finish(){
   $('play').hidden = true;
   const n = run.good + run.bad + run.empty, raw = run.good - run.bad * run.pen, sur20 = n ? raw / n * 20 : 0;
-  const tip = run.bad * run.pen > 2 ? "Tu perds beaucoup de points sur les réponses fausses. Si tu hésites entre plus de deux réponses, mieux vaut cliquer « Je ne sais pas »." :
-              run.empty > n * 0.3 ? "Tu laisses beaucoup de questions sans réponse. Si tu arrives à éliminer deux réponses sur quatre, ça vaut souvent le coup de répondre." :
+  const tip = run.bad * run.pen > 2 ? "Tu perds beaucoup de points sur les réponses fausses. Si tu hésites, mieux vaut cliquer « Je ne sais pas »." :
+              run.empty > n * 0.3 ? "Tu laisses beaucoup de questions sans réponse. Si tu es presque sûr, ça vaut souvent le coup de répondre." :
               "Bon équilibre entre réponses et abstentions.";
-  const errs = run.log.length ? `<h3>À revoir</h3><ul class="review">${run.log.map(l => `<li class="${l.cls}"><b>${esc(l.q)}</b><br>Bonne réponse : ${esc(l.r)}<br><span class="compl">${esc(l.e)}</span></li>`).join('')}</ul>` : '<p>Aucune erreur, parfait !</p>';
+  const errs = run.log.length ? `<h3>À revoir</h3><ul class="review">${run.log.map(l => `<li class="${l.cls}"><b>${esc(l.q)}</b><br>Bonne réponse : ${esc(l.r)}${l.wrong.map(w => `<br><span class="badtxt">Tu as coché « ${esc(w.t)} » : ${esc(w.why)}</span>`).join('')}${l.missed.length ? `<br><span class="badtxt">Tu as oublié : ${l.missed.map(t => '« ' + esc(t) + ' »').join(', ')}</span>` : ''}<br><span class="compl">${esc(l.e)}</span></li>`).join('')}</ul>` : '<p>Aucune erreur, parfait !</p>';
   $('result').innerHTML = `
     <h3>Ta note</h3>
     <div class="score">${fmt(sur20)} / 20</div>
