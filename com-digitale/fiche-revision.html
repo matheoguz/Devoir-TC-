@@ -3,152 +3,195 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Caveat:wght@600&display=swap">
 <style>
-/* Mise en page : une feuille Seyès (grands carreaux), marge rouge à gauche, une colonne de lecture + sommaire collant sur grand écran */
+/* Mise en page : feuille Seyès, marge rouge à gauche ; sommaire collant + leçon, puis le QCM noté en points négatifs */
 :root{
   --paper:#f7f9fc; --grid:#dde5f2; --margin:#e7a3a8;
   --ink:#1d2433; --soft:#556079; --blue:#2348a8; --red:#b8323f; --hl:#d8f0b8; --card:#ffffff; --line:#cdd6e6;
+  --ok:#1f7a3d; --okbg:#e3f5e8; --ko:#b3261e; --kobg:#fbe6e4; --neutral:#eef2f8;
   --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
   --body:"Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
   --hand:"Caveat", "Comic Sans MS", cursive;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --paper:#141925; --grid:#1e2638; --margin:#6b2f37;
-  --ink:#e6eaf3; --soft:#9aa5bd; --blue:#8fb0ff; --red:#ff8a95; --hl:#2f4a22; --card:#1b2232; --line:#2c3650; color-scheme:dark}}
+  --ink:#e6eaf3; --soft:#9aa5bd; --blue:#8fb0ff; --red:#ff8a95; --hl:#2f4a22; --card:#1b2232; --line:#2c3650;
+  --ok:#7ddc96; --okbg:#173322; --ko:#ff9a8f; --kobg:#3a1d1b; --neutral:#202a3d; color-scheme:dark}}
 :root[data-theme="dark"]{
   --paper:#141925; --grid:#1e2638; --margin:#6b2f37;
-  --ink:#e6eaf3; --soft:#9aa5bd; --blue:#8fb0ff; --red:#ff8a95; --hl:#2f4a22; --card:#1b2232; --line:#2c3650; color-scheme:dark}
+  --ink:#e6eaf3; --soft:#9aa5bd; --blue:#8fb0ff; --red:#ff8a95; --hl:#2f4a22; --card:#1b2232; --line:#2c3650;
+  --ok:#7ddc96; --okbg:#173322; --ko:#ff9a8f; --kobg:#3a1d1b; --neutral:#202a3d; color-scheme:dark}
 
 body{
   background-color:var(--paper);
-  background-image:
-    linear-gradient(90deg, transparent 0 calc(max(16px, env(safe-area-inset-left,0px)) - 6px), var(--margin) calc(max(16px, env(safe-area-inset-left,0px)) - 6px) calc(max(16px, env(safe-area-inset-left,0px)) - 4px), transparent 0),
-    linear-gradient(var(--grid) 1px, transparent 1px);
-  background-size:100% 100%, 100% 32px;
+  background-image:linear-gradient(var(--grid) 1px, transparent 1px);
+  background-size:100% 32px;
   color:var(--ink); font-family:var(--body); font-size:16.5px; line-height:1.6;
   padding-left:max(16px, env(safe-area-inset-left,0px)); padding-right:max(16px, env(safe-area-inset-right,0px));
   padding-block:24px 64px;
 }
-.wrap{max-width:1080px; margin:0 auto; display:grid; grid-template-columns:220px minmax(0,1fr); gap:40px}
+.wrap{max-width:1100px; margin:0 auto; display:grid; grid-template-columns:230px minmax(0,1fr); gap:40px}
 @media (max-width:860px){.wrap{grid-template-columns:minmax(0,1fr)} nav.toc{position:static !important}}
 
-header.top{grid-column:1/-1; display:flex; flex-direction:column; gap:6px; padding-left:8px}
+header.top{grid-column:1/-1; display:flex; flex-direction:column; gap:8px; border-left:3px solid var(--margin); padding-left:16px}
 .eyebrow{font-family:var(--hand); color:var(--red); font-size:1.5rem; line-height:1}
 h1{font-family:var(--display); font-weight:800; font-size:clamp(2rem,5vw,3.1rem); line-height:1.05; margin:0; text-wrap:balance; color:var(--blue)}
-.sub{color:var(--soft); max-width:62ch; margin:0}
+.sub{color:var(--soft); max-width:64ch; margin:0}
+.cta{display:inline-flex; align-self:flex-start; gap:8px; align-items:center; background:var(--red); color:#fff; font-family:var(--display); font-weight:700; padding:8px 16px; border-radius:8px; text-decoration:none}
+.cta:focus-visible{outline:3px solid var(--blue); outline-offset:2px}
 
 nav.toc{position:sticky; top:calc(env(safe-area-inset-top,0px) + 16px); align-self:start; font-size:.95rem}
-nav.toc ol{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:4px; counter-reset:t}
+nav.toc ol{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:2px}
 nav.toc a{display:flex; gap:10px; color:var(--ink); text-decoration:none; padding:6px 10px; border-radius:6px}
 nav.toc a:hover, nav.toc a:focus-visible{background:var(--card); outline:2px solid var(--blue); outline-offset:-2px}
-nav.toc .n{font-family:var(--display); font-weight:700; color:var(--red); min-width:1.6em}
+nav.toc .n{font-family:var(--display); font-weight:700; color:var(--red); min-width:1.8em}
+nav.toc .qcm-link{margin-top:8px; background:var(--card); border:2px solid var(--red); font-weight:700}
 
-main{display:flex; flex-direction:column; gap:48px; min-width:0}
+main{display:flex; flex-direction:column; gap:56px; min-width:0}
 section{display:flex; flex-direction:column; gap:16px; scroll-margin-top:16px}
-h2{font-family:var(--display); font-weight:700; font-size:1.65rem; margin:0; color:var(--red); display:flex; gap:12px; align-items:baseline; text-wrap:balance}
+h2{font-family:var(--display); font-weight:700; font-size:1.7rem; line-height:1.2; margin:0; color:var(--red); display:flex; gap:12px; align-items:baseline; text-wrap:balance; border-bottom:2px solid var(--margin); padding-bottom:6px}
 h2 .n{font-size:1rem; color:var(--soft); font-weight:500}
 h3{font-family:var(--display); font-weight:700; font-size:1.15rem; margin:0; color:var(--blue)}
-p{margin:0; max-width:68ch}
-ul,ol{margin:0; padding-left:1.25em; display:flex; flex-direction:column; gap:4px; max-width:68ch}
+p{margin:0; max-width:70ch}
+ul,ol{margin:0; padding-left:1.25em; display:flex; flex-direction:column; gap:4px; max-width:70ch}
 mark{background:var(--hl); color:inherit; padding:0 3px; border-radius:2px}
 .def{font-weight:700; color:var(--red)}
+.intro{font-size:1.05rem}
 
 .box{background:var(--card); border:1px solid var(--line); border-radius:10px; padding:16px 18px; display:flex; flex-direction:column; gap:10px; min-width:0}
 .tag{display:inline-block; font-family:var(--display); font-weight:700; font-size:.85rem; letter-spacing:.06em; padding:2px 10px; border:2px solid var(--red); border-radius:4px; background:var(--hl); color:var(--ink); align-self:flex-start}
 .grid2{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px}
-.grid3{display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px}
-@media (max-width:640px){.grid2,.grid3{grid-template-columns:minmax(0,1fr)}}
-.retiens{border-left:4px solid var(--red); padding:8px 14px; background:var(--card); border-radius:0 8px 8px 0; font-weight:700}
+@media (max-width:640px){.grid2{grid-template-columns:minmax(0,1fr)}}
+.retiens{border-left:4px solid var(--red); padding:10px 14px; background:var(--card); border-radius:0 8px 8px 0; display:flex; flex-direction:column; gap:4px}
+.retiens b.t{font-family:var(--display); color:var(--red); letter-spacing:.04em; font-size:.85rem; text-transform:uppercase}
+.piege{border:2px dashed var(--ko); background:var(--kobg); border-radius:8px; padding:10px 14px; display:flex; flex-direction:column; gap:4px}
+.piege b.t{font-family:var(--display); color:var(--ko); letter-spacing:.04em; font-size:.85rem; text-transform:uppercase}
+.compl{font-size:.9rem; color:var(--soft); font-style:italic}
 .chips{display:flex; flex-wrap:wrap; gap:8px; list-style:none; padding:0}
 .chips li{border:1px solid var(--line); background:var(--card); border-radius:999px; padding:2px 12px; font-size:.93rem}
 .scroll{overflow-x:auto}
-table{border-collapse:collapse; width:100%; min-width:520px; background:var(--card); font-size:.95rem}
+table{border-collapse:collapse; width:100%; min-width:540px; background:var(--card); font-size:.95rem}
 th,td{border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top}
 th{font-family:var(--display); color:var(--blue); background:var(--paper)}
-.margin-note{font-family:var(--hand); color:var(--red); font-size:1.25rem; line-height:1.2}
+.margin-note{font-family:var(--hand); color:var(--red); font-size:1.3rem; line-height:1.2}
 
-/* Entonnoir */
 .funnel{display:flex; flex-direction:column; align-items:center; gap:6px; width:100%}
 .funnel div{color:#fff; text-align:center; padding:10px 12px; border-radius:6px; font-weight:700; max-width:100%}
-.funnel small{display:block; font-weight:400; opacity:.92}
-.f1{width:100%; background:#2348a8}.f2{width:78%; background:#5a4fb0}.f3{width:56%; background:#b8323f}
-.steps{counter-reset:s; list-style:none; padding:0}
+.funnel small{display:block; font-weight:400; opacity:.95}
+.f1{width:100%; background:#2348a8}.f2{width:80%; background:#5a4fb0}.f3{width:60%; background:#b8323f}
+.steps{counter-reset:s; list-style:none; padding:0; gap:8px}
 .steps li{counter-increment:s; display:flex; gap:10px}
 .steps li::before{content:counter(s); font-family:var(--display); font-weight:800; color:var(--red); min-width:1.2em}
 
-/* Quiz */
-details{background:var(--card); border:1px solid var(--line); border-radius:8px; padding:10px 14px}
-summary{cursor:pointer; font-weight:700}
-summary:focus-visible{outline:2px solid var(--blue); outline-offset:3px}
-details[open] summary{color:var(--blue); margin-bottom:6px}
-.quiz{display:flex; flex-direction:column; gap:8px}
-footer{grid-column:1/-1; color:var(--soft); font-size:.88rem; padding-left:8px}
+/* QCM */
+.qcm-head{background:var(--card); border:2px solid var(--red); border-radius:12px; padding:16px 18px; display:flex; flex-direction:column; gap:12px}
+.settings{display:flex; flex-wrap:wrap; gap:12px 20px; align-items:center}
+.settings label{display:flex; gap:8px; align-items:center; font-weight:700}
+select, button{font:inherit}
+select{padding:4px 8px; border-radius:6px; border:1px solid var(--line); background:var(--paper); color:var(--ink)}
+.btn{background:var(--blue); color:#fff; border:0; border-radius:8px; padding:8px 16px; font-family:var(--display); font-weight:700; cursor:pointer}
+.btn.alt{background:transparent; color:var(--blue); border:2px solid var(--blue)}
+.btn.red{background:var(--red)}
+.btn:focus-visible{outline:3px solid var(--ink); outline-offset:2px}
+.btn:disabled{opacity:.5; cursor:not-allowed}
+.progress{font-variant-numeric:tabular-nums; color:var(--soft)}
+.q{background:var(--card); border:1px solid var(--line); border-radius:10px; padding:14px 16px; display:flex; flex-direction:column; gap:10px}
+.q legend{font-weight:700; padding:0; display:flex; gap:8px}
+.q legend .qn{font-family:var(--display); color:var(--red); min-width:2em; font-variant-numeric:tabular-nums}
+.q fieldset{border:0; margin:0; padding:0; display:flex; flex-direction:column; gap:6px; min-width:0}
+.opt{display:flex; gap:10px; align-items:flex-start; padding:7px 10px; border:1px solid var(--line); border-radius:8px; cursor:pointer; background:var(--paper)}
+.opt:hover{border-color:var(--blue)}
+.opt input{margin-top:5px; accent-color:var(--blue)}
+.opt.good{background:var(--okbg); border-color:var(--ok)}
+.opt.bad{background:var(--kobg); border-color:var(--ko)}
+.qfoot{display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; align-items:center}
+.clear{background:none; border:0; color:var(--soft); text-decoration:underline; cursor:pointer; padding:0}
+.verdict{font-family:var(--display); font-weight:700}
+.verdict.ok{color:var(--ok)} .verdict.ko{color:var(--ko)} .verdict.nr{color:var(--soft)}
+.explain{font-size:.95rem; background:var(--neutral); border-radius:6px; padding:8px 10px}
+.result{border-radius:12px; padding:18px; background:var(--card); border:2px solid var(--blue); display:flex; flex-direction:column; gap:10px}
+.score{font-family:var(--display); font-weight:800; font-size:2.6rem; color:var(--blue); line-height:1; font-variant-numeric:tabular-nums}
+.stats{display:flex; flex-wrap:wrap; gap:8px 18px; font-variant-numeric:tabular-nums}
+.stats span b{font-family:var(--display)}
+.qlist{display:flex; flex-direction:column; gap:12px}
+footer{grid-column:1/-1; color:var(--soft); font-size:.88rem}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
 </style>
 
 <div class="wrap">
   <header class="top">
-    <span class="eyebrow">BUT TC · Com digitale · L. Perraud</span>
-    <h1>Fiche de révision : communication digitale</h1>
-    <p class="sub">Tout le cours en une page : principes, pub digitale, inbound / outbound, démarche marketing, persona et tunnel de conversion. Quiz à la fin pour se tester.</p>
+    <span class="eyebrow">BUT TC · Communication digitale · Laure Perraud</span>
+    <h1>Communication digitale : la leçon complète</h1>
+    <p class="sub">Le cours remis au propre et expliqué, partie par partie, avec ce qu'il faut retenir et les pièges classiques. À la fin : un QCM noté comme demain, avec des points négatifs.</p>
+    <a class="cta" href="#qcm">Aller directement au QCM</a>
   </header>
 
   <nav class="toc" aria-label="Sommaire">
     <ol>
-      <li><a href="#principes"><span class="n">I</span>Principes</a></li>
-      <li><a href="#pub"><span class="n">II</span>Pub digitale</a></li>
-      <li><a href="#inbound"><span class="n">→</span>Push / pull, inbound</a></li>
-      <li><a href="#demarche"><span class="n">↳</span>Démarche marketing</a></li>
+      <li><a href="#principes"><span class="n">I</span>Principes de la com digitale</a></li>
+      <li><a href="#pub"><span class="n">II</span>La publicité digitale</a></li>
+      <li><a href="#push"><span class="n">II.2</span>Push / pull, outbound / inbound</a></li>
+      <li><a href="#demarche"><span class="n">II.3</span>La démarche marketing</a></li>
       <li><a href="#persona"><span class="n">III</span>Le persona</a></li>
-      <li><a href="#tunnel"><span class="n">IV</span>Tunnel de conversion</a></li>
-      <li><a href="#quiz"><span class="n">?</span>Quiz</a></li>
+      <li><a href="#tunnel"><span class="n">IV</span>Le tunnel de conversion</a></li>
+      <li><a href="#memo"><span class="n">✓</span>Mémo express</a></li>
+      <li><a class="qcm-link" href="#qcm"><span class="n">?</span>QCM points négatifs</a></li>
     </ol>
   </nav>
 
   <main>
-    <!-- I -->
+    <!-- ================= I ================= -->
     <section id="principes">
-      <h2><span class="n">I</span>Principes de la communication digitale</h2>
-      <div class="box">
-        <h3>Les 3 questions du cours</h3>
-        <ul>
-          <li>Comment <mark>générer du trafic</mark> ?</li>
-          <li>Comment <mark>fidéliser</mark> des clients sur Internet ?</li>
-          <li>Comment <mark>transformer les visiteurs en clients</mark> ?</li>
-        </ul>
-      </div>
-      <h3>Supports et moyens de com digitale</h3>
+      <h2><span class="n">I</span>Les principes de la communication digitale</h2>
+      <p class="intro">Le cours part de trois questions. Tout le reste (pub, inbound, persona, tunnel) sert à y répondre :</p>
+      <ul>
+        <li>Comment <mark>générer du trafic</mark> sur son site ?</li>
+        <li>Comment <mark>fidéliser</mark> des clients sur Internet ?</li>
+        <li>Comment <mark>transformer des visiteurs en clients</mark> ?</li>
+      </ul>
+
+      <h3>1. Les supports et moyens de com digitale</h3>
       <ul class="chips">
         <li>SEA</li><li>SEO</li><li>Webinar</li><li>Blog</li><li>Chat et messagerie</li><li>Pub</li><li>Étude de cas</li><li>Comptes médias sociaux</li><li>Études sectorielles</li>
       </ul>
       <div class="grid2">
-        <div class="box"><span class="tag">PUB</span><p>C'est la <span class="def">location d'un espace pour diffuser une annonce</span> (ex : social ads).</p></div>
-        <div class="box"><span class="tag">COMMUNICATION</span><p>C'est <span class="def">faire savoir quelque chose à quelqu'un, peu importe la manière</span> (avec location d'espace ou non).</p></div>
+        <div class="box"><span class="tag">SEA</span><p><b>Search Engine Advertising</b> : le référencement <b>payant</b>. L'entreprise paie pour apparaître en haut des résultats (les liens « Sponsorisé » de Google).</p></div>
+        <div class="box"><span class="tag">SEO</span><p><b>Search Engine Optimization</b> : le référencement <b>naturel</b>, gratuit. On optimise le site et ses contenus pour bien remonter dans Google sans payer.</p></div>
       </div>
-      <p class="retiens">La pub est une partie de la com : toute pub est de la com, mais toute com n'est pas de la pub.</p>
-      <div class="box">
-        <h3>Les acteurs de la pub</h3>
-        <ul>
-          <li><b>L'annonceur</b> : l'entreprise qui veut communiquer</li>
-          <li><b>L'agence de pub</b></li>
-          <li><b>La régie pub</b> : vend les espaces d'un support</li>
-          <li><b>L'agence média / centrale d'achat d'espace</b></li>
-          <li><b>Le fournisseur de l'annonce / agence de création</b></li>
-          <li><b>Les associations professionnelles</b> : ARPP, Union des marques (UDM)</li>
-          <li><b>L'éditeur / le support</b></li>
-          <li><b>L'internaute</b></li>
-        </ul>
+
+      <h3>2. Pub ≠ communication</h3>
+      <div class="grid2">
+        <div class="box"><span class="tag">LA PUB</span><p>C'est la <span class="def">location d'un espace pour diffuser une annonce</span>. On paie un support pour y mettre son message (ex : les social ads sur Instagram).</p></div>
+        <div class="box"><span class="tag">LA COMMUNICATION</span><p>C'est <span class="def">faire savoir quelque chose à quelqu'un, peu importe la manière</span>, avec location d'espace ou non (un post gratuit, un article de blog, un webinar…).</p></div>
       </div>
+      <div class="retiens"><b class="t">À retenir</b><span>La pub est <b>une partie</b> de la communication. Toute pub est de la com, mais toute com n'est pas de la pub : ce qui fait la pub, c'est l'<b>achat / la location d'espace</b>.</span></div>
+
+      <h3>3. Les acteurs de la pub</h3>
+      <div class="scroll"><table>
+        <thead><tr><th>Acteur</th><th>Son rôle</th></tr></thead>
+        <tbody>
+          <tr><td><b>L'annonceur</b></td><td>L'entreprise qui veut communiquer et qui paie la campagne.</td></tr>
+          <tr><td><b>L'agence de pub</b></td><td>Conçoit la stratégie et la campagne pour l'annonceur.</td></tr>
+          <tr><td><b>La régie pub</b></td><td><b>Vend</b> les espaces publicitaires d'un support (côté média).</td></tr>
+          <tr><td><b>L'agence média / centrale d'achat d'espace</b></td><td><b>Achète</b> l'espace pub pour le compte de l'annonceur, en grosses quantités pour négocier les prix.</td></tr>
+          <tr><td><b>Le fournisseur de l'annonce / agence de création</b></td><td>Fabrique l'annonce : visuels, textes, vidéos.</td></tr>
+          <tr><td><b>Les associations professionnelles</b></td><td>Encadrent le métier : <b>ARPP</b> (Autorité de régulation professionnelle de la publicité), <b>UDM</b> (Union des marques, qui représente les annonceurs).</td></tr>
+          <tr><td><b>L'éditeur / le support</b></td><td>Le média qui diffuse : site, appli, réseau social, journal…</td></tr>
+          <tr><td><b>L'internaute</b></td><td>Celui qui reçoit la pub : la cible.</td></tr>
+        </tbody>
+      </table></div>
+      <div class="piege"><b class="t">Piège QCM</b><span>Régie = elle <b>vend</b> l'espace (côté support). Centrale d'achat / agence média = elle <b>achète</b> l'espace (côté annonceur). Ne pas les inverser.</span></div>
     </section>
 
-    <!-- II -->
+    <!-- ================= II ================= -->
     <section id="pub">
       <h2><span class="n">II</span>La publicité digitale</h2>
       <div class="grid2">
         <div class="box">
-          <h3>Les 3 leviers (types) de pub digitale</h3>
+          <h3>Les 3 leviers de la pub digitale</h3>
           <ul>
-            <li><b>Search</b> (SEA / SEO) : moteurs de recherche</li>
-            <li><b>Native Ad</b> sur les médias sociaux</li>
-            <li><b>Display</b> : bannières, visuels</li>
+            <li><b>Search</b> (SEA / SEO) : être visible dans les moteurs de recherche, au moment où l'internaute cherche.</li>
+            <li><b>Native Ad</b> sur les médias sociaux : une pub qui prend la forme du contenu autour (un post sponsorisé qui ressemble aux autres posts).</li>
+            <li><b>Display</b> : les bannières et visuels affichés sur les sites.</li>
           </ul>
         </div>
         <div class="box">
@@ -163,180 +206,380 @@ footer{grid-column:1/-1; color:var(--soft); font-size:.88rem; padding-left:8px}
           </ul>
         </div>
       </div>
-      <div class="box">
-        <h3>Média social ≠ réseau social</h3>
-        <div class="scroll"><table>
-          <thead><tr><th></th><th>Média social</th><th>Réseau social</th></tr></thead>
-          <tbody>
-            <tr><th>Centré sur</th><td>Le <b>contenu</b></td><td>Le <b>lien social</b> : les interactions entre les gens (liens d'amis)</td></tr>
-            <tr><th>Lien</th><td>Catégorie large</td><td><b>Sous-catégorie</b> du média social</td></tr>
-            <tr><th>Exemples</th><td>Wiki, forums, blogs, X, Pinterest, YouTube</td><td>Facebook, LinkedIn, TikTok, Instagram</td></tr>
-          </tbody>
-        </table></div>
-      </div>
+
+      <h3>Média social ≠ réseau social</h3>
+      <div class="scroll"><table>
+        <thead><tr><th></th><th>Média social</th><th>Réseau social</th></tr></thead>
+        <tbody>
+          <tr><th>L'accent est mis sur</th><td>Le <b>contenu</b> (ce qui est publié)</td><td>Le <b>lien social</b> : les interactions entre les personnes, les liens d'amis / de relations</td></tr>
+          <tr><th>Relation entre les deux</th><td>La catégorie large</td><td>Une <b>sous-catégorie</b> du média social</td></tr>
+          <tr><th>Exemples</th><td>Wiki, forums, blogs, X, Pinterest, YouTube</td><td>Facebook, LinkedIn, TikTok, Instagram</td></tr>
+        </tbody>
+      </table></div>
+      <div class="retiens"><b class="t">À retenir</b><span>Tout réseau social est un média social, mais pas l'inverse. Un wiki ou un forum est un média social sans être un réseau social.</span></div>
     </section>
 
-    <!-- Push / pull -->
-    <section id="inbound">
-      <h2><span class="n">→</span>Push / pull, outbound / inbound</h2>
+    <!-- ================= Push / pull ================= -->
+    <section id="push">
+      <h2><span class="n">II.2</span>Push / pull, outbound / inbound</h2>
+      <p>Deux façons opposées d'aller chercher le client. <b>Push = outbound</b>, <b>pull = inbound</b>.</p>
       <div class="scroll"><table>
         <thead><tr><th></th><th>PUSH = outbound</th><th>PULL = inbound</th></tr></thead>
         <tbody>
-          <tr><th>Principe</th><td><b>Pousser le produit</b> vers le conso, de la marque vers le conso</td><td><b>« Tirer » le conso</b> vers le produit : c'est le conso qui commence à chercher</td></tr>
-          <tr><th>Par quels moyens ?</th><td>Réductions, distribution gratuite d'échantillons, segmentation, fichiers (data mining). Sur tous les supports</td><td>Message pub (non personnalisé), contenus. Approche centrée sur l'internaute, moyens digitaux</td></tr>
+          <tr><th>Principe</th><td><b>Pousser le produit</b> vers le consommateur. Ça part de la marque vers le conso.</td><td><b>« Tirer » le consommateur</b> vers le produit. C'est le conso qui est à l'origine : il commence à chercher.</td></tr>
+          <tr><th>Moyens</th><td>Réductions, distribution gratuite d'échantillons, segmentation, fichiers clients (data mining). Sur tous les supports.</td><td>Message pub non personnalisé, contenus utiles. Approche centrée sur l'internaute, par des moyens digitaux.</td></tr>
           <tr><th>Pour qui ?</th><td>Entreprises avec <b>peu de budget</b></td><td><b>Grands groupes</b> à forte notoriété</td></tr>
-          <tr><th>Pour quoi ?</th><td>Faire acheter le produit : objectif <b>conatif</b>, court terme</td><td>Faire adhérer à <b>long terme</b> : objectifs <b>cognitif et affectif</b></td></tr>
-          <tr><th>Nature</th><td>Stratégie <b>intrusive</b></td><td>Stratégie <b>non intrusive</b>, attirer de façon naturelle</td></tr>
+          <tr><th>Objectif</th><td>Faire <b>acheter</b> le produit : objectif <b>conatif</b>, <b>court terme</b></td><td>Faire <b>adhérer</b> à la marque : objectifs <b>cognitif et affectif</b>, <b>long terme</b></td></tr>
+          <tr><th>Nature</th><td>Stratégie <b>intrusive</b></td><td>Stratégie <b>non intrusive</b> : on attire de façon naturelle</td></tr>
         </tbody>
       </table></div>
+      <div class="box">
+        <h3>Les 3 objectifs de communication (à connaître pour le QCM)</h3>
+        <ul>
+          <li><b>Cognitif</b> : faire <b>connaître</b> (notoriété, information).</li>
+          <li><b>Affectif</b> : faire <b>aimer</b> (image, attachement à la marque).</li>
+          <li><b>Conatif</b> : faire <b>agir</b> (acheter, s'inscrire, cliquer).</li>
+        </ul>
+      </div>
 
       <div class="grid2">
         <div class="box">
-          <h3>Modèle AIDA</h3>
+          <h3>Le modèle AIDA</h3>
+          <p>Les étapes par lesquelles un message doit faire passer la cible :</p>
           <ul class="steps">
-            <li><span><b>A</b>ttention : l'accroche</span></li>
-            <li><span><b>I</b>ntérêt</span></li>
-            <li><span><b>D</b>ésir</span></li>
-            <li><span><b>A</b>ction</span></li>
+            <li><span><b>A</b>ttention : l'accroche, capter le regard</span></li>
+            <li><span><b>I</b>ntérêt : donner envie d'en savoir plus</span></li>
+            <li><span><b>D</b>ésir : donner envie d'avoir le produit</span></li>
+            <li><span><b>A</b>ction : faire acheter / agir</span></li>
           </ul>
         </div>
         <div class="box">
-          <h3>L'inbound en 4 étapes</h3>
+          <h3>L'inbound marketing en 4 étapes</h3>
           <ul class="steps">
-            <li><span><b>Attirer</b> : produire du contenu de qualité pour atteindre la bonne cible (site, blog, digital).</span></li>
-            <li><span><b>Convertir</b> : une fois le trafic généré, récupérer les données grâce à un contenu à forte valeur, en échange (ex : landing page).</span></li>
-            <li><span><b>Conclure</b> : une fois les données des prospects récupérées, faire aboutir la relation : le prospect devient client.</span></li>
+            <li><span><b>Attirer</b> : produire du contenu de qualité pour atteindre la bonne cible sur son site, son blog, en digital.</span></li>
+            <li><span><b>Convertir</b> : une fois le trafic généré, récupérer les données des visiteurs grâce à un contenu à forte valeur, donné en échange (ex : landing page avec formulaire).</span></li>
+            <li><span><b>Conclure</b> : une fois les données des prospects récupérées, faire aboutir la relation : le prospect devient <b>client</b>.</span></li>
             <li><span><b>Fidéliser / enchanter</b> : avec des contenus à forte valeur, entretenir la relation et transformer le client en <mark>ambassadeur</mark>.</span></li>
           </ul>
         </div>
       </div>
+      <div class="piege"><b class="t">Piège QCM</b><span>L'ordre compte : <b>Attirer → Convertir → Conclure → Fidéliser</b>. « Convertir » ne veut pas dire vendre : c'est récupérer les coordonnées (visiteur → prospect). La vente, c'est « Conclure ».</span></div>
     </section>
 
-    <!-- Démarche -->
+    <!-- ================= Démarche ================= -->
     <section id="demarche">
-      <h2><span class="n">↳</span>La démarche marketing en 5 étapes</h2>
+      <h2><span class="n">II.3</span>La démarche marketing</h2>
+      <p>Cinq étapes, rangées en trois types de marketing :</p>
       <div class="scroll"><table>
-        <thead><tr><th>Marketing…</th><th>Étapes</th></tr></thead>
+        <thead><tr><th>Marketing…</th><th>Étapes</th><th>En clair</th></tr></thead>
         <tbody>
-          <tr><th>Analytique</th><td>1. Étude de marché</td></tr>
-          <tr><th>Stratégique</th><td>2. Fixer des objectifs structurés / chiffrés, pour calculer le <b>ROI</b><br>3. Définir des personae (cibles)</td></tr>
-          <tr><th>Opérationnel</th><td>4. Opérationnaliser la stratégie de content marketing<br>5. Mettre en place un tunnel de conversion</td></tr>
+          <tr><th>Analytique</th><td>1. Étude de marché</td><td>Comprendre le marché et l'entreprise</td></tr>
+          <tr><th>Stratégique</th><td>2. Fixer des objectifs structurés et chiffrés<br>3. Définir des personae (les cibles)</td><td>Décider où on va et pour qui. Les objectifs chiffrés servent à calculer le <b>ROI</b> (retour sur investissement).</td></tr>
+          <tr><th>Opérationnel</th><td>4. Opérationnaliser la stratégie de content marketing<br>5. Mettre en place un tunnel de conversion</td><td>Passer à l'action concrète</td></tr>
         </tbody>
       </table></div>
+
+      <h3>L'étude de marché</h3>
       <div class="grid2">
         <div class="box">
-          <h3>A. Étude externe : le marché de l'entreprise</h3>
+          <span class="tag">A. ÉTUDE EXTERNE</span>
+          <p>Le marché sur lequel se trouve l'entreprise :</p>
           <ul>
-            <li><b>Macro</b> : l'environnement</li>
-            <li><b>Méso</b> : l'offre sur le marché (segments produits), concurrents, distributeurs</li>
-            <li><b>Micro</b> : la demande, les consommateurs, la segmentation conso</li>
-            <li><b>Conclusion</b> : opportunités / menaces</li>
+            <li><b>Macro</b> : l'environnement (économique, légal, social, techno…)</li>
+            <li><b>Méso</b> : l'<b>offre</b> sur le marché (segments de produits), les <b>concurrents</b>, les <b>distributeurs</b></li>
+            <li><b>Micro</b> : la <b>demande</b>, les consommateurs, la segmentation des consommateurs</li>
+            <li><b>Conclusion</b> : <mark>opportunités / menaces</mark></li>
           </ul>
         </div>
         <div class="box">
-          <h3>B. Étude interne : l'entreprise</h3>
+          <span class="tag">B. ÉTUDE INTERNE</span>
+          <p>L'entreprise elle-même :</p>
           <ul>
-            <li>Ciblage</li><li>Positionnement</li><li>Prix</li><li>Produit</li><li>Distribution</li><li>Communication</li><li><b>Forces / faiblesses</b></li>
+            <li>Ciblage</li><li>Positionnement</li><li>Prix</li><li>Produit</li><li>Distribution</li><li>Communication</li>
+            <li>Conclusion : <mark>forces / faiblesses</mark></li>
           </ul>
         </div>
       </div>
-      <p class="retiens">Externe → opportunités / menaces. Interne → forces / faiblesses. Les deux ensemble donnent un SWOT.</p>
+      <div class="piege"><b class="t">Piège QCM</b><span>Méso = l'<b>offre</b> (concurrents, distributeurs). Micro = la <b>demande</b> (consommateurs). Externe → opportunités / menaces ; interne → forces / faiblesses (ensemble : le SWOT).</span></div>
     </section>
 
-    <!-- III -->
+    <!-- ================= III ================= -->
     <section id="persona">
       <h2><span class="n">III</span>Le persona (connaître sa cible)</h2>
       <div class="box">
-        <p><span class="def">Persona</span> : personne fictive = <b>client type</b>, le <mark>cœur de cible</mark>. Il sert à créer des scénarios d'utilisation du produit / service.</p>
-        <p>C'est une <b>représentation semi-fictive du client idéal, fondée sur des études de marché</b> : le stéréotype idéal du cœur de cible.</p>
+        <p><span class="def">Le persona</span> est une personne fictive qui représente le <b>client type</b>, le <mark>cœur de cible</mark>. Il sert à imaginer des scénarios d'utilisation du produit ou du service.</p>
+        <p>Définition complète : une <b>représentation semi-fictive du client idéal, fondée sur des études de marché</b>. C'est le stéréotype idéal du cœur de cible.</p>
+        <p class="compl">« Semi-fictive » : la personne est inventée (prénom, photo), mais tout ce qu'on dit d'elle vient de vraies données.</p>
       </div>
       <div class="box">
-        <h3>Pour construire un persona</h3>
+        <h3>Comment construire un persona ?</h3>
+        <p>On collecte des informations sur la cible et les prospects grâce à :</p>
         <ul>
-          <li>Faire une étude documentaire</li>
-          <li>Des entretiens individuels semi-directifs</li>
-          <li>De l'observation</li>
+          <li>une <b>étude documentaire</b> ;</li>
+          <li>des <b>entretiens individuels semi-directifs</b> ;</li>
+          <li>de l'<b>observation</b>.</li>
         </ul>
-        <p>→ Collecter des infos sur la cible et les prospects.</p>
       </div>
-      <h3>Les 5 étapes</h3>
+      <h3>Les 5 étapes pour créer un persona</h3>
       <ol class="steps">
-        <li><span><b>Établir le profil général de la cible</b> : infos signalétiques, contexte d'activité / professionnel, portrait de la personne (traits de caractère, centres d'intérêt).</span></li>
-        <li><span><b>Cerner le problème de la cible par rapport à l'offre</b> : comprendre ses préoccupations et ses freins, se mettre à sa place (ses contraintes), puis se tourner vers notre offre : en quoi elle peut aider la cible ? Quelle est sa valeur ajoutée par rapport aux concurrents ?</span></li>
-        <li><span><b>Identifier l'attitude de la cible à notre égard</b> : pourquoi ma cible n'achète pas chez moi ? Citer ses objections.</span></li>
-        <li><span><b>Préciser les habitudes d'achat</b> : comprendre son comportement d'achat pour mieux préparer la vente. Est-il impulsif ? réfléchi ? raisonnable ? Ses expressions favorites, sa façon de parler, son ton. Trouver des <b>verbatims</b>.</span></li>
-        <li><span><b>Présenter votre offre à votre persona</b> : mettre au point un discours adapté à ses attentes, avec son niveau de spécialisation et ses mots ; écrire les avantages de l'offre ; rédiger le pitch et un argumentaire de vente de quelques minutes.</span></li>
+        <li><span><b>Établir le profil général de la cible</b> : les infos signalétiques (âge, sexe, lieu…), le contexte d'activité ou professionnel, le portrait de la personne (traits de caractère, centres d'intérêt).</span></li>
+        <li><span><b>Cerner le problème de la cible par rapport à l'offre</b> : comprendre ses préoccupations et ses freins, se mettre à sa place en tenant compte de ses contraintes, puis se tourner vers notre offre. En quoi peut-elle aider la cible ? Quelle est sa <b>valeur ajoutée</b> par rapport aux concurrents ?</span></li>
+        <li><span><b>Identifier l'attitude de la cible à notre égard</b> : pourquoi ma cible n'achète pas chez moi ? Lister ses <b>objections</b>.</span></li>
+        <li><span><b>Préciser les habitudes d'achat</b> : comprendre son comportement d'achat pour mieux préparer la vente. L'imaginer en situation d'achat : est-il impulsif ? réfléchi ? raisonnable ? Quelles sont ses expressions, sa façon de parler, son ton ? On cherche des <b>verbatims</b> (ses phrases exactes).</span></li>
+        <li><span><b>Présenter l'offre au persona</b> : mettre au point un discours adapté à ses attentes, avec ses mots et son niveau de connaissance ; écrire les avantages de l'offre ; rédiger un pitch et un argumentaire de vente de quelques minutes.</span></li>
       </ol>
-      <p class="margin-note">Le persona se construit sur des données réelles, pas sur des suppositions.</p>
+      <div class="piege"><b class="t">Piège QCM</b><span>Les <b>objections</b> (« pourquoi il n'achète pas chez moi ») = étape 3. Les <b>verbatims</b> et la façon de parler = étape 4 (habitudes d'achat).</span></div>
     </section>
 
-    <!-- IV -->
+    <!-- ================= IV ================= -->
     <section id="tunnel">
       <h2><span class="n">IV</span>Le tunnel de conversion</h2>
       <div class="box">
-        <p><span class="def">Tunnel de conversion</span> = entonnoir de conversion = tunnel marketing.</p>
-        <p>C'est la <b>modélisation des étapes par lesquelles le visiteur devient client</b> : le parcours, du premier contact jusqu'à la demande (l'achat).</p>
+        <p><span class="def">Tunnel de conversion</span> = entonnoir de conversion = tunnel marketing (trois noms pour la même chose).</p>
+        <p>C'est la <b>modélisation des étapes par lesquelles un visiteur devient client</b> : tout le parcours, du premier contact jusqu'à la demande (l'achat).</p>
       </div>
       <div class="grid2">
         <div class="box">
-          <h3>Le découpage</h3>
-          <div class="funnel" role="img" aria-label="Entonnoir : TOFU, puis MOFU, puis BOFU">
-            <div class="f1">TOFU <small>Top of funnel : internautes attirés par l'intérêt de vos contenus</small></div>
-            <div class="f2">MOFU <small>Middle : ils interagissent avec vos contenus et deviennent des prospects</small></div>
-            <div class="f3">BOFU <small>Bottom : les prospects deviennent des clients</small></div>
+          <h3>Le découpage du tunnel</h3>
+          <div class="funnel" role="img" aria-label="Entonnoir : TOFU en haut, MOFU au milieu, BOFU en bas">
+            <div class="f1">TOFU · Top of funnel <small>Les internautes sont attirés par l'intérêt de vos contenus</small></div>
+            <div class="f2">MOFU · Middle of funnel <small>Ils interagissent avec vos contenus et deviennent des prospects</small></div>
+            <div class="f3">BOFU · Bottom of funnel <small>Les prospects deviennent des clients</small></div>
           </div>
         </div>
         <div class="box">
-          <h3>Les 4 étapes d'achat</h3>
+          <h3>Le lien avec les 4 étapes d'achat</h3>
           <ul class="steps">
             <li><span>Éveil et reconnaissance du besoin : <b>prise de conscience</b></span></li>
-            <li><span>Recherche d'infos</span></li>
+            <li><span>Recherche d'informations</span></li>
             <li><span>Évaluation des possibilités : <b>examen</b></span></li>
             <li><span>Achat et usage : <b>décision</b></span></li>
           </ul>
-          <p class="margin-note">Ex : article de blog → page produit → produit dans le panier → achat</p>
+          <p class="margin-note">Ex : lecture d'un article de blog → visite d'une page produit → produit mis au panier → achat</p>
         </div>
       </div>
-      <div class="grid2">
-        <div class="box">
-          <span class="tag">TOFU</span>
-          <p><b>Objectif : acquisition</b>, faire que les internautes deviennent des visiteurs.</p>
-          <ul>
-            <li>Attirer les internautes qui vous cherchent…</li>
-            <li>… et ceux qui ne vous cherchent pas.</li>
-            <li>Faire prendre conscience du problème aux visiteurs non qualifiés, donc leur apporter des réponses.</li>
-          </ul>
-          <p><b>Comment ?</b> SEO, réseaux sociaux (les moyens de base de l'inbound), SEA, création de contenu (informatif, varié), faire de la pub, multiplier les supports.</p>
-        </div>
-        <div class="box">
-          <span class="tag">MOFU</span>
-          <p><b>Objectif :</b> transformer les visiteurs en <mark>prospects qualifiés</mark>.</p>
-          <p><span class="def">Prospect qualifié</span> : prospect sur lequel on dispose des données pour confirmer qu'il appartient à notre cible et pour estimer son potentiel de conversion.</p>
-          <p><b>Comment ?</b> En demandant des infos via un formulaire, en échange d'un livre blanc, d'un ebook, d'un webinaire…</p>
-        </div>
+
+      <div class="box">
+        <span class="tag">TOFU</span>
+        <p><b>Objectif : l'acquisition</b>. Les internautes deviennent des <b>visiteurs</b>.</p>
+        <ul>
+          <li>Attirer les internautes qui vous cherchent…</li>
+          <li>… et aussi ceux qui ne vous cherchent pas.</li>
+          <li>Faire prendre conscience de leur problème aux visiteurs <b>non qualifiés</b> : il faut donc leur apporter des réponses.</li>
+        </ul>
+        <p><b>Comment ?</b> SEO, réseaux sociaux (les moyens de base de l'inbound), SEA, création de contenu (informatif, varié), faire de la pub, multiplier les supports.</p>
       </div>
+      <div class="box">
+        <span class="tag">MOFU</span>
+        <p><b>Objectif :</b> transformer les visiteurs en <mark>prospects qualifiés</mark>.</p>
+        <p><span class="def">Prospect qualifié</span> : un prospect sur lequel on dispose de données pour <b>confirmer qu'il appartient à notre cible</b> et pour <b>estimer son potentiel de conversion</b>.</p>
+        <p><b>Comment ?</b> En demandant des informations via un <b>formulaire</b>, en échange d'un <b>livre blanc</b>, d'un <b>ebook</b>, d'un <b>webinaire</b>…</p>
+      </div>
+      <div class="box">
+        <span class="tag">BOFU</span>
+        <p><b>Objectif :</b> transformer les prospects en <b>clients</b>.</p>
+        <p class="compl">Pas encore détaillé dans tes notes. Exemples habituels : essai gratuit, démo, devis, offre promotionnelle, avis et témoignages clients.</p>
+      </div>
+      <div class="piege"><b class="t">Piège QCM</b><span>TOFU = internaute → <b>visiteur</b>. MOFU = visiteur → <b>prospect qualifié</b>. BOFU = prospect → <b>client</b>. Le formulaire et le livre blanc, c'est le MOFU, pas le TOFU.</span></div>
     </section>
 
-    <!-- Quiz -->
-    <section id="quiz">
-      <h2><span class="n">?</span>Quiz : teste-toi</h2>
-      <p>Réponds dans ta tête, puis clique pour voir la réponse.</p>
-      <div class="quiz">
-        <details><summary>1. Quelle est la différence entre pub et communication ?</summary>La pub, c'est louer un espace pour diffuser une annonce. La com, c'est faire savoir quelque chose à quelqu'un, peu importe la manière (avec ou sans location).</details>
-        <details><summary>2. Cite 5 acteurs de la pub.</summary>Annonceur, agence de pub, régie pub, agence média / centrale d'achat d'espace, agence de création, associations professionnelles (ARPP, UDM), éditeur / support, internaute.</details>
-        <details><summary>3. Quels sont les 3 leviers de la pub digitale ?</summary>Search (SEA / SEO), Native Ad sur les médias sociaux, Display.</details>
-        <details><summary>4. Média social ou réseau social : YouTube ? LinkedIn ?</summary>YouTube : média social (centré sur le contenu). LinkedIn : réseau social (centré sur le lien entre les personnes). Le réseau social est une sous-catégorie du média social.</details>
-        <details><summary>5. Push ou pull : une distribution d'échantillons gratuits ?</summary>Push (outbound) : on pousse le produit vers le conso, objectif d'achat à court terme, stratégie intrusive.</details>
-        <details><summary>6. Que veut dire AIDA ?</summary>Attention (accroche), Intérêt, Désir, Action.</details>
-        <details><summary>7. Quelles sont les 4 étapes de l'inbound ?</summary>Attirer, Convertir, Conclure, Fidéliser (enchanter : faire du client un ambassadeur).</details>
-        <details><summary>8. Les 5 étapes de la démarche marketing ?</summary>1 Étude de marché (analytique), 2 Objectifs chiffrés pour le ROI, 3 Personae (stratégique), 4 Content marketing, 5 Tunnel de conversion (opérationnel).</details>
-        <details><summary>9. Macro, méso, micro : c'est quoi ?</summary>Macro : l'environnement. Méso : l'offre (segments, concurrents, distributeurs). Micro : la demande (consommateurs, segmentation).</details>
-        <details><summary>10. Définis un persona et cite 3 façons de le construire.</summary>Une représentation semi-fictive du client idéal (cœur de cible), fondée sur des études de marché. Étude documentaire, entretiens individuels semi-directifs, observation.</details>
-        <details><summary>11. Que signifient TOFU, MOFU, BOFU ?</summary>Top, Middle et Bottom of funnel : internaute attiré, puis prospect, puis client.</details>
-        <details><summary>12. Qu'est-ce qu'un prospect qualifié ? Comment l'obtenir ?</summary>Un prospect sur lequel on a assez de données pour confirmer qu'il est dans notre cible et estimer son potentiel de conversion. On l'obtient en demandant des infos via un formulaire (livre blanc, ebook, webinaire en échange).</details>
+    <!-- ================= Mémo ================= -->
+    <section id="memo">
+      <h2><span class="n">✓</span>Mémo express (à relire juste avant le QCM)</h2>
+      <div class="scroll"><table>
+        <tbody>
+          <tr><th>Pub</th><td>Location d'un espace pour diffuser une annonce</td></tr>
+          <tr><th>Com</th><td>Faire savoir quelque chose, peu importe la manière</td></tr>
+          <tr><th>SEA / SEO</th><td>Référencement payant / naturel</td></tr>
+          <tr><th>Régie / centrale</th><td>La régie vend l'espace, la centrale l'achète</td></tr>
+          <tr><th>3 leviers</th><td>Search, Native Ad, Display</td></tr>
+          <tr><th>Réseau social</th><td>Sous-catégorie du média social, centrée sur le lien entre les gens</td></tr>
+          <tr><th>Push / outbound</th><td>Marque → conso, intrusif, court terme, conatif, petit budget</td></tr>
+          <tr><th>Pull / inbound</th><td>Le conso cherche, non intrusif, long terme, cognitif + affectif, grands groupes</td></tr>
+          <tr><th>AIDA</th><td>Attention, Intérêt, Désir, Action</td></tr>
+          <tr><th>Inbound</th><td>Attirer, Convertir, Conclure, Fidéliser</td></tr>
+          <tr><th>Démarche</th><td>Analytique (étude) → stratégique (objectifs, personae) → opérationnel (contenu, tunnel)</td></tr>
+          <tr><th>Macro / méso / micro</th><td>Environnement / offre / demande</td></tr>
+          <tr><th>Persona</th><td>Représentation semi-fictive du client idéal, fondée sur des études</td></tr>
+          <tr><th>TOFU / MOFU / BOFU</th><td>→ visiteur / → prospect qualifié / → client</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <!-- ================= QCM ================= -->
+    <section id="qcm">
+      <h2><span class="n">?</span>QCM à points négatifs</h2>
+      <div class="qcm-head">
+        <p>Comme demain : <b>une seule bonne réponse par question</b>. Une bonne réponse rapporte des points, une mauvaise en <b>enlève</b>, et ne rien cocher donne 0. Si tu n'es pas sûr, tu peux laisser vide.</p>
+        <div class="settings">
+          <label for="bareme">Barème
+            <select id="bareme">
+              <option value="0.25">+1 / −0,25</option>
+              <option value="0.5" selected>+1 / −0,5</option>
+              <option value="1">+1 / −1</option>
+            </select>
+          </label>
+          <label for="nb">Questions
+            <select id="nb">
+              <option value="20" selected>20 au hasard</option>
+              <option value="all">Toutes</option>
+            </select>
+          </label>
+          <button class="btn alt" id="new" type="button">Nouveau QCM</button>
+        </div>
+        <p class="progress" id="progress" aria-live="polite"></p>
       </div>
+
+      <form id="quiz" class="qlist" novalidate></form>
+      <div style="display:flex; gap:10px; flex-wrap:wrap">
+        <button class="btn red" id="submit" type="button">Corriger mon QCM</button>
+      </div>
+      <div id="result" class="result" hidden></div>
     </section>
   </main>
 
-  <footer>Fiche faite à partir des notes de cours (6 pages). Le BOFU n'a pas encore été détaillé en cours.</footer>
+  <footer>Leçon faite à partir des notes de cours (6 pages). Les ajouts qui ne sont pas dans les notes (définitions de SEA / SEO, des objectifs cognitif / affectif / conatif, exemples BOFU) sont des compléments classiques, signalés comme tels.</footer>
 </div>
+
+<script>
+const BANK = [
+ {q:"La publicité, c'est :", a:["La location d'un espace pour diffuser une annonce","Faire savoir quelque chose à quelqu'un, peu importe la manière","Uniquement les posts gratuits sur les réseaux sociaux","Le référencement naturel d'un site"], e:"Définition du cours : la pub = location d'un espace pour diffuser une annonce."},
+ {q:"La communication, c'est :", a:["Faire savoir quelque chose à quelqu'un, peu importe la manière","Uniquement la location d'un espace publicitaire","Uniquement la communication payante","Uniquement la communication sur Internet"], e:"La com, c'est faire savoir quelque chose, avec ou sans location d'espace. La pub n'en est qu'une partie."},
+ {q:"Quelle affirmation est juste ?", a:["Toute pub est de la communication, mais toute communication n'est pas de la pub","Toute communication est de la pub","La pub et la communication sont la même chose","La pub n'est jamais de la communication"], e:"La pub est une partie de la com : ce qui la distingue, c'est l'achat ou la location d'espace."},
+ {q:"Qui achète l'espace publicitaire pour le compte de l'annonceur ?", a:["L'agence média / la centrale d'achat d'espace","La régie publicitaire","L'éditeur / le support","L'ARPP"], e:"La centrale d'achat (agence média) achète l'espace pour l'annonceur. La régie, elle, le vend."},
+ {q:"Qui vend les espaces publicitaires d'un support ?", a:["La régie publicitaire","La centrale d'achat d'espace","L'annonceur","L'internaute"], e:"La régie vend l'espace, côté support."},
+ {q:"L'annonceur est :", a:["L'entreprise qui veut communiquer et paie la campagne","Le site qui diffuse la pub","L'organisme qui régule la publicité","La personne qui voit la pub"], e:"L'annonceur est l'entreprise à l'origine de la campagne."},
+ {q:"L'ARPP et l'UDM sont :", a:["Des associations professionnelles","Des régies publicitaires","Des agences de création","Des réseaux sociaux"], e:"Ce sont les associations professionnelles citées en cours parmi les acteurs de la pub."},
+ {q:"Le SEA, c'est :", a:["Le référencement payant (liens sponsorisés dans les moteurs de recherche)","Le référencement naturel","La pub par bannières sur les sites","L'envoi d'e-mails de prospection"], e:"SEA = Search Engine Advertising : on paie pour apparaître dans les résultats."},
+ {q:"Le SEO, c'est :", a:["Le référencement naturel (gratuit)","Le référencement payant","Une pub native sur les réseaux sociaux","Une régie publicitaire"], e:"SEO = Search Engine Optimization : optimiser son site pour remonter sans payer."},
+ {q:"Lequel n'est PAS un des 3 leviers de pub digitale vus en cours ?", a:["L'affichage sur un panneau dans la rue","Search","Display","Native Ad sur les médias sociaux"], e:"Les 3 leviers : Search (SEA/SEO), Native Ad sur les médias sociaux, Display."},
+ {q:"Le Display, c'est :", a:["Les bannières et visuels affichés sur les sites","Les liens sponsorisés de Google","Le référencement naturel","Les messages privés"], e:"Display = pub visuelle (bannières) sur les sites."},
+ {q:"Une Native Ad est :", a:["Une pub qui prend la forme du contenu autour d'elle (ex : post sponsorisé)","Une bannière clignotante en haut d'un site","Un lien sponsorisé dans Google","Un e-mail commercial"], e:"La pub native s'intègre au contenu du support et en a l'apparence."},
+ {q:"Lequel de ces supports de pub digitale a été cité en cours ?", a:["Les comparateurs","La radio FM","Les prospectus en boîte aux lettres","Les panneaux 4x3"], e:"Supports cités : moteurs de recherche, comparateurs, sites éditeurs, applications, messageries, médias sociaux."},
+ {q:"Quelle est la différence entre média social et réseau social ?", a:["Le réseau social est une sous-catégorie du média social, centrée sur le lien entre les personnes","Le média social est une sous-catégorie du réseau social","Il n'y a aucune différence","Le réseau social est centré sur le contenu"], e:"Média social = accent sur le contenu ; réseau social = sous-catégorie, accent sur le lien social."},
+ {q:"Lequel est un réseau social (et pas seulement un média social) ?", a:["LinkedIn","Un wiki","Un forum","Un blog"], e:"Exemples de réseaux sociaux du cours : Facebook, LinkedIn, TikTok, Instagram."},
+ {q:"Selon le cours, YouTube est classé comme :", a:["Un média social","Un réseau social uniquement","Une régie publicitaire","Un moteur de recherche payant"], e:"Dans le cours, YouTube est donné en exemple de média social (accent sur le contenu)."},
+ {q:"La distribution gratuite d'échantillons relève d'une stratégie :", a:["Push","Pull","Inbound","SEO"], e:"Push : on pousse le produit vers le consommateur (réductions, échantillons…)."},
+ {q:"La stratégie push s'adresse surtout :", a:["Aux entreprises avec peu de budget","Aux grands groupes à forte notoriété","Uniquement aux associations","Uniquement aux sites e-commerce"], e:"Push : petit budget. Pull : grands groupes à forte notoriété."},
+ {q:"L'objectif d'une stratégie pull est :", a:["Faire adhérer à long terme (objectifs cognitif et affectif)","Faire acheter tout de suite (objectif conatif court terme)","Envoyer un maximum d'échantillons","Être le plus intrusif possible"], e:"Pull = adhésion à long terme, objectifs cognitif et affectif."},
+ {q:"Un objectif conatif consiste à :", a:["Faire agir (acheter, s'inscrire…)","Faire connaître","Faire aimer","Faire oublier un concurrent"], e:"Cognitif = connaître, affectif = aimer, conatif = agir."},
+ {q:"Le marketing outbound est :", a:["Intrusif, il va de la marque vers le consommateur","Non intrusif, c'est le consommateur qui cherche","Toujours gratuit","Centré uniquement sur le SEO"], e:"Outbound = push : de la marque vers le conso, sur tous les supports, intrusif."},
+ {q:"Dans l'inbound marketing :", a:["C'est le consommateur qui est à l'origine : il commence à chercher","La marque appelle les prospects un par un","On achète un maximum d'espace TV","On distribue des échantillons dans la rue"], e:"Inbound = pull : approche centrée sur l'internaute, non intrusive, long terme."},
+ {q:"Que veut dire AIDA ?", a:["Attention, Intérêt, Désir, Action","Achat, Intérêt, Décision, Action","Attention, Information, Désir, Achat","Acquisition, Intérêt, Désir, Adhésion"], e:"A = Attention (accroche), I = Intérêt, D = Désir, A = Action."},
+ {q:"Dans AIDA, le premier « A » correspond à :", a:["L'accroche : capter l'attention","L'achat","L'action","L'adhésion"], e:"Le premier A, c'est l'Attention, obtenue grâce à l'accroche."},
+ {q:"Quel est l'ordre des 4 étapes de l'inbound ?", a:["Attirer, Convertir, Conclure, Fidéliser","Convertir, Attirer, Conclure, Fidéliser","Attirer, Conclure, Convertir, Fidéliser","Fidéliser, Attirer, Convertir, Conclure"], e:"Attirer → Convertir → Conclure → Fidéliser (enchanter)."},
+ {q:"L'étape « Convertir » de l'inbound consiste à :", a:["Récupérer les données des visiteurs en échange d'un contenu à forte valeur","Transformer le client en ambassadeur","Signer la vente","Produire du contenu pour attirer du trafic"], e:"Convertir = récupérer des données (visiteur → prospect). La vente, c'est « Conclure »."},
+ {q:"L'étape « Fidéliser / enchanter » de l'inbound vise à :", a:["Transformer le client en ambassadeur","Attirer de nouveaux internautes","Récupérer des adresses e-mail","Baisser les prix"], e:"On entretient la relation avec des contenus à forte valeur pour faire du client un ambassadeur."},
+ {q:"L'étude de marché relève du marketing :", a:["Analytique","Stratégique","Opérationnel","Relationnel"], e:"Étape 1 = étude de marché = marketing analytique."},
+ {q:"Définir des personae relève du marketing :", a:["Stratégique","Analytique","Opérationnel","Direct"], e:"Stratégique : fixer les objectifs chiffrés et définir les personae."},
+ {q:"Mettre en place un tunnel de conversion relève du marketing :", a:["Opérationnel","Analytique","Stratégique","Cognitif"], e:"Opérationnel : content marketing et tunnel de conversion."},
+ {q:"Pourquoi fixe-t-on des objectifs structurés et chiffrés ?", a:["Pour pouvoir calculer le ROI","Pour choisir la couleur du logo","Pour remplacer l'étude de marché","Pour éviter de définir des personae"], e:"Des objectifs chiffrés permettent de mesurer le retour sur investissement (ROI)."},
+ {q:"Dans l'étude externe, l'analyse des concurrents et des distributeurs se fait au niveau :", a:["Méso","Macro","Micro","Interne"], e:"Méso = l'offre : segments de produits, concurrents, distributeurs."},
+ {q:"Le niveau « micro » de l'étude externe porte sur :", a:["La demande : les consommateurs et leur segmentation","L'environnement général","Les concurrents","Les forces de l'entreprise"], e:"Micro = la demande (consommateurs, segmentation conso)."},
+ {q:"Le niveau « macro » de l'étude externe porte sur :", a:["L'environnement","La demande","L'offre","Le prix de l'entreprise"], e:"Macro = environnement."},
+ {q:"La conclusion de l'étude externe donne :", a:["Les opportunités et les menaces","Les forces et les faiblesses","Le persona","Le modèle AIDA"], e:"Externe → opportunités / menaces. Interne → forces / faiblesses."},
+ {q:"Lequel fait partie de l'étude INTERNE ?", a:["Le positionnement de l'entreprise","L'environnement économique","La segmentation des consommateurs du marché","Les distributeurs du marché"], e:"Interne : ciblage, positionnement, prix, produit, distribution, communication, forces / faiblesses."},
+ {q:"Un persona est :", a:["Une représentation semi-fictive du client idéal, fondée sur des études de marché","Un vrai client choisi au hasard","L'ensemble de la population française","Un concurrent direct"], e:"Le persona = client type, cœur de cible, semi-fictif mais fondé sur des données réelles."},
+ {q:"Le persona représente :", a:["Le cœur de cible","Tous les clients possibles","Les clients perdus","Les fournisseurs"], e:"C'est le stéréotype idéal du cœur de cible."},
+ {q:"Laquelle de ces méthodes sert à construire un persona selon le cours ?", a:["Des entretiens individuels semi-directifs","Un spot TV","L'achat d'espace publicitaire","Du SEA"], e:"Méthodes : étude documentaire, entretiens individuels semi-directifs, observation."},
+ {q:"« Pourquoi ma cible n'achète pas chez moi ? » correspond à l'étape :", a:["Identifier l'attitude de la cible à notre égard (ses objections)","Établir le profil général","Préciser les habitudes d'achat","Présenter l'offre au persona"], e:"Étape 3 : identifier l'attitude de la cible, citer ses objections."},
+ {q:"Chercher des verbatims (phrases exactes de la cible) sert surtout à :", a:["Connaître sa façon de parler et son comportement d'achat","Calculer le ROI","Fixer le prix","Choisir une régie"], e:"Étape 4 (habitudes d'achat) : expressions favorites, façon de parler, ton, verbatims."},
+ {q:"Les infos signalétiques et les centres d'intérêt de la cible font partie de l'étape :", a:["Établir le profil général de la cible","Cerner le problème de la cible","Identifier ses objections","Présenter l'offre"], e:"Étape 1 : infos signalétiques, contexte d'activité, portrait (caractère, centres d'intérêt)."},
+ {q:"Le tunnel de conversion, c'est :", a:["La modélisation des étapes par lesquelles un visiteur devient client","La liste de tous les clients","Un outil de paiement en ligne","Un type de bannière"], e:"Tunnel de conversion = entonnoir de conversion = tunnel marketing."},
+ {q:"Quel autre nom désigne le tunnel de conversion ?", a:["L'entonnoir de conversion","Le mix marketing","Le modèle AIDA","La régie"], e:"Tunnel de conversion = entonnoir de conversion = tunnel marketing."},
+ {q:"Que signifie MOFU ?", a:["Middle of funnel","Most of funnel","Marketing of funnel","Move of funnel"], e:"TOFU = Top, MOFU = Middle, BOFU = Bottom of funnel."},
+ {q:"L'objectif du TOFU est :", a:["L'acquisition : que les internautes deviennent des visiteurs","Transformer les visiteurs en prospects qualifiés","Transformer les prospects en clients","Faire des clients des ambassadeurs"], e:"TOFU = acquisition (internaute → visiteur)."},
+ {q:"L'objectif du MOFU est :", a:["Transformer les visiteurs en prospects qualifiés","L'acquisition de trafic","Faire des clients des ambassadeurs","Choisir une régie"], e:"MOFU = visiteurs → prospects qualifiés."},
+ {q:"Au BOFU :", a:["Les prospects deviennent des clients","Les internautes découvrent la marque","On fait l'étude de marché","On définit le persona"], e:"BOFU = Bottom of funnel : prospect → client."},
+ {q:"Un prospect qualifié est :", a:["Un prospect dont on a assez de données pour confirmer qu'il est dans la cible et estimer son potentiel de conversion","N'importe quel visiteur du site","Un client fidèle","Un prospect qui a déjà acheté deux fois"], e:"Définition du cours, à connaître par cœur."},
+ {q:"Proposer un livre blanc en échange d'un formulaire rempli, c'est une action du :", a:["MOFU","TOFU","BOFU","Marketing analytique"], e:"MOFU : demander des infos via formulaire, livre blanc, ebook, webinaire."},
+ {q:"Le SEO, les réseaux sociaux et la création de contenu informatif sont surtout utilisés au :", a:["TOFU","MOFU","BOFU","Moment de la fidélisation uniquement"], e:"TOFU : SEO, réseaux sociaux, SEA, contenu, pub, multiplier les supports."},
+ {q:"Au TOFU, il faut attirer :", a:["Les internautes qui vous cherchent et ceux qui ne vous cherchent pas","Seulement les clients déjà fidèles","Seulement les internautes qui vous cherchent","Seulement les prospects qualifiés"], e:"Le cours insiste : attirer ceux qui vous cherchent ET ceux qui ne vous cherchent pas."},
+ {q:"La première étape d'achat (éveil, reconnaissance du besoin) correspond à :", a:["La prise de conscience","La décision","L'examen","La fidélisation"], e:"Étapes d'achat : prise de conscience → recherche d'info → examen → décision."}
+];
+
+const form = document.getElementById('quiz');
+const result = document.getElementById('result');
+const progress = document.getElementById('progress');
+const submitBtn = document.getElementById('submit');
+let current = [], corrected = false;
+
+function shuffle(arr){ const a = arr.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a; }
+function esc(s){ return s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function fmt(n){ return (Math.round(n*100)/100).toString().replace('.', ','); }
+
+function build(){
+  corrected = false; result.hidden = true; submitBtn.disabled = false;
+  const nb = document.getElementById('nb').value;
+  let qs = shuffle(BANK);
+  if(nb !== 'all') qs = qs.slice(0, Number(nb));
+  current = qs.map(item => ({...item, opts: shuffle(item.a.map((t,i)=>({t, ok:i===0})))}));
+  form.innerHTML = current.map((item, qi) => `
+    <div class="q" id="q${qi}">
+      <fieldset>
+        <legend><span class="qn">${qi+1}.</span><span>${esc(item.q)}</span></legend>
+        ${item.opts.map((o, oi) => `
+          <label class="opt" for="q${qi}o${oi}">
+            <input type="radio" name="q${qi}" id="q${qi}o${oi}" value="${oi}">
+            <span>${esc(o.t)}</span>
+          </label>`).join('')}
+      </fieldset>
+      <div class="qfoot">
+        <button type="button" class="clear" data-q="${qi}">Effacer ma réponse (0 point)</button>
+        <span class="verdict" id="v${qi}"></span>
+      </div>
+      <div class="explain" id="e${qi}" hidden></div>
+    </div>`).join('');
+  updateProgress();
+}
+
+function updateProgress(){
+  const answered = current.filter((_, qi) => form.querySelector(`input[name="q${qi}"]:checked`)).length;
+  progress.textContent = corrected ? '' : `${answered} / ${current.length} questions cochées · ${current.length - answered} laissées vides (0 point)`;
+}
+
+form.addEventListener('change', updateProgress);
+form.addEventListener('click', e => {
+  const b = e.target.closest('.clear');
+  if(!b || corrected) return;
+  form.querySelectorAll(`input[name="q${b.dataset.q}"]`).forEach(i => i.checked = false);
+  updateProgress();
+});
+
+submitBtn.addEventListener('click', () => {
+  if(corrected) return;
+  corrected = true; submitBtn.disabled = true;
+  const pen = Number(document.getElementById('bareme').value);
+  let good=0, bad=0, empty=0;
+  current.forEach((item, qi) => {
+    const checked = form.querySelector(`input[name="q${qi}"]:checked`);
+    const v = document.getElementById('v'+qi), ex = document.getElementById('e'+qi);
+    form.querySelectorAll(`input[name="q${qi}"]`).forEach(i => i.disabled = true);
+    item.opts.forEach((o, oi) => { if(o.ok) document.querySelector(`label[for="q${qi}o${oi}"]`).classList.add('good'); });
+    if(!checked){ empty++; v.textContent = 'Pas répondu : 0'; v.className = 'verdict nr'; }
+    else if(item.opts[Number(checked.value)].ok){ good++; v.textContent = 'Juste : +1'; v.className = 'verdict ok'; }
+    else { bad++; checked.closest('.opt').classList.add('bad'); v.textContent = `Faux : −${fmt(pen)}`; v.className = 'verdict ko'; }
+    ex.textContent = item.e; ex.hidden = false;
+  });
+  const n = current.length, raw = good - bad*pen, sur20 = raw / n * 20;
+  const tip = bad*pen > 2 ? "Tu perds beaucoup de points avec les réponses fausses. Si tu hésites entre plus de deux réponses, laisse vide." :
+              empty > n*0.3 ? "Tu laisses beaucoup de questions vides. Si tu peux éliminer deux réponses sur quatre, ça vaut souvent le coup de répondre." :
+              "Bon équilibre entre réponses et abstentions.";
+  result.innerHTML = `
+    <h3>Ton résultat</h3>
+    <div class="score">${fmt(sur20)} / 20</div>
+    <div class="stats">
+      <span><b>${good}</b> justes</span><span><b>${bad}</b> fausses</span><span><b>${empty}</b> vides</span><span>Points : <b>${fmt(raw)}</b> sur ${n}</span>
+    </div>
+    <p>${tip}</p>
+    <p>Les bonnes réponses sont en vert dans chaque question, avec l'explication. Relis les parties où tu t'es trompé, puis relance un nouveau QCM.</p>
+    <div><button class="btn" type="button" id="again">Refaire un nouveau QCM</button></div>`;
+  result.hidden = false; updateProgress();
+  document.getElementById('again').addEventListener('click', () => { build(); document.getElementById('qcm').scrollIntoView(); });
+  result.scrollIntoView({block:'center'});
+});
+
+document.getElementById('new').addEventListener('click', build);
+document.getElementById('nb').addEventListener('change', build);
+build();
+</script>
