@@ -113,6 +113,16 @@ select{padding:4px 8px; border-radius:6px; border:1px solid var(--line); backgro
 .stats{display:flex; flex-wrap:wrap; gap:8px 18px; font-variant-numeric:tabular-nums}
 .stats span b{font-family:var(--display)}
 .qlist{display:flex; flex-direction:column; gap:12px}
+.big{font-size:1.1rem; padding:12px 24px}
+.qcm-play{display:flex; flex-direction:column; gap:12px}
+.bar-row{display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap}
+.bar{height:8px; background:var(--line); border-radius:99px; overflow:hidden}
+.bar span{display:block; height:100%; background:var(--red); width:0; transition:width .3s}
+.q legend{font-size:1.1rem; margin-bottom:6px}
+.actions{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end}
+.review{list-style:none; padding:0; gap:10px}
+.review li{border-left:4px solid var(--ko); padding:6px 12px; background:var(--paper); border-radius:0 6px 6px 0}
+.review li.nr{border-left-color:var(--soft)}
 footer{grid-column:1/-1; color:var(--soft); font-size:.88rem}
 @media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
 </style>
@@ -409,8 +419,10 @@ footer{grid-column:1/-1; color:var(--soft); font-size:.88rem}
     <!-- ================= QCM ================= -->
     <section id="qcm">
       <h2><span class="n">?</span>QCM à points négatifs</h2>
-      <div class="qcm-head">
-        <p>Comme demain : <b>une seule bonne réponse par question</b>. Une bonne réponse rapporte des points, une mauvaise en <b>enlève</b>, et ne rien cocher donne 0. Si tu n'es pas sûr, tu peux laisser vide.</p>
+
+      <div id="start" class="qcm-head">
+        <p>Comme demain : <b>une seule bonne réponse par question</b>. Une bonne réponse rapporte des points, une mauvaise en <b>enlève</b>. Si tu n'es pas sûr, clique sur « Je ne sais pas » : ça vaut 0.</p>
+        <p>Les questions arrivent <b>une par une</b>, tirées au hasard dans une banque de <b id="banksize"></b> questions. Le QCM pioche d'abord celles que tu n'as pas encore vues, pour ne jamais retomber sur les mêmes.</p>
         <div class="settings">
           <label for="bareme">Barème
             <select id="bareme">
@@ -419,26 +431,41 @@ footer{grid-column:1/-1; color:var(--soft); font-size:.88rem}
               <option value="1">+1 / −1</option>
             </select>
           </label>
-          <label for="nb">Questions
+          <label for="nb">Nombre de questions
             <select id="nb">
-              <option value="20" selected>20 au hasard</option>
-              <option value="all">Toutes</option>
+              <option value="10">10</option>
+              <option value="20" selected>20</option>
+              <option value="40">40</option>
             </select>
           </label>
-          <button class="btn alt" id="new" type="button">Nouveau QCM</button>
         </div>
-        <p class="progress" id="progress" aria-live="polite"></p>
+        <p class="progress" id="seen"></p>
+        <div><button class="btn red big" id="launch" type="button">Lancer le QCM</button></div>
       </div>
 
-      <form id="quiz" class="qlist" novalidate></form>
-      <div style="display:flex; gap:10px; flex-wrap:wrap">
-        <button class="btn red" id="submit" type="button">Corriger mon QCM</button>
+      <div id="play" class="qcm-play" hidden>
+        <div class="bar-row">
+          <span class="progress" id="counter"></span>
+          <span class="progress" id="live"></span>
+        </div>
+        <div class="bar" aria-hidden="true"><span id="barfill"></span></div>
+        <div class="q">
+          <fieldset id="qbox"></fieldset>
+          <div class="explain" id="explain" hidden></div>
+          <div class="actions">
+            <button class="btn alt" id="skip" type="button">Je ne sais pas (0 point)</button>
+            <button class="btn" id="validate" type="button" disabled>Valider</button>
+            <button class="btn red" id="next" type="button" hidden>Question suivante</button>
+          </div>
+        </div>
+        <button class="clear" id="quit" type="button">Arrêter le QCM</button>
       </div>
+
       <div id="result" class="result" hidden></div>
     </section>
   </main>
 
-  <footer>Leçon faite à partir des notes de cours (6 pages). Les ajouts qui ne sont pas dans les notes (définitions de SEA / SEO, des objectifs cognitif / affectif / conatif, exemples BOFU) sont des compléments classiques, signalés comme tels.</footer>
+  <footer>Leçon et QCM faits à partir des notes de cours (6 pages). Les ajouts qui ne sont pas dans les notes (définitions de SEA / SEO, des objectifs cognitif / affectif / conatif, exemples BOFU) sont des compléments classiques, signalés comme tels.</footer>
 </div>
 
 <script>
@@ -495,91 +522,145 @@ const BANK = [
  {q:"Proposer un livre blanc en échange d'un formulaire rempli, c'est une action du :", a:["MOFU","TOFU","BOFU","Marketing analytique"], e:"MOFU : demander des infos via formulaire, livre blanc, ebook, webinaire."},
  {q:"Le SEO, les réseaux sociaux et la création de contenu informatif sont surtout utilisés au :", a:["TOFU","MOFU","BOFU","Moment de la fidélisation uniquement"], e:"TOFU : SEO, réseaux sociaux, SEA, contenu, pub, multiplier les supports."},
  {q:"Au TOFU, il faut attirer :", a:["Les internautes qui vous cherchent et ceux qui ne vous cherchent pas","Seulement les clients déjà fidèles","Seulement les internautes qui vous cherchent","Seulement les prospects qualifiés"], e:"Le cours insiste : attirer ceux qui vous cherchent ET ceux qui ne vous cherchent pas."},
- {q:"La première étape d'achat (éveil, reconnaissance du besoin) correspond à :", a:["La prise de conscience","La décision","L'examen","La fidélisation"], e:"Étapes d'achat : prise de conscience → recherche d'info → examen → décision."}
+ {q:"La première étape d'achat (éveil, reconnaissance du besoin) correspond à :", a:["La prise de conscience","La décision","L'examen","La fidélisation"], e:"Étapes d'achat : prise de conscience → recherche d'info → examen → décision."},
+ {q:"Laquelle n'est PAS une des 3 questions de l'introduction du cours ?", a:["Comment fixer le prix d'un produit en magasin ?","Comment générer du trafic ?","Comment fidéliser des clients sur Internet ?","Comment transformer des visiteurs en clients ?"], e:"Les 3 questions : générer du trafic, fidéliser, transformer les visiteurs en clients."},
+ {q:"Le webinar est :", a:["Un support / moyen de communication digitale","Une régie publicitaire","Un objectif conatif","Une étape du modèle AIDA"], e:"Webinar, blog, SEA, SEO, chat… font partie des supports de com digitale."},
+ {q:"Les études de cas et les études sectorielles sont :", a:["Des supports / moyens de communication digitale","Des acteurs de la pub","Des associations professionnelles","Des étapes du tunnel de conversion"], e:"Elles sont citées dans la liste des supports et moyens de com digitale."},
+ {q:"Le fournisseur de l'annonce est aussi appelé :", a:["L'agence de création","La régie","La centrale d'achat","L'éditeur"], e:"Fournisseur de l'annonce / agence de création : il fabrique l'annonce."},
+ {q:"L'éditeur / le support, c'est :", a:["Le média qui diffuse la pub (site, appli, réseau…)","L'entreprise qui paie la campagne","L'organisme qui régule la pub","L'agence qui conçoit la stratégie"], e:"L'éditeur est le support qui diffuse l'annonce."},
+ {q:"Parmi les acteurs de la pub, l'internaute est :", a:["Celui qui reçoit la pub : la cible","Celui qui vend l'espace","Celui qui achète l'espace","Celui qui régule la pub"], e:"L'internaute est le destinataire de la publicité."},
+ {q:"Un post sponsorisé sur Instagram qui ressemble aux autres posts du fil, c'est :", a:["De la Native Ad","Du Display","Du SEO","Du marketing outbound par téléphone"], e:"La Native Ad prend la forme du contenu qui l'entoure."},
+ {q:"Apparaître dans les résultats « Sponsorisé » en haut de Google, c'est :", a:["Du SEA","Du SEO","Du Display","De la Native Ad"], e:"SEA = référencement payant."},
+ {q:"Améliorer les textes de son site pour mieux remonter dans Google sans payer, c'est :", a:["Du SEO","Du SEA","Du Display","Un achat d'espace"], e:"SEO = référencement naturel, gratuit."},
+ {q:"Selon le cours, Pinterest est donné en exemple de :", a:["Média social","Réseau social uniquement","Régie publicitaire","Moteur de recherche payant"], e:"Exemples de médias sociaux : wiki, forums, blogs, X, Pinterest, YouTube."},
+ {q:"Un forum de discussion est :", a:["Un média social, mais pas un réseau social","Un réseau social","Une régie","Une association professionnelle"], e:"Le forum est cité comme média social (accent sur le contenu)."},
+ {q:"« Tous les réseaux sociaux sont des médias sociaux. »", a:["Vrai","Faux : c'est l'inverse","Faux : il n'y a aucun lien","Vrai seulement pour Facebook"], e:"Le réseau social est une sous-catégorie du média social."},
+ {q:"Le réseau social met l'accent sur :", a:["Les interactions et les liens entre les personnes","Le contenu publié","Le prix des produits","L'achat d'espace"], e:"Réseau social = lien social. Média social = contenu."},
+ {q:"Proposer des réductions de prix pour faire acheter vite relève d'une stratégie :", a:["Push","Pull","Inbound","Cognitive"], e:"Push : réductions, échantillons, segmentation, data mining."},
+ {q:"Utiliser des fichiers clients (data mining) pour cibler une offre relève d'une stratégie :", a:["Push","Pull","Inbound","SEO"], e:"Le data mining fait partie des moyens du push cités en cours."},
+ {q:"Une grande marque très connue qui veut que les consommateurs viennent d'eux-mêmes utilise plutôt :", a:["Une stratégie pull","Une stratégie push","Une stratégie outbound","Un objectif conatif court terme"], e:"Pull : grands groupes à forte notoriété, long terme."},
+ {q:"Un objectif cognitif consiste à :", a:["Faire connaître","Faire agir","Faire aimer","Faire acheter tout de suite"], e:"Cognitif = connaître, affectif = aimer, conatif = agir."},
+ {q:"Un objectif affectif consiste à :", a:["Faire aimer la marque","Faire connaître la marque","Faire acheter le produit","Récupérer des données"], e:"Affectif = faire aimer (image, attachement)."},
+ {q:"La stratégie push vise un résultat :", a:["À court terme","À long terme","Uniquement de fidélisation","Uniquement de notoriété"], e:"Push = faire acheter, objectif conatif, court terme."},
+ {q:"Quelle stratégie est non intrusive ?", a:["L'inbound (pull)","L'outbound (push)","La distribution d'échantillons","La prospection par fichiers"], e:"Inbound : on attire de façon naturelle, l'internaute vient de lui-même."},
+ {q:"Dans AIDA, le Désir arrive :", a:["Après l'Intérêt et avant l'Action","Avant l'Attention","En tout premier","Après l'Action"], e:"Attention → Intérêt → Désir → Action."},
+ {q:"Une landing page avec un formulaire sert surtout à l'étape inbound :", a:["Convertir","Attirer","Conclure","Fidéliser"], e:"Convertir = récupérer les données du visiteur en échange d'un contenu."},
+ {q:"Publier des articles de blog de qualité pour toucher la bonne cible correspond à l'étape :", a:["Attirer","Convertir","Conclure","Fidéliser"], e:"Attirer = produire du contenu de qualité pour atteindre la cible."},
+ {q:"À quelle étape de l'inbound le prospect devient-il client ?", a:["Conclure","Attirer","Convertir","Fidéliser"], e:"Conclure = faire aboutir la relation : le prospect devient client."},
+ {q:"Combien d'étapes compte la démarche marketing vue en cours ?", a:["5","3","4","7"], e:"Étude de marché, objectifs, personae, content marketing, tunnel de conversion."},
+ {q:"Opérationnaliser la stratégie de content marketing relève du marketing :", a:["Opérationnel","Analytique","Stratégique","Affectif"], e:"Étapes 4 et 5 = marketing opérationnel."},
+ {q:"Que veut dire ROI ?", a:["Retour sur investissement","Rapport des objectifs internes","Réseau d'offres internet","Revenu des opérations intérieures"], e:"ROI = Return On Investment = retour sur investissement."},
+ {q:"Le prix pratiqué par l'entreprise est analysé dans :", a:["L'étude interne","L'étude externe, niveau macro","L'étude externe, niveau méso","L'étude externe, niveau micro"], e:"Interne : ciblage, positionnement, prix, produit, distribution, communication."},
+ {q:"La segmentation des consommateurs est étudiée au niveau :", a:["Micro","Macro","Méso","Interne"], e:"Micro = la demande et la segmentation conso."},
+ {q:"Les segments de produits présents sur le marché sont étudiés au niveau :", a:["Méso","Micro","Macro","Interne"], e:"Méso = l'offre sur le marché (segments produits), concurrents, distributeurs."},
+ {q:"Opportunités, menaces, forces et faiblesses réunies forment :", a:["Un SWOT","Le modèle AIDA","Le tunnel de conversion","Le ROI"], e:"Externe (opportunités/menaces) + interne (forces/faiblesses) = SWOT."},
+ {q:"« Semi-fictive » dans la définition du persona veut dire :", a:["La personne est inventée mais fondée sur de vraies données","La personne est totalement inventée, sans données","C'est une vraie personne","C'est un groupe de clients"], e:"Le persona est inventé (nom, portrait) mais construit à partir d'études de marché."},
+ {q:"Le persona sert notamment à :", a:["Créer des scénarios d'utilisation du produit / service","Calculer le ROI","Choisir une régie","Acheter de l'espace pub"], e:"Persona = client type, pour imaginer des scénarios d'utilisation."},
+ {q:"L'étude documentaire, les entretiens semi-directifs et l'observation servent à :", a:["Collecter des infos pour construire le persona","Acheter de l'espace publicitaire","Calculer la note d'un QCM","Choisir un réseau social"], e:"Ce sont les 3 méthodes de collecte pour construire un persona."},
+ {q:"La valeur ajoutée de l'offre par rapport aux concurrents est analysée à l'étape :", a:["Cerner le problème de la cible par rapport à l'offre","Établir le profil général","Préciser les habitudes d'achat","Identifier l'attitude de la cible"], e:"Étape 2 : en quoi l'offre aide la cible, quelle valeur ajoutée face aux concurrents."},
+ {q:"Savoir si la cible est impulsive, réfléchie ou raisonnable relève de l'étape :", a:["Préciser les habitudes d'achat","Établir le profil général","Identifier ses objections","Présenter l'offre"], e:"Étape 4 : comportement en situation d'achat."},
+ {q:"Rédiger un argumentaire de vente de quelques minutes relève de l'étape :", a:["Présenter l'offre au persona","Établir le profil général","Identifier les objections","Préciser les habitudes d'achat"], e:"Étape 5 : discours adapté, avantages, pitch, argumentaire."},
+ {q:"Combien d'étapes compte la création d'un persona dans le cours ?", a:["5","3","4","6"], e:"Profil, problème, attitude, habitudes d'achat, présentation de l'offre."},
+ {q:"Les visiteurs « non qualifiés » se trouvent surtout :", a:["En haut du tunnel (TOFU)","Au milieu du tunnel (MOFU)","En bas du tunnel (BOFU)","Après l'achat"], e:"TOFU : faire prendre conscience du problème aux visiteurs non qualifiés."},
+ {q:"Un ebook à télécharger en échange de son adresse e-mail est une action du :", a:["MOFU","TOFU","BOFU","Marketing push"], e:"MOFU : formulaire, livre blanc, ebook, webinaire."},
+ {q:"S'inscrire à un webinaire en laissant ses coordonnées correspond au :", a:["MOFU","TOFU","BOFU","Marketing analytique"], e:"Le webinaire contre des infos sert à qualifier le prospect : MOFU."},
+ {q:"Dans l'exemple du cours, quelle étape vient juste avant l'achat ?", a:["La mise du produit dans le panier","La lecture d'un article de blog","La visite de la page produit","La découverte de la marque"], e:"Article de blog → page produit → panier → achat."},
+ {q:"Quel est le bon ordre des étapes d'achat ?", a:["Prise de conscience, recherche d'info, examen, décision","Recherche d'info, prise de conscience, décision, examen","Examen, prise de conscience, recherche d'info, décision","Décision, examen, recherche d'info, prise de conscience"], e:"1 besoin (prise de conscience), 2 recherche d'info, 3 évaluation (examen), 4 achat (décision)."},
+ {q:"« L'évaluation des possibilités » correspond à :", a:["L'examen","La décision","La prise de conscience","La fidélisation"], e:"Étape 3 d'achat : évaluation des possibilités = examen."},
+ {q:"Que signifie TOFU ?", a:["Top of funnel","Total of funnel","Top of fund","Tunnel of funnel"], e:"Top / Middle / Bottom of funnel."},
+ {q:"Faire de la pub et multiplier les supports sert surtout au :", a:["TOFU","MOFU","BOFU","Marketing analytique"], e:"TOFU : SEO, réseaux sociaux, SEA, contenu, pub, multiplier les supports."}
 ];
 
-const form = document.getElementById('quiz');
-const result = document.getElementById('result');
-const progress = document.getElementById('progress');
-const submitBtn = document.getElementById('submit');
-let current = [], corrected = false;
-
+const $ = id => document.getElementById(id);
+const KEY = 'qcm-com-digitale-vues';
+function load(){ try { return JSON.parse(localStorage.getItem(KEY)) || []; } catch(e){ return []; } }
+function save(v){ try { localStorage.setItem(KEY, JSON.stringify(v)); } catch(e){} }
+let seenList = load();
 function shuffle(arr){ const a = arr.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a; }
 function esc(s){ return s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 function fmt(n){ return (Math.round(n*100)/100).toString().replace('.', ','); }
 
-function build(){
-  corrected = false; result.hidden = true; submitBtn.disabled = false;
-  const nb = document.getElementById('nb').value;
-  let qs = shuffle(BANK);
-  if(nb !== 'all') qs = qs.slice(0, Number(nb));
-  current = qs.map(item => ({...item, opts: shuffle(item.a.map((t,i)=>({t, ok:i===0})))}));
-  form.innerHTML = current.map((item, qi) => `
-    <div class="q" id="q${qi}">
-      <fieldset>
-        <legend><span class="qn">${qi+1}.</span><span>${esc(item.q)}</span></legend>
-        ${item.opts.map((o, oi) => `
-          <label class="opt" for="q${qi}o${oi}">
-            <input type="radio" name="q${qi}" id="q${qi}o${oi}" value="${oi}">
-            <span>${esc(o.t)}</span>
-          </label>`).join('')}
-      </fieldset>
-      <div class="qfoot">
-        <button type="button" class="clear" data-q="${qi}">Effacer ma réponse (0 point)</button>
-        <span class="verdict" id="v${qi}"></span>
-      </div>
-      <div class="explain" id="e${qi}" hidden></div>
-    </div>`).join('');
-  updateProgress();
+let run = null;
+$('banksize').textContent = BANK.length;
+function showSeen(){
+  const unseen = BANK.length - new Set(seenList).size;
+  $('seen').textContent = unseen > 0 ? `Il te reste ${unseen} questions jamais vues sur ${BANK.length}.` : `Tu as vu toutes les questions : on repart pour un nouveau tour, dans un autre ordre.`;
+}
+showSeen();
+
+function pick(n){
+  const seen = new Set(seenList);
+  let unseen = shuffle(BANK.map((_, i) => i).filter(i => !seen.has(i)));
+  let chosen = unseen.slice(0, n);
+  if(chosen.length < n){
+    seenList = [];
+    const rest = shuffle(BANK.map((_, i) => i).filter(i => !chosen.includes(i)));
+    chosen = chosen.concat(rest.slice(0, n - chosen.length));
+  }
+  seenList = seenList.concat(chosen); save(seenList);
+  return chosen;
 }
 
-function updateProgress(){
-  const answered = current.filter((_, qi) => form.querySelector(`input[name="q${qi}"]:checked`)).length;
-  progress.textContent = corrected ? '' : `${answered} / ${current.length} questions cochées · ${current.length - answered} laissées vides (0 point)`;
-}
-
-form.addEventListener('change', updateProgress);
-form.addEventListener('click', e => {
-  const b = e.target.closest('.clear');
-  if(!b || corrected) return;
-  form.querySelectorAll(`input[name="q${b.dataset.q}"]`).forEach(i => i.checked = false);
-  updateProgress();
+$('launch').addEventListener('click', () => {
+  const n = Math.min(Number($('nb').value), BANK.length);
+  run = { ids: pick(n), i: 0, pen: Number($('bareme').value), good: 0, bad: 0, empty: 0, log: [] };
+  $('start').hidden = true; $('result').hidden = true; $('play').hidden = false;
+  showQ(); $('qcm').scrollIntoView();
 });
 
-submitBtn.addEventListener('click', () => {
-  if(corrected) return;
-  corrected = true; submitBtn.disabled = true;
-  const pen = Number(document.getElementById('bareme').value);
-  let good=0, bad=0, empty=0;
-  current.forEach((item, qi) => {
-    const checked = form.querySelector(`input[name="q${qi}"]:checked`);
-    const v = document.getElementById('v'+qi), ex = document.getElementById('e'+qi);
-    form.querySelectorAll(`input[name="q${qi}"]`).forEach(i => i.disabled = true);
-    item.opts.forEach((o, oi) => { if(o.ok) document.querySelector(`label[for="q${qi}o${oi}"]`).classList.add('good'); });
-    if(!checked){ empty++; v.textContent = 'Pas répondu : 0'; v.className = 'verdict nr'; }
-    else if(item.opts[Number(checked.value)].ok){ good++; v.textContent = 'Juste : +1'; v.className = 'verdict ok'; }
-    else { bad++; checked.closest('.opt').classList.add('bad'); v.textContent = `Faux : −${fmt(pen)}`; v.className = 'verdict ko'; }
-    ex.textContent = item.e; ex.hidden = false;
-  });
-  const n = current.length, raw = good - bad*pen, sur20 = raw / n * 20;
-  const tip = bad*pen > 2 ? "Tu perds beaucoup de points avec les réponses fausses. Si tu hésites entre plus de deux réponses, laisse vide." :
-              empty > n*0.3 ? "Tu laisses beaucoup de questions vides. Si tu peux éliminer deux réponses sur quatre, ça vaut souvent le coup de répondre." :
+function showQ(){
+  const item = BANK[run.ids[run.i]];
+  run.opts = shuffle(item.a.map((t, k) => ({t, ok: k === 0})));
+  run.answered = false;
+  const n = run.ids.length;
+  $('counter').textContent = `Question ${run.i + 1} / ${n}`;
+  $('live').textContent = `Points : ${fmt(run.good - run.bad * run.pen)}`;
+  $('barfill').style.width = (run.i / n * 100) + '%';
+  $('qbox').innerHTML = `<legend><span>${esc(item.q)}</span></legend>` + run.opts.map((o, k) => `
+    <label class="opt" for="o${k}"><input type="radio" name="cur" id="o${k}" value="${k}"><span>${esc(o.t)}</span></label>`).join('');
+  $('explain').hidden = true; $('validate').disabled = true; $('validate').hidden = false; $('skip').hidden = false; $('next').hidden = true;
+}
+
+$('qbox').addEventListener('change', () => { if(!run.answered) $('validate').disabled = false; });
+
+function answer(k){
+  if(run.answered) return; run.answered = true;
+  const item = BANK[run.ids[run.i]];
+  document.querySelectorAll('#qbox input').forEach(i => i.disabled = true);
+  run.opts.forEach((o, j) => { if(o.ok) document.querySelector(`label[for="o${j}"]`).classList.add('good'); });
+  let verdict, cls;
+  if(k === null){ run.empty++; verdict = 'Pas répondu : 0 point.'; cls = 'nr'; }
+  else if(run.opts[k].ok){ run.good++; verdict = 'Juste : +1.'; cls = 'ok'; }
+  else { run.bad++; document.querySelector(`label[for="o${k}"]`).classList.add('bad'); verdict = `Faux : −${fmt(run.pen)}.`; cls = 'ko'; }
+  if(cls !== 'ok') run.log.push({q: item.q, r: item.a[0], e: item.e, cls});
+  $('explain').innerHTML = `<span class="verdict ${cls}">${verdict}</span> ${esc(item.e)}`;
+  $('explain').hidden = false;
+  $('live').textContent = `Points : ${fmt(run.good - run.bad * run.pen)}`;
+  $('validate').hidden = true; $('skip').hidden = true;
+  $('next').textContent = run.i + 1 < run.ids.length ? 'Question suivante' : 'Voir ma note';
+  $('next').hidden = false; $('next').focus();
+}
+$('validate').addEventListener('click', () => { const c = document.querySelector('#qbox input:checked'); if(c) answer(Number(c.value)); });
+$('skip').addEventListener('click', () => answer(null));
+$('next').addEventListener('click', () => { run.i++; if(run.i < run.ids.length) showQ(); else finish(); });
+$('quit').addEventListener('click', () => { if(run && run.i > 0 || (run && run.answered)) { if(!run.answered) run.ids = run.ids.slice(0, run.i); else run.ids = run.ids.slice(0, run.i + 1); finish(); } else { $('play').hidden = true; $('start').hidden = false; showSeen(); } });
+
+function finish(){
+  $('play').hidden = true;
+  const n = run.good + run.bad + run.empty, raw = run.good - run.bad * run.pen, sur20 = n ? raw / n * 20 : 0;
+  const tip = run.bad * run.pen > 2 ? "Tu perds beaucoup de points sur les réponses fausses. Si tu hésites entre plus de deux réponses, mieux vaut cliquer « Je ne sais pas »." :
+              run.empty > n * 0.3 ? "Tu laisses beaucoup de questions sans réponse. Si tu arrives à éliminer deux réponses sur quatre, ça vaut souvent le coup de répondre." :
               "Bon équilibre entre réponses et abstentions.";
-  result.innerHTML = `
-    <h3>Ton résultat</h3>
+  const errs = run.log.length ? `<h3>À revoir</h3><ul class="review">${run.log.map(l => `<li class="${l.cls}"><b>${esc(l.q)}</b><br>Bonne réponse : ${esc(l.r)}<br><span class="compl">${esc(l.e)}</span></li>`).join('')}</ul>` : '<p>Aucune erreur, parfait !</p>';
+  $('result').innerHTML = `
+    <h3>Ta note</h3>
     <div class="score">${fmt(sur20)} / 20</div>
-    <div class="stats">
-      <span><b>${good}</b> justes</span><span><b>${bad}</b> fausses</span><span><b>${empty}</b> vides</span><span>Points : <b>${fmt(raw)}</b> sur ${n}</span>
-    </div>
+    <div class="stats"><span><b>${run.good}</b> justes</span><span><b>${run.bad}</b> fausses</span><span><b>${run.empty}</b> sans réponse</span><span>Points : <b>${fmt(raw)}</b> sur ${n}</span></div>
     <p>${tip}</p>
-    <p>Les bonnes réponses sont en vert dans chaque question, avec l'explication. Relis les parties où tu t'es trompé, puis relance un nouveau QCM.</p>
-    <div><button class="btn" type="button" id="again">Refaire un nouveau QCM</button></div>`;
-  result.hidden = false; updateProgress();
-  document.getElementById('again').addEventListener('click', () => { build(); document.getElementById('qcm').scrollIntoView(); });
-  result.scrollIntoView({block:'center'});
-});
-
-document.getElementById('new').addEventListener('click', build);
-document.getElementById('nb').addEventListener('change', build);
-build();
+    ${errs}
+    <div><button class="btn red big" type="button" id="again">Relancer un QCM (nouvelles questions)</button></div>`;
+  $('result').hidden = false;
+  $('again').addEventListener('click', () => { $('result').hidden = true; $('start').hidden = false; showSeen(); $('qcm').scrollIntoView(); });
+  $('qcm').scrollIntoView();
+}
 </script>
