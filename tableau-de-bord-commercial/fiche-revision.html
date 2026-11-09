@@ -1,0 +1,406 @@
+<title>Fiche R3.08 Tableau de bord</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Mise en page : une colonne de lecture type cahier de révision, sommaire collant en haut, blocs « formule » et « piège » repérables d'un coup d'œil */
+:root{
+  --bg:#f6f7f9; --paper:#ffffff; --ink:#18212b; --muted:#5a6573; --line:#dde2e8;
+  --accent:#0f6e74; --accent-soft:#e2f1f1;
+  --ok:#1f7a3d; --ok-soft:#e3f3e8; --warn:#9a5b00; --warn-soft:#fbefd9; --bad:#b3261e; --bad-soft:#fbe4e2;
+  --f-head:"Sora",system-ui,sans-serif; --f-body:"Source Sans 3",system-ui,sans-serif; --f-mono:"JetBrains Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#11161c; --paper:#1a2129; --ink:#e6ebf0; --muted:#9aa6b3; --line:#2c3640;
+  --accent:#5cc3c9; --accent-soft:#16363a;
+  --ok:#6fd08f; --ok-soft:#173426; --warn:#f0b65a; --warn-soft:#3a2c14; --bad:#ff8a80; --bad-soft:#3d1c1a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11161c; --paper:#1a2129; --ink:#e6ebf0; --muted:#9aa6b3; --line:#2c3640;
+  --accent:#5cc3c9; --accent-soft:#16363a;
+  --ok:#6fd08f; --ok-soft:#173426; --warn:#f0b65a; --warn-soft:#3a2c14; --bad:#ff8a80; --bad-soft:#3d1c1a; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+.wrap{max-width:860px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:8px 64px}
+header.top{padding-block:28px 12px}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+h1{font-family:var(--f-head);font-size:clamp(28px,6vw,40px);line-height:1.15;margin:6px 0 10px;text-wrap:balance}
+h2{font-family:var(--f-head);font-size:24px;margin:0 0 4px;text-wrap:balance}
+h3{font-family:var(--f-head);font-size:18px;margin:22px 0 6px}
+p{margin:8px 0}
+.lead{color:var(--muted);max-width:65ch}
+nav.toc{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-bottom:1px solid var(--line);margin-inline:calc(-1*max(16px,env(safe-area-inset-left,0px)))}
+nav.toc .in{display:flex;gap:6px;overflow-x:auto;padding:10px max(16px,env(safe-area-inset-left,0px));scrollbar-width:none}
+nav.toc a{flex:none;font-size:14px;font-weight:600;color:var(--ink);text-decoration:none;padding:6px 12px;border:1px solid var(--line);border-radius:999px;white-space:nowrap}
+nav.toc a:hover,nav.toc a:focus-visible{border-color:var(--accent);color:var(--accent);outline:none}
+section{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:22px clamp(16px,4vw,28px);margin-top:20px;scroll-margin-top:64px}
+.sub{color:var(--muted);margin:0 0 12px}
+ul,ol{padding-left:22px;margin:8px 0}
+li{margin:3px 0}
+strong{font-weight:700}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:12px 0}
+.box{border:1px solid var(--line);border-radius:10px;padding:12px 14px;min-width:0}
+.box b.t{display:block;font-family:var(--f-head);font-size:15px;margin-bottom:4px}
+.formula{font-family:var(--f-mono);font-size:15px;background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:6px;padding:10px 12px;margin:8px 0;overflow-x:auto;white-space:nowrap}
+.formula small{font-family:var(--f-body);color:var(--muted);display:block;white-space:normal;font-size:14px;margin-top:2px}
+.trap{background:var(--warn-soft);border-radius:8px;padding:10px 12px;margin:10px 0}
+.trap::before{content:"Piège";display:block;font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--warn);margin-bottom:2px}
+.key{background:var(--ok-soft);border-radius:8px;padding:10px 12px;margin:10px 0}
+.key::before{content:"À retenir";display:block;font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ok);margin-bottom:2px}
+.tbl{overflow-x:auto;margin:10px 0;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:15px;font-variant-numeric:tabular-nums}
+th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-size:13px;color:var(--muted);font-weight:600;background:var(--bg)}
+tr:last-child td{border-bottom:none}
+td.n{text-align:right}
+.pill{display:inline-block;font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px}
+.p-ok{background:var(--ok-soft);color:var(--ok)} .p-warn{background:var(--warn-soft);color:var(--warn)} .p-bad{background:var(--bad-soft);color:var(--bad)} .p-info{background:var(--accent-soft);color:var(--accent)}
+.alert{border:1px solid var(--bad);background:var(--bad-soft);border-radius:10px;padding:12px 14px;margin:10px 0}
+.alert b.t{color:var(--bad);font-family:var(--f-head)}
+/* Schéma de décomposition du CA */
+.tree{display:grid;grid-template-columns:1fr;gap:10px;margin:14px 0}
+.tree .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.node{border:1px solid var(--line);border-radius:10px;padding:10px 12px;text-align:center;background:var(--paper)}
+.node b{display:block;font-family:var(--f-head);font-size:15px}
+.node span{font-family:var(--f-mono);font-size:13px;color:var(--muted)}
+.node.root{border-color:var(--accent);background:var(--accent-soft)}
+.op{text-align:center;font-family:var(--f-mono);color:var(--accent);font-size:14px}
+details{border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:8px 0}
+details summary{cursor:pointer;font-weight:600}
+details summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+details[open] summary{margin-bottom:6px}
+.ans{color:var(--ink)}
+.muted{color:var(--muted)}
+.mono{font-family:var(--f-mono);font-size:14px}
+footer{color:var(--muted);font-size:14px;margin-top:24px}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">BUT TC 2 · R3.08 · Tableau de bord commercial</div>
+  <h1>Fiche de révision : piloter avec un tableau de bord</h1>
+  <p class="lead">Le cours (tes notes + celles de Yanis), toutes les formules, les pièges, et les corrigés du TD1 et du TD2 Casa Nova. À la fin, un test pour vérifier que tu sais.</p>
+</header>
+
+<nav class="toc" aria-label="Sommaire"><div class="in">
+  <a href="#cours">1. Le cours</a>
+  <a href="#indicateurs">2. Indicateurs</a>
+  <a href="#formules">3. Formules</a>
+  <a href="#satisfaction">4. Satisfaction</a>
+  <a href="#td1">5. TD1</a>
+  <a href="#td2">6. TD2 Casa Nova</a>
+  <a href="#excel">7. Ton Excel</a>
+  <a href="#test">8. Test</a>
+</div></nav>
+
+<section id="cours">
+  <h2>1. Le tableau de bord</h2>
+  <p class="sub">Les définitions à savoir par cœur.</p>
+
+  <div class="formula">Tableau de bord = outil synthétique + outil de pilotage
+    <small>Synthétique : il rassemble <strong>quelques</strong> indicateurs clés choisis pour suivre des objectifs. Pilotage : il permet de détecter un écart, comprendre sa cause et décider d'une action.</small></div>
+  <p><strong>3 étapes :</strong> mesurer → analyser → décider.</p>
+  <p><strong>Attention :</strong> il n'existe pas de tableau de bord universel. Il dépend des objectifs et de la personne qui le lit.</p>
+
+  <h3>À quoi il sert : 4 rôles</h3>
+  <div class="tbl"><table>
+    <tr><th>Rôle</th><th>La question posée</th></tr>
+    <tr><td><strong>Suivre</strong></td><td>Où en sommes-nous ?</td></tr>
+    <tr><td><strong>Comprendre</strong></td><td>Pourquoi ce résultat ? (les écarts)</td></tr>
+    <tr><td><strong>Alerter</strong></td><td>Où est le risque ?</td></tr>
+    <tr><td><strong>Corriger</strong></td><td>Que peut-on changer ?</td></tr>
+  </table></div>
+
+  <div class="grid2">
+    <div class="box"><b class="t">Reporting</b>Remonter, présenter et transmettre les résultats.</div>
+    <div class="box"><b class="t">Pilotage</b>Utiliser l'information pour agir et prendre des décisions.</div>
+  </div>
+
+  <h3>Pour qui : une même donnée, trois usages</h3>
+  <ul>
+    <li><strong>Collaborateur / salarié :</strong> comprendre ses résultats, repérer ses axes de progrès.</li>
+    <li><strong>Manager :</strong> arbitrer, accompagner, corriger.</li>
+    <li><strong>Hiérarchie :</strong> suivre la performance globale, décider au niveau stratégique.</li>
+  </ul>
+
+  <h3>Le fil rouge du pilotage</h3>
+  <div class="formula">1. Objectif → 2. Plan d'action → 3. KPI → 4. Écart → 5. Décision</div>
+  <div class="key">Un KPI qui n'est pas associé à un objectif n'a pas de sens. Un écart sans décision n'a pas d'utilité.</div>
+
+  <h3>Objectifs</h3>
+  <ul>
+    <li><strong>Stratégie :</strong> ensemble d'actions mises en place par l'entreprise pour atteindre ses objectifs à long, moyen ou court terme.</li>
+    <li><strong>Objectif stratégique :</strong> grande orientation à long terme de l'entreprise. Ex. : devenir leader sur le marché.</li>
+    <li><strong>Objectif opérationnel :</strong> résultat concret et mesurable, fixé à un service, qui permet de réaliser l'objectif stratégique.</li>
+    <li><strong>Plan d'action :</strong> les actions mises en place pour atteindre l'objectif.</li>
+    <li><strong>Action corrective :</strong> action mise en place pour réduire l'écart entre le résultat obtenu et l'objectif fixé.</li>
+  </ul>
+  <div class="tbl"><table>
+    <tr><th>Service</th><th>Mission</th><th>Objectif opérationnel</th></tr>
+    <tr><td>Prospection</td><td>Trouver de nouveaux clients</td><td>+50 nouveaux clients en 6 mois</td></tr>
+    <tr><td>GRC</td><td>Développer la clientèle existante</td><td>+10 % de CA moyen par client</td></tr>
+    <tr><td>Communication</td><td>Opérations promotionnelles</td><td>« Doubler le PV » pour vendre plus</td></tr>
+  </table></div>
+  <p class="muted">Objectif stratégique commun : devenir leader sur le marché. Plus on descend vers les services, plus l'objectif devient concret, mesurable et pilotable.</p>
+
+  <h3>Un bon objectif est pilotable</h3>
+  <ul>
+    <li><strong>Clair / précis :</strong> compris par tous.</li>
+    <li><strong>Mesurable :</strong> un résultat observable, chiffré.</li>
+    <li><strong>Maîtrisable :</strong> sous le contrôle du responsable.</li>
+    <li><strong>Daté :</strong> avec une échéance.</li>
+  </ul>
+</section>
+
+<section id="indicateurs">
+  <h2>2. Les indicateurs (KPI)</h2>
+  <div class="formula">Indicateur = information chiffrée qui permet d'apprécier une performance ou l'atteinte d'un objectif</div>
+  <p>Un indicateur permet d'apprécier 3 choses :</p>
+  <ul>
+    <li><strong>une évolution :</strong> « le CA progresse » ;</li>
+    <li><strong>une performance :</strong> « c'est efficace » ;</li>
+    <li><strong>un objectif :</strong> « l'objectif est atteint, ou dépassé ».</li>
+  </ul>
+
+  <h3>Les 4 familles d'indicateurs</h3>
+  <div class="tbl"><table>
+    <tr><th>Famille</th><th>Ce qu'elle mesure</th><th>Exemples</th></tr>
+    <tr><td><strong>Résultat</strong></td><td>Le résultat obtenu</td><td>CA, marge</td></tr>
+    <tr><td><strong>Moyens</strong></td><td>Les ressources mobilisées</td><td>Heures, budget</td></tr>
+    <tr><td><strong>Avancement</strong></td><td>L'exécution du plan</td><td>% de l'équipe formée</td></tr>
+    <tr><td><strong>Environnement</strong></td><td>Ce qui influence l'activité</td><td>Trafic de la galerie, marché</td></tr>
+  </table></div>
+
+  <h3>Du plan d'action au KPI</h3>
+  <p>Objectif : +8 % de CA → plan d'action : développer les ventes additionnelles → KPI : <strong>indice des ventes</strong> et <strong>panier moyen</strong>.</p>
+  <div class="key">Le KPI doit renseigner sur ce qui compte : il mesure le levier sur lequel le plan d'action agit.</div>
+</section>
+
+<section id="formules">
+  <h2>3. Les formules</h2>
+  <p class="sub">Le CA se décompose. Chaque case est un levier que le manager peut actionner.</p>
+
+  <div class="tree" aria-label="Décomposition du chiffre d'affaires">
+    <div class="node root"><b>Chiffre d'affaires TTC</b><span>= tickets × panier moyen</span></div>
+    <div class="op">↙ décomposé en ↘</div>
+    <div class="row">
+      <div class="node"><b>Nombre de tickets (clients)</b><span>= visiteurs × taux de transformation</span></div>
+      <div class="node"><b>Panier moyen</b><span>= indice des ventes × prix moyen</span></div>
+    </div>
+    <div class="op">↙ ↘ &nbsp;&nbsp;&nbsp;&nbsp; ↙ ↘</div>
+    <div class="row">
+      <div class="node"><b>Trafic</b><span>visiteurs, passages</span></div>
+      <div class="node"><b>Taux de transformation</b><span>visiteur → client</span></div>
+      <div class="node"><b>Indice des ventes</b><span>articles par ticket</span></div>
+      <div class="node"><b>Prix moyen</b><span>prix d'un article</span></div>
+    </div>
+  </div>
+
+  <div class="formula">CA TTC = nb de tickets × panier moyen</div>
+  <div class="formula">Panier moyen = CA ÷ nb de tickets<small>Ce que dépense un client à chaque passage en caisse. En €.</small></div>
+  <div class="formula">Taux de transformation = (nb de tickets ÷ nb de visiteurs) × 100<small>Part des visiteurs qui achètent. En %.</small></div>
+  <div class="formula">Indice des ventes = nb d'articles vendus ÷ nb de tickets<small>Nombre d'articles par ticket. Sans unité (ex. 2,10).</small></div>
+  <div class="formula">Prix moyen d'un article = CA ÷ nb d'articles vendus<small>En €. Vérification : panier moyen = indice des ventes × prix moyen.</small></div>
+  <div class="formula">Évolution (%) = (valeur d'arrivée − valeur de départ) ÷ valeur de départ × 100<small>Toujours divisé par la valeur de <strong>départ</strong> (le mois le plus ancien).</small></div>
+  <div class="formula">Écart à l'objectif = réalisé − objectif<small>Négatif = sous l'objectif. Positif = au-dessus.</small></div>
+  <div class="formula">Taux d'atteinte = réalisé ÷ objectif × 100</div>
+  <div class="formula">CA HT = CA TTC ÷ (1 + taux de TVA)<small>TVA 20 % → ÷ 1,2 ; 10 % → ÷ 1,1 ; 5,5 % → ÷ 1,055.</small></div>
+
+  <div class="trap"><strong>Points ou pourcentage ?</strong> Quand on compare deux <em>taux</em>, la différence s'écrit en <strong>points de pourcentage</strong> : un taux qui passe de 27 % à 25 % baisse de <strong>2 points</strong>, pas de 2 %. (En évolution relative, c'est −7,4 %.)</div>
+  <div class="trap"><strong>Les 3 unités d'écart du TD2 :</strong> euros pour le CA et le panier moyen ; points de pourcentage pour le taux de transformation et le CSAT ; points de score pour le NPS et le CES.</div>
+  <div class="trap">Une évolution observée ne prouve pas, à elle seule, une relation de cause à effet. On parle d'<strong>hypothèse</strong> tant qu'on n'a pas vérifié.</div>
+</section>
+
+<section id="satisfaction">
+  <h2>4. Les indicateurs de satisfaction</h2>
+  <div class="tbl"><table>
+    <tr><th>Indicateur</th><th>Ce qu'il mesure</th><th>Question type</th><th>Échelle</th></tr>
+    <tr><td><strong>CSAT</strong><br><span class="muted">Customer Satisfaction Score</span></td><td>La satisfaction juste après une expérience</td><td>« Êtes-vous satisfait de… ? »</td><td>Smileys, 1 à 5…</td></tr>
+    <tr><td><strong>NPS</strong><br><span class="muted">Net Promoter Score</span></td><td>La propension à recommander une entreprise, une marque, un produit</td><td>« Recommanderiez-vous… à vos proches ? »</td><td>0 à 10</td></tr>
+    <tr><td><strong>CES</strong><br><span class="muted">Customer Effort Score</span></td><td>L'effort fourni par le client pour faire une action ou résoudre un problème</td><td>« X a facilité la résolution de mon problème »</td><td>1 à 7 (ou 1 à 5)</td></tr>
+  </table></div>
+  <p><strong>Propension :</strong> la proportion de gens qui ont l'intention de faire quelque chose.</p>
+
+  <div class="formula">CSAT = (nb de réponses satisfaites + très satisfaites) ÷ nb total de réponses × 100</div>
+  <div class="formula">NPS = % de promoteurs − % de détracteurs<small>Promoteurs : notes 9 et 10. Passifs : 7 et 8 (ne comptent pas). Détracteurs : 0 à 6. Résultat en points, de −100 à +100.</small></div>
+  <div class="formula">CES moyen = moyenne des notes<small>Dans le TD2 : de 1 (effort très important) à 7 (effort très faible). Plus c'est haut, mieux c'est.</small></div>
+  <div class="trap">Le NPS s'écrit en <strong>points</strong>, pas en % : « NPS de +16 » ou « 16 pts ».</div>
+</section>
+
+<section id="td1">
+  <h2>5. Corrigé TD1</h2>
+
+  <h3>Application 1 : galerie marchande Cora (la méthode)</h3>
+  <p class="muted">Je n'ai pas eu la page 1 de l'énoncé, donc voici la méthode à partir de ta copie (tes résultats sont justes).</p>
+  <ol>
+    <li><strong>Fréquentation journalière :</strong> les coefficients font 7 au total. Fréquentation moyenne = 32 000 ÷ 7 = 4 571 par jour. Chaque jour = 4 571 × son coefficient (lundi 0,5 → 2 286). Jours d'ouverture de la boutique (lundi, mercredi, samedi, dimanche matin) = <strong>19 200</strong> personnes.</li>
+    <li><strong>Répartition par entrée :</strong> on applique les % « hors week-end » au lundi et au mercredi, les % « week-end » au samedi et au dimanche. Total par entrée : A ≈ 3 255, B1 ≈ 6 126, B2 ≈ 6 126, C ≈ 3 694.</li>
+    <li><strong>Clients :</strong> taux d'attractivité 6 % × 19 200 = 1 152 personnes qui entrent ; × 12 % = <strong>138 clients</strong> par semaine.</li>
+    <li><strong>CA :</strong> 26,40 € × 138 = 3 643,20 € TTC par semaine, soit 14 572,80 € par mois. Passage au HT rayon par rayon (30 % à 20 % de TVA, 20 % à 10 %, 50 % à 5,5 %) = <strong>13 199,34 € HT</strong> par mois.</li>
+    <li><strong>Tableau de résultat :</strong> CA − charges variables = marge sur coût variable (MCV) ; MCV − charges fixes = résultat. Attention, sur ta feuille CV = 66 % et MCV = 32 %, or CV + MCV doit faire 100 %. Vérifie le taux dans l'énoncé.</li>
+  </ol>
+
+  <h3>Application 2 : satisfaction client</h3>
+  <p><strong>1. Repérer l'indicateur</strong></p>
+  <ul>
+    <li>The Kooples, « Que pensez-vous de l'accueil… ? » avec des smileys → <strong>CSAT</strong> (satisfaction après une expérience).</li>
+    <li>The Kooples, « Recommanderiez-vous The Kooples à vos proches ? » de 0 à 10 → <strong>NPS</strong>.</li>
+    <li>Diduenjoy, « a facilité la résolution de mon problème » de 1 à 7 → <strong>CES</strong>.</li>
+  </ul>
+
+  <p><strong>2. CES pour l'Hôtel Altis</strong></p>
+  <p>a. Deux conditions pour qu'il soit pertinent :</p>
+  <ul>
+    <li>le poser <strong>juste après une interaction précise</strong> (réservation, check-in, réclamation), quand le client s'en souvient ;</li>
+    <li>une question <strong>claire sur une seule tâche</strong>, avec la même échelle à chaque fois, pour pouvoir comparer dans le temps.</li>
+  </ul>
+  <p>b. Trois premières questions (échelle de 1 « pas du tout d'accord » à 7 « tout à fait d'accord ») :</p>
+  <ol>
+    <li>« Il a été facile de réserver votre chambre. »</li>
+    <li>« Votre arrivée à l'hôtel (check-in) a été simple et rapide. »</li>
+    <li>« Quand vous avez eu une demande, notre équipe l'a traitée facilement. »</li>
+  </ol>
+
+  <p><strong>3. CSAT</strong> : (35 + 57) ÷ 112 × 100 = <strong>82,1 %</strong>.</p>
+  <p>Interprétation : 8 clients sur 10 sont satisfaits, c'est correct. Mais 20 clients sur 112 (17,9 %) ne le sont pas, dont 12 « pas du tout satisfaits », plus que les « peu satisfaits » : il y a une vraie insatisfaction à comprendre. À comparer avec un objectif et avec les résultats précédents.</p>
+
+  <p><strong>4. NPS</strong> (750 personnes)</p>
+  <p>Étapes avant le calcul : définir l'objectif et la cible, poser la question de recommandation sur 0 à 10 (+ une question ouverte « pourquoi ? »), choisir le moment et le canal, avoir assez de réponses, puis classer les réponses.</p>
+  <div class="tbl"><table>
+    <tr><th>Groupe</th><th>Notes</th><th class="n">Personnes</th><th class="n">%</th></tr>
+    <tr><td>Promoteurs</td><td>9 et 10</td><td class="n">197 + 111 = 308</td><td class="n">41,1 %</td></tr>
+    <tr><td>Passifs</td><td>7 et 8</td><td class="n">98 + 102 = 200</td><td class="n">26,7 %</td></tr>
+    <tr><td>Détracteurs</td><td>0 à 6</td><td class="n">25+34+33+17+50+38+45 = 242</td><td class="n">32,3 %</td></tr>
+  </table></div>
+  <div class="formula">NPS = 41,1 − 32,3 = +8,8 ≈ <strong>+9 points</strong></div>
+  <p>Interprétation : positif, mais faible. Presque un tiers des clients sont détracteurs. Plan d'actions : appeler les détracteurs pour connaître leurs raisons, analyser les commentaires, corriger les points de friction cités, puis faire passer les passifs (7-8) en promoteurs (programme de fidélité, parrainage).</p>
+</section>
+
+<section id="td2">
+  <h2>6. Corrigé TD2 : Casa Nova</h2>
+  <p class="sub">Le CA augmente entre août et septembre. Est-ce une bonne nouvelle ?</p>
+
+  <h3>Q1. Trois objectifs opérationnels</h3>
+  <ol>
+    <li>Atteindre <strong>112 000 € de CA TTC</strong> en septembre.</li>
+    <li>Transformer <strong>28 % des visiteurs</strong> en clients, avec un panier moyen de 53 € et 2,10 articles par ticket.</li>
+    <li>Atteindre un <strong>CSAT de 90 %</strong>, un <strong>NPS de 35</strong> et un <strong>CES de 5,5</strong>.</li>
+  </ol>
+
+  <h3>Q2-Q3. Les KPI retenus et leur famille</h3>
+  <div class="tbl"><table>
+    <tr><th>KPI</th><th>Classement</th><th>Intérêt pour le manager</th></tr>
+    <tr><td>CA TTC</td><td><span class="pill p-info">Résultat commercial</span></td><td>Savoir si l'objectif de vente est atteint</td></tr>
+    <tr><td>Panier moyen</td><td><span class="pill p-info">Résultat commercial</span></td><td>Combien dépense chaque client</td></tr>
+    <tr><td>Taux de transformation</td><td><span class="pill p-warn">Efficacité commerciale</span></td><td>Les vendeurs transforment-ils les visiteurs ?</td></tr>
+    <tr><td>Indice des ventes</td><td><span class="pill p-warn">Efficacité commerciale</span></td><td>Les ventes additionnelles fonctionnent-elles ?</td></tr>
+    <tr><td>Prix moyen par article</td><td><span class="pill p-warn">Efficacité commerciale</span></td><td>Le panier monte-t-il grâce au prix ou au volume ?</td></tr>
+    <tr><td>CSAT</td><td><span class="pill p-ok">Satisfaction client</span></td><td>Satisfaction après la visite</td></tr>
+    <tr><td>NPS</td><td><span class="pill p-ok">Satisfaction client</span></td><td>Fidélité et bouche-à-oreille</td></tr>
+    <tr><td>CES</td><td><span class="pill p-ok">Satisfaction client</span></td><td>Facilité du parcours d'achat</td></tr>
+  </table></div>
+
+  <h3>Q4 à Q8. Le tableau de bord de septembre</h3>
+  <div class="tbl"><table>
+    <tr><th>KPI</th><th class="n">Objectif</th><th class="n">Sept.</th><th class="n">Août</th><th class="n">Écart à l'objectif</th><th class="n">Évolution</th><th>Signal</th></tr>
+    <tr><td>CA TTC</td><td class="n">112 000 €</td><td class="n">110 000 €</td><td class="n">105 894 €</td><td class="n">−2 000 €</td><td class="n">+3,9 %</td><td><span class="pill p-warn">À surveiller</span></td></tr>
+    <tr><td>Visiteurs</td><td class="n">—</td><td class="n">8 000</td><td class="n">7 400</td><td class="n">—</td><td class="n">+8,1 %</td><td><span class="pill p-ok">Hausse</span></td></tr>
+    <tr><td>Tickets</td><td class="n">—</td><td class="n">2 000</td><td class="n">1 998</td><td class="n">—</td><td class="n">+0,1 %</td><td><span class="pill p-warn">Stable</span></td></tr>
+    <tr><td>Taux de transformation</td><td class="n">28 %</td><td class="n">25,0 %</td><td class="n">27,0 %</td><td class="n">−3 pts</td><td class="n">−2 pts</td><td><span class="pill p-bad">Alerte</span></td></tr>
+    <tr><td>Panier moyen</td><td class="n">53 €</td><td class="n">55,00 €</td><td class="n">53,00 €</td><td class="n">+2 €</td><td class="n">+3,8 %</td><td><span class="pill p-ok">Atteint</span></td></tr>
+    <tr><td>Indice des ventes</td><td class="n">2,10</td><td class="n">2,00</td><td class="n">2,10</td><td class="n">−0,10</td><td class="n">−4,8 %</td><td><span class="pill p-warn">À surveiller</span></td></tr>
+    <tr><td>Prix moyen article</td><td class="n">—</td><td class="n">27,50 €</td><td class="n">25,24 €</td><td class="n">—</td><td class="n">+9,0 %</td><td><span class="pill p-info">Info</span></td></tr>
+    <tr><td>CSAT</td><td class="n">90 %</td><td class="n">81 %</td><td class="n">85 %</td><td class="n">−9 pts</td><td class="n">−4 pts</td><td><span class="pill p-bad">Alerte</span></td></tr>
+    <tr><td>NPS</td><td class="n">35</td><td class="n">16</td><td class="n">25</td><td class="n">−19 pts</td><td class="n">−9 pts</td><td><span class="pill p-bad">Alerte</span></td></tr>
+    <tr><td>CES /7</td><td class="n">5,5</td><td class="n">4,6</td><td class="n">5,0</td><td class="n">−0,9 pt</td><td class="n">−0,4 pt</td><td><span class="pill p-bad">Alerte</span></td></tr>
+  </table></div>
+  <p class="muted">Calculs : taux de transformation = 2 000 ÷ 8 000 ; panier moyen = 110 000 ÷ 2 000 ; indice = 4 000 ÷ 2 000 ; prix moyen = 110 000 ÷ 4 000. Le CA atteint 98,2 % de l'objectif.</p>
+
+  <p><strong>Q7. Vérification :</strong> 2 000 tickets × 55 € = 110 000 € et 1 998 × 53 € = 105 894 €. Les résultats sont cohérents.</p>
+
+  <h3>Les tendances de mai à septembre (onglet « Données brutes »)</h3>
+  <div class="tbl"><table>
+    <tr><th></th><th class="n">Mai</th><th class="n">Juin</th><th class="n">Juil.</th><th class="n">Août</th><th class="n">Sept.</th></tr>
+    <tr><td>Visiteurs</td><td class="n">6 200</td><td class="n">6 600</td><td class="n">7 100</td><td class="n">7 400</td><td class="n">8 000</td></tr>
+    <tr><td>Taux de transformation</td><td class="n">30 %</td><td class="n">29 %</td><td class="n">28 %</td><td class="n">27 %</td><td class="n">25 %</td></tr>
+    <tr><td>Panier moyen</td><td class="n">50 €</td><td class="n">51 €</td><td class="n">52 €</td><td class="n">53 €</td><td class="n">55 €</td></tr>
+    <tr><td>Indice des ventes</td><td class="n">2,10</td><td class="n">2,10</td><td class="n">2,10</td><td class="n">2,10</td><td class="n">2,00</td></tr>
+    <tr><td>CSAT</td><td class="n">91 %</td><td class="n">90 %</td><td class="n">88 %</td><td class="n">85 %</td><td class="n">81 %</td></tr>
+    <tr><td>NPS</td><td class="n">42</td><td class="n">39</td><td class="n">34</td><td class="n">25</td><td class="n">16</td></tr>
+    <tr><td>Détracteurs</td><td class="n">17 %</td><td class="n">18 %</td><td class="n">20 %</td><td class="n">23 %</td><td class="n">28 %</td></tr>
+    <tr><td>CES /7</td><td class="n">5,8</td><td class="n">5,7</td><td class="n">5,4</td><td class="n">5,0</td><td class="n">4,6</td></tr>
+  </table></div>
+  <p>Plus il y a de visiteurs, moins le magasin les transforme, et plus la satisfaction baisse. Les deux mouvements sont réguliers depuis mai.</p>
+
+  <h3>Q9. Deux graphiques utiles</h3>
+  <ol>
+    <li><strong>« Plus de visiteurs, moins de transformation (mai-sept.) »</strong> : histogramme des visiteurs + courbe du taux de transformation sur un 2<sup>e</sup> axe. Il montre que la hausse du trafic n'est pas transformée.</li>
+    <li><strong>« La satisfaction client se dégrade depuis mai »</strong> : courbes NPS, CSAT et CES, avec la ligne d'objectif. Il montre une tendance, pas un accident de septembre.</li>
+  </ol>
+
+  <h3>Q10. Les deux alertes prioritaires</h3>
+  <div class="alert"><b class="t">Alerte 1 : taux de transformation à 25 % (objectif 28 %, −3 pts)</b><br>
+  Il y a 600 visiteurs de plus qu'en août mais seulement 2 tickets de plus. À 28 %, les 8 000 visiteurs auraient donné 2 240 tickets, soit environ 13 200 € de CA en plus au panier de 55 €. C'est plus que les 2 000 € qui manquent.</div>
+  <div class="alert"><b class="t">Alerte 2 : la satisfaction chute (NPS 16 au lieu de 35, −19 pts)</b><br>
+  Le NPS a perdu 26 points depuis mai, les détracteurs passent de 17 % à 28 %, le CSAT et le CES baissent aussi. C'est un risque pour les ventes futures (moins de recommandations, moins de retours en magasin).</div>
+
+  <h3>Q11-Q12. Schéma et phrases explicatives</h3>
+  <p>Le schéma est celui de la <a href="#formules">partie 3</a>. Quatre relations en phrases :</p>
+  <ol>
+    <li>Le nombre de tickets dépend de la fréquentation et du taux de transformation : 8 000 visiteurs × 25 % = 2 000 tickets.</li>
+    <li>Le panier moyen dépend du nombre d'articles par ticket et du prix moyen : 2,00 × 27,50 € = 55 €.</li>
+    <li>Le CA est le produit du nombre de tickets et du panier moyen : 2 000 × 55 € = 110 000 €.</li>
+    <li>Si le trafic monte mais que le taux de transformation baisse, le nombre de tickets stagne : c'est ce qui arrive en septembre.</li>
+  </ol>
+
+  <h3>Q13. La hausse du CA suffit-elle ?</h3>
+  <p>Non. Le CA progresse de 3,9 %, mais cette hausse vient de la fréquentation (+8,1 %) et du prix moyen par article (+9,0 %), pas de l'efficacité commerciale. Le taux de transformation baisse de 2 points (25 % contre 28 % visés), le nombre de tickets ne bouge pas (+0,1 %) et l'indice des ventes recule à 2,00 : les clients achètent moins d'articles, mais plus chers. Le panier moyen dépasse l'objectif (55 € pour 53 €) seulement grâce au prix. Le CA reste sous l'objectif de 2 000 €. La progression est donc fragile, et elle dépend d'éléments que le magasin maîtrise mal (le trafic, les prix).</p>
+
+  <h3>Q14. La satisfaction explique-t-elle les difficultés ?</h3>
+  <div class="grid2">
+    <div class="box"><b class="t">Faits observés</b>NPS 42 → 16, détracteurs 17 % → 28 %, CSAT 91 % → 81 %, CES 5,8 → 4,6 depuis mai. Dans le même temps, taux de transformation 30 % → 25 % et visiteurs +29 %.</div>
+    <div class="box"><b class="t">Hypothèses</b>Avec plus de visiteurs, l'équipe ne suffit plus (attente en caisse, moins de conseil), donc plus d'effort pour le client et moins d'achats. La hausse du prix moyen peut aussi décevoir.</div>
+    <div class="box"><b class="t">Vérifications nécessaires</b>Lire les commentaires de l'enquête, mesurer l'attente en caisse, comparer le planning des vendeurs au trafic par heure, vérifier les ruptures de stock et l'évolution des prix.</div>
+  </div>
+  <p><strong>Conclusion :</strong> non, on ne peut pas l'affirmer avec certitude. Les indicateurs baissent ensemble, mais une corrélation n'est pas une preuve de cause à effet.</p>
+
+  <h3>Q15. Trois actions correctives par priorité</h3>
+  <div class="tbl"><table>
+    <tr><th>#</th><th>Problème</th><th>Cause à vérifier</th><th>Action</th><th>Responsable</th><th>Échéance</th><th>KPI de suivi</th></tr>
+    <tr><td>1</td><td>Transformation 25 % (obj. 28 %)</td><td>Pas assez de vendeurs aux heures de forte affluence</td><td>Adapter le planning au trafic par heure, renforcer l'accueil et le conseil le samedi</td><td>Directeur + manager</td><td>Fin octobre</td><td>Taux de transformation</td></tr>
+    <tr><td>2</td><td>NPS 16, CES 4,6</td><td>Points de friction : attente en caisse, information, SAV</td><td>Analyser les commentaires, rappeler les détracteurs, ouvrir une caisse de plus en pointe</td><td>Manager</td><td>Mi-novembre</td><td>NPS, CES, CSAT</td></tr>
+    <tr><td>3</td><td>Indice des ventes 2,00 (obj. 2,10)</td><td>Peu de ventes complémentaires</td><td>Former l'équipe à la vente additionnelle, mettre les accessoires près des produits phares</td><td>Manager</td><td>Fin novembre</td><td>Indice des ventes, panier moyen</td></tr>
+  </table></div>
+
+  <h3>Q16. Synthèse managériale (exemple)</h3>
+  <p class="box">En septembre, le CA de Casa Nova progresse de 3,9 % mais reste 2 000 € sous l'objectif. Cette hausse vient de la fréquentation (+8,1 %) et de la hausse du prix moyen des articles (+9 %), pas de l'efficacité commerciale : le taux de transformation tombe à 25 % pour un objectif de 28 %, le nombre de tickets stagne et l'indice des ventes recule à 2,00. En parallèle, la satisfaction se dégrade depuis mai : le NPS passe de 42 à 16 et le CES de 5,8 à 4,6. Le principal risque est de perdre des clients et des recommandations, ce qui menacerait le CA des prochains mois. La priorité est de mieux transformer les visiteurs, en adaptant les effectifs aux heures d'affluence, tout en vérifiant les causes de l'insatisfaction dans les commentaires clients.</p>
+</section>
+
+<section id="excel">
+  <h2>7. Ce qu'il faut corriger dans votre Excel</h2>
+  <p class="sub">Fichier « Louca et Mattheo ». Les formules de base sont justes, voici ce qui coince.</p>
+  <ol>
+    <li><strong>Onglet « Données brutes », objectifs :</strong> panier moyen saisi 0,53 au lieu de 53, indice des ventes 0,021 au lieu de 2,10, et NPS écrit « 35 pts » en texte : Excel ne peut pas calculer avec du texte.</li>
+    <li><strong>Colonne « Écart objectif » à l'envers :</strong> vous calculez objectif − réalisé (<span class="mono">=B5-C5</span>), donc le CA affiche +2 000 alors qu'il manque 2 000 €, et le panier moyen affiche −2 alors qu'il est au-dessus. Mettez <span class="mono">=C5-B5</span> (réalisé − objectif).</li>
+    <li><strong>Écart en points pour les taux :</strong> pour le taux de transformation et le CSAT, écrivez <span class="mono">=(C9-B9)*100</span> et notez « pts », pas le format %.</li>
+    <li><strong>Onglet « Feuil1 » :</strong> l'indice des ventes (2,1 ; 2) et le prix moyen (25,24 ; 27,5) sont tapés à la main. Le sujet demande des formules Excel : <span class="mono">=articles/tickets</span> et <span class="mono">=CA/articles</span>.</li>
+    <li><strong>Il manque :</strong> l'évolution des articles, du CSAT, du NPS et du CES ; la colonne « Statut / décision » est vide ; pas de mise en forme conditionnelle (le signal visuel), pas de graphiques, pas d'alertes.</li>
+  </ol>
+</section>
+
+<section id="test">
+  <h2>8. Teste-toi</h2>
+  <p class="sub">Réponds dans ta tête, puis ouvre la réponse.</p>
+  <details><summary>Quelles sont les 3 étapes du tableau de bord ?</summary><p class="ans">Mesurer, analyser, décider.</p></details>
+  <details><summary>Différence entre reporting et pilotage ?</summary><p class="ans">Reporting : remonter et transmettre l'information. Pilotage : utiliser l'information pour agir et décider.</p></details>
+  <details><summary>Les 5 étapes du fil rouge du pilotage ?</summary><p class="ans">Objectif, plan d'action, KPI, écart, décision.</p></details>
+  <details><summary>Les 4 familles d'indicateurs, avec un exemple chacune ?</summary><p class="ans">Résultat (CA), moyens (budget, heures), avancement (% de l'équipe formée), environnement (trafic de la galerie).</p></details>
+  <details><summary>Les 4 critères d'un objectif pilotable ?</summary><p class="ans">Clair/précis, mesurable, maîtrisable, daté.</p></details>
+  <details><summary>500 visiteurs, 125 tickets, 6 250 € de CA, 300 articles. Taux de transformation, panier moyen, indice des ventes, prix moyen ?</summary><p class="ans">TT = 125 ÷ 500 = 25 %. PM = 6 250 ÷ 125 = 50 €. IV = 300 ÷ 125 = 2,4. Prix moyen = 6 250 ÷ 300 = 20,83 €. Vérif : 2,4 × 20,83 ≈ 50 €.</p></details>
+  <details><summary>Un taux passe de 30 % à 27 %. Comment l'écrire ?</summary><p class="ans">−3 points de pourcentage (et −10 % en évolution relative).</p></details>
+  <details><summary>200 réponses : 90 notes de 9-10, 60 de 7-8, 50 de 0-6. NPS ?</summary><p class="ans">45 % − 25 % = +20 points. Les passifs ne comptent pas.</p></details>
+  <details><summary>Quel indicateur pour « Recommanderiez-vous notre magasin ? » ? Et pour « Il a été facile d'obtenir un remboursement » ?</summary><p class="ans">NPS pour la recommandation. CES pour la facilité.</p></details>
+  <details><summary>Le CA augmente : le magasin est-il forcément performant ?</summary><p class="ans">Non. Il faut regarder d'où vient la hausse (trafic, transformation, panier, prix), comparer à l'objectif et vérifier la satisfaction. Casa Nova : CA +3,9 % mais transformation en baisse et NPS en chute.</p></details>
+</section>
+
+<footer>Sources : tes notes de cours, le résumé de Yanis, le sujet du TD1 (pages 2 à 4), le sujet du TD2 Casa Nova et votre fichier Excel. Calculs vérifiés à partir des données du classeur.</footer>
+</div>
