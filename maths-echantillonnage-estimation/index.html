@@ -1,0 +1,351 @@
+<title>Échantillonnage et estimation</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout : une colonne de lecture (cours → fiche → exos), sommaire collant en haut */
+:root{
+  --bg:#f7f8fa; --card:#ffffff; --fg:#17202b; --muted:#5b6675; --line:#dfe3ea;
+  --accent:#1f5fbf; --accent-soft:#e6eefb; --ok:#1d7a4c; --ok-soft:#e3f4ea; --warn:#a4570f; --warn-soft:#fbefe1;
+  --f-display:"Space Grotesk",system-ui,sans-serif; --f-body:"Inter",system-ui,sans-serif; --f-mono:"JetBrains Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#11161d; --card:#19202a; --fg:#e8edf3; --muted:#9aa6b5; --line:#2a3340;
+  --accent:#7fb0ff; --accent-soft:#1c2a40; --ok:#6fd3a0; --ok-soft:#14302a; --warn:#f2b46b; --warn-soft:#382816; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11161d; --card:#19202a; --fg:#e8edf3; --muted:#9aa6b5; --line:#2a3340;
+  --accent:#7fb0ff; --accent-soft:#1c2a40; --ok:#6fd3a0; --ok-soft:#14302a; --warn:#f2b46b; --warn-soft:#382816; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:16px/1.6 var(--f-body)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--card)}
+.wrap{max-width:760px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:8px 64px}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--card);border-bottom:1px solid var(--line)}
+nav .in{max-width:760px;margin:0 auto;display:flex;gap:6px;overflow-x:auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:10px}
+nav a{white-space:nowrap;text-decoration:none;color:var(--accent);font-weight:600;font-size:14px;padding:6px 12px;border-radius:999px;background:var(--accent-soft)}
+nav a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1,h2,h3{font-family:var(--f-display);line-height:1.2;text-wrap:balance}
+h1{font-size:2rem;margin:28px 0 6px}
+h2{font-size:1.5rem;margin:48px 0 12px;padding-top:12px;border-top:2px solid var(--fg)}
+h3{font-size:1.15rem;margin:28px 0 8px}
+.lead{color:var(--muted);margin:0 0 8px}
+p,li{max-width:65ch}
+.f{font-family:var(--f-mono);font-size:.95rem;background:var(--accent-soft);color:var(--fg);padding:12px 14px;border-radius:8px;overflow-x:auto;white-space:pre;margin:10px 0}
+code{font-family:var(--f-mono);font-size:.9em;background:var(--accent-soft);padding:1px 5px;border-radius:4px}
+.box{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:14px 16px;margin:14px 0}
+.tip{background:var(--ok-soft);border-color:transparent}
+.tip b:first-child{color:var(--ok)}
+.trap{background:var(--warn-soft);border-color:transparent}
+.trap b:first-child{color:var(--warn)}
+.tbl{overflow-x:auto;margin:12px 0}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;background:var(--card)}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+th{font-weight:600;background:var(--accent-soft)}
+.ex{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:14px 16px;margin:14px 0}
+.ex h3{margin:0 0 6px}
+.tag{display:inline-block;font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:999px;margin-left:6px;vertical-align:middle}
+.t-f{background:var(--warn-soft);color:var(--warn)}
+.t-c{background:var(--ok-soft);color:var(--ok)}
+.t-n{background:var(--accent-soft);color:var(--accent)}
+details{margin-top:10px;border-top:1px dashed var(--line);padding-top:8px}
+summary{cursor:pointer;font-weight:600;color:var(--accent)}
+.ans{font-weight:700;color:var(--ok)}
+ol.steps{padding-left:22px}
+ol.steps li{margin:4px 0}
+</style>
+
+<nav><div class="in">
+  <a href="#plan">Le plan pour 10</a><a href="#cours">Cours</a><a href="#fiche">Fiche</a><a href="#td1">TD (11 exos)</a><a href="#td2">Feuille 2</a><a href="#entrainement">Entraînement</a>
+</div></nav>
+
+<div class="wrap">
+<h1>Échantillonnage et estimation</h1>
+<p class="lead">Cours simple, fiche de révision et tous les exercices des feuilles corrigés. BUT TC, maths.</p>
+
+<h2 id="plan">Le plan pour avoir au moins 10</h2>
+<p>Tout le chapitre tient dans <b>une seule question</b> et <b>trois formules</b>. Si tu sais faire les exos de type « intervalle », tu as déjà la moyenne.</p>
+<div class="box tip"><b>La question à se poser à chaque exo :</b> est-ce que l'énoncé me donne la <b>vraie valeur</b> de toute la population (« selon l'INED… », « autant d'hommes que de femmes », « 25 % des consommateurs ») ?
+<ul>
+<li><b>Oui</b> → on fait de l'<b>échantillonnage</b> : intervalle de <b>fluctuation</b> autour de cette vraie valeur, puis on regarde si l'échantillon tombe dedans.</li>
+<li><b>Non</b> (on ne connaît que l'échantillon) → on fait de l'<b>estimation</b> : intervalle de <b>confiance</b> autour du résultat de l'échantillon.</li>
+</ul></div>
+<p>Ordre conseillé : apprends la fiche (10 min), refais les exos 2, 7, 11 et 3 de la feuille 2 en cachant la correction. Ce sont les plus « tombables ».</p>
+
+<h2 id="cours">Le cours, en simple</h2>
+
+<h3>Les mots</h3>
+<div class="tbl"><table>
+<tr><th>Mot</th><th>Ce que ça veut dire</th><th>Lettre</th></tr>
+<tr><td>Population</td><td>Tout le monde (tous les clients, tous les tubes…)</td><td>p (proportion), m (moyenne), σ (écart-type)</td></tr>
+<tr><td>Échantillon</td><td>Le petit groupe qu'on a vraiment interrogé ou mesuré</td><td>n (taille), f (proportion), x̄ (moyenne), s (écart-type)</td></tr>
+<tr><td>Proportion</td><td>Un pourcentage écrit en décimal : 29 % → 0,29</td><td>f = nombre de « oui » ÷ n</td></tr>
+<tr><td>Seuil / niveau de confiance</td><td>95 % = on a 95 % de chances d'avoir raison (risque 5 %)</td><td>donne le nombre z</td></tr>
+</table></div>
+
+<h3>Le nombre z (à connaître par cœur)</h3>
+<div class="tbl"><table>
+<tr><th>Niveau de confiance</th><th>90 %</th><th>95 %</th><th>99 %</th></tr>
+<tr><td>Risque</td><td>10 %</td><td>5 %</td><td>1 %</td></tr>
+<tr><td><b>z</b></td><td><b>1,645</b></td><td><b>1,96</b></td><td><b>2,576</b></td></tr>
+</table></div>
+<p>Plus on veut être sûr (99 %), plus z est grand, donc plus l'intervalle est <b>large</b>.</p>
+
+<h3>1. Intervalle de fluctuation (on connaît p)</h3>
+<p>On connaît la vraie proportion p. On regarde si la proportion f de l'échantillon est « normale ».</p>
+<div class="f">I = [ p − z × √(p(1−p)/n) ; p + z × √(p(1−p)/n) ]</div>
+<p>f est <b>dans</b> I → rien d'anormal, c'est le hasard. f est <b>hors</b> de I → il y a un vrai problème (au risque choisi).</p>
+
+<h3>2. Intervalle de confiance d'une proportion (on ne connaît pas p)</h3>
+<div class="f">IC = [ f − z × √(f(1−f)/n) ; f + z × √(f(1−f)/n) ]</div>
+<p>C'est la même formule, mais on met <b>f</b> à la place de p. On dit : « la vraie proportion p est entre … et … avec 95 % de confiance ».</p>
+
+<h3>3. Intervalle de confiance d'une moyenne</h3>
+<div class="f">IC = [ x̄ − z × s/√n ; x̄ + z × s/√n ]</div>
+<p>Si l'énoncé donne l'écart-type de la population σ, on met σ à la place de s.</p>
+<div class="box trap"><b>Piège de l'écart-type :</b> si on te donne l'écart-type <i>de l'échantillon</i> σₑ et qu'on demande une estimation de celui de la population, on corrige :
+<div class="f">s = σₑ × √( n / (n−1) )</div>
+Avec n = 100 ou plus, ça change presque rien : tu peux le dire et passer.</div>
+
+<h3>4. La loi normale (exos « quelle est la probabilité… »)</h3>
+<p>Si X suit la loi normale N(m ; σ), on se ramène à la loi normale centrée réduite avec :</p>
+<div class="f">Z = (X − m) / σ</div>
+<p>Puis on lit dans la table, ou à la calculatrice :</p>
+<ul>
+<li>Casio : <code>Menu STAT → DIST → NORM → Ncd</code> (bornes basse et haute, σ, μ)</li>
+<li>TI : <code>2nde VAR (distrib) → normalcdf(borne basse, borne haute, μ, σ)</code></li>
+<li>NumWorks : <code>Probabilités → Normale</code></li>
+</ul>
+<p>Valeurs utiles : P(−1,96 &lt; Z &lt; 1,96) = 0,95 ; P(−2 &lt; Z &lt; 2) ≈ 0,954 ; P(−2,576 &lt; Z &lt; 2,576) = 0,99.</p>
+
+<h3>5. La moyenne d'un échantillon</h3>
+<p>Si on prend des échantillons de taille n, la moyenne X̄ varie moins que les valeurs seules :</p>
+<div class="f">X̄ suit N( m ; σ/√n )</div>
+<p>Donc : même moyenne m, mais l'écart-type est divisé par √n.</p>
+
+<h3>6. Trouver la taille n de l'échantillon</h3>
+<p>On veut une précision E (la « marge », le ± ). On résout :</p>
+<div class="f">Proportion : n ≥ z² × p(1−p) / E²
+Moyenne    : n ≥ (z × σ / E)²</div>
+<p>On arrondit toujours <b>au-dessus</b> (139,4 → 140).</p>
+
+<h3>7. Comparer deux groupes</h3>
+<p>On calcule l'intervalle de confiance de chaque groupe. Si les deux intervalles <b>se chevauchent</b>, on ne peut pas dire qu'il y a une différence. S'ils sont <b>séparés</b>, la différence est significative.</p>
+
+<h2 id="fiche">Fiche de révision (à recopier)</h2>
+<div class="box">
+<p><b>Étape 0.</b> Je connais la vraie valeur de la population ? Oui → fluctuation. Non → confiance.</p>
+<ol class="steps">
+<li>J'écris les données : n = … ; f = … (ou p, ou x̄ et s).</li>
+<li>Je choisis z : 90 % → 1,645 ; 95 % → 1,96 ; 99 % → 2,576.</li>
+<li>Je calcule la marge E = z × √(p(1−p)/n) &nbsp;ou&nbsp; z × s/√n.</li>
+<li>J'écris l'intervalle [ centre − E ; centre + E ] avec 3 ou 4 chiffres après la virgule.</li>
+<li>Je fais une phrase de conclusion avec le contexte.</li>
+</ol>
+</div>
+<div class="tbl"><table>
+<tr><th>Situation</th><th>Formule</th></tr>
+<tr><td>Fluctuation (p connu)</td><td><code>p ± z√(p(1−p)/n)</code></td></tr>
+<tr><td>Confiance proportion</td><td><code>f ± z√(f(1−f)/n)</code></td></tr>
+<tr><td>Confiance moyenne</td><td><code>x̄ ± z·s/√n</code></td></tr>
+<tr><td>Loi normale</td><td><code>Z = (X − m)/σ</code></td></tr>
+<tr><td>Moyenne d'échantillon</td><td><code>X̄ ~ N(m ; σ/√n)</code></td></tr>
+<tr><td>Écart-type corrigé</td><td><code>s = σₑ√(n/(n−1))</code></td></tr>
+<tr><td>Variance avec Σ</td><td><code>x̄ = Σx/n ; σₑ² = Σx²/n − x̄²</code></td></tr>
+<tr><td>Taille d'échantillon</td><td><code>n ≥ z²p(1−p)/E²</code> ou <code>n ≥ (zσ/E)²</code></td></tr>
+</table></div>
+<div class="box tip"><b>Les phrases qui rapportent des points :</b>
+<ul>
+<li>« f = 0,479 appartient à l'intervalle de fluctuation, donc l'écart est dû au hasard : on ne peut pas accuser … au seuil de 95 %. »</li>
+<li>« Avec un niveau de confiance de 95 %, la proportion de … est comprise entre … et … »</li>
+<li>« Les deux intervalles se chevauchent : on ne peut pas conclure à une différence. »</li>
+<li>« 95 % → 99 % : z augmente, donc l'intervalle est plus grand. »</li>
+</ul></div>
+
+<h2 id="td1">TD Échantillonnage et estimation (corrigé)</h2>
+<p class="lead">Essaie d'abord, puis ouvre la correction.</p>
+
+<div class="ex"><h3>Exercice 1 · Naissances et usine <span class="tag t-f">fluctuation</span></h3>
+<p>105 garçons pour 100 filles ; 693 naissances dont 332 garçons. Les opposants ont-ils raison ?</p>
+<details><summary>Voir la correction</summary>
+<p>Vraie proportion connue (INED) : p = 105/205 ≈ 0,5122. n = 693. Échantillon : f = 332/693 ≈ 0,4791.</p>
+<div class="f">E = 1,96 × √(0,5122 × 0,4878 / 693) ≈ 0,0372
+I = [0,4750 ; 0,5494]</div>
+<p class="ans">f = 0,479 est dans l'intervalle : le « faible » nombre de garçons s'explique par le hasard. Les opposants n'ont pas raison (au seuil de 95 %).</p>
+</details></div>
+
+<div class="ex"><h3>Exercice 2 · Parité dans deux entreprises <span class="tag t-f">fluctuation</span></h3>
+<p>A : 60 personnes dont 26 femmes. B : 1050 personnes dont 480 femmes. Bassin d'emploi : p = 0,5.</p>
+<details><summary>Voir la correction</summary>
+<p><b>1.</b> A : f = 26/60 ≈ 0,433 (43,3 %). B : f = 480/1050 ≈ 0,457 (45,7 %). B semble mieux respecter la parité (plus proche de 50 %).</p>
+<p><b>2.</b> p = 0,5.</p>
+<div class="f">A : 0,5 ± 1,96 × √(0,25/60)   = 0,5 ± 0,1265 → [0,3735 ; 0,6265]
+B : 0,5 ± 1,96 × √(0,25/1050) = 0,5 ± 0,0302 → [0,4698 ; 0,5302]</div>
+<p class="ans">A : 0,433 est dedans → A respecte la parité. B : 0,457 est en dehors → B ne la respecte pas. Le résultat est l'inverse de l'impression de départ, parce que B a beaucoup plus de salariés : son intervalle est bien plus étroit.</p>
+</details></div>
+
+<div class="ex"><h3>Exercice 3 · Influence de la marque <span class="tag t-n">loi normale</span></h3>
+<p>25 % sont influencés. On interroge 100 personnes. Probabilité qu'au moins 35 soient influencés ?</p>
+<details><summary>Voir la correction</summary>
+<p>X = nombre d'influencés, loi binomiale B(100 ; 0,25). Comme n est grand, on l'approche par une loi normale :</p>
+<div class="f">m = n × p = 100 × 0,25 = 25
+σ = √(n × p × (1−p)) = √18,75 ≈ 4,33
+P(X ≥ 35) = P(Z ≥ (35 − 25)/4,33) = P(Z ≥ 2,31) ≈ 0,0105</div>
+<p class="ans">Environ 1 % de chances : c'est très peu probable.</p>
+<p>(Avec la correction de continuité, on calcule P(Z ≥ (34,5−25)/4,33) ≈ 0,014. Le calcul exact donne 0,016. Les trois réponses sont acceptées selon ce qu'a vu ton prof.)</p>
+</details></div>
+
+<div class="ex"><h3>Exercice 4 · Tubes <span class="tag t-n">loi normale</span></h3>
+<p>X suit N(20 cm ; 1,5 mm). a) P(19,75 &lt; X &lt; 20,25) ? b) Intervalle centré sur 20 cm à 95 % ?</p>
+<details><summary>Voir la correction</summary>
+<div class="box trap"><b>Piège :</b> 1,5 mm = 0,15 cm. Tout mettre en cm.</div>
+<p><b>a)</b></p>
+<div class="f">Z = (20,25 − 20)/0,15 ≈ 1,67
+P(19,75 &lt; X &lt; 20,25) = P(−1,67 &lt; Z &lt; 1,67) ≈ 0,904</div>
+<p class="ans">Environ 90 % des tubes.</p>
+<p><b>b)</b></p>
+<div class="f">20 ± 1,96 × 0,15 = 20 ± 0,294 → [19,706 ; 20,294] cm</div>
+</details></div>
+
+<div class="ex"><h3>Exercice 5 · Test d'aptitude <span class="tag t-n">moyenne d'échantillon</span></h3>
+<p>m = 150, variance σ² = 100, n = 25. P(146 &lt; X̄ &lt; 154) ?</p>
+<details><summary>Voir la correction</summary>
+<div class="box trap"><b>Piège :</b> on donne la <i>variance</i> 100, donc σ = √100 = 10.</div>
+<div class="f">X̄ suit N(150 ; 10/√25) = N(150 ; 2)
+P(146 &lt; X̄ &lt; 154) = P(−2 &lt; Z &lt; 2) ≈ 0,954</div>
+<p class="ans">Environ 95,4 %.</p>
+</details></div>
+
+<div class="ex"><h3>Exercice 6 · Enfants dyslexiques <span class="tag t-c">confiance moyenne</span></h3>
+<p>n = 150, Σxᵢ = 1502, Σxᵢ² = 19486.</p>
+<details><summary>Voir la correction</summary>
+<p><b>1.1</b> Population : les enfants dyslexiques. Variable : X = nombre de bonnes réponses (sur 20), quantitative discrète. Paramètres : la moyenne m et l'écart-type σ.</p>
+<p><b>1.2</b> x̄ = 1502/150 ≈ <b>10,01</b> bonnes réponses.</p>
+<p><b>1.3</b></p>
+<div class="f">σₑ² = 19486/150 − 10,013² ≈ 29,64
+s = √(29,64 × 150/149) ≈ 5,46</div>
+<p><b>1.4</b> 99 % → z = 2,576.</p>
+<div class="f">E = 2,576 × 5,46/√150 ≈ 1,15
+IC = [8,86 ; 11,16]</div>
+<p class="ans">Avec 99 % de confiance, le nombre moyen de bonnes réponses est entre 8,86 et 11,16.</p>
+</details></div>
+
+<div class="ex"><h3>Exercice 7 · Harcèlement au travail <span class="tag t-c">confiance proportion</span></h3>
+<p>500 salariés, 145 déclarent un harcèlement moral.</p>
+<details><summary>Voir la correction</summary>
+<p><b>2.1</b> Population : les salariés en France. Variable : « a subi un harcèlement » (oui/non), qualitative. Paramètre : la proportion p.</p>
+<p><b>2.2</b> f = 145/500 = <b>0,29</b> (29 %).</p>
+<p><b>2.3</b> 90 % → z = 1,645.</p>
+<div class="f">E = 1,645 × √(0,29 × 0,71 / 500) ≈ 0,0334
+IC = [0,2566 ; 0,3234]</div>
+<p class="ans">Entre 25,7 % et 32,3 % des salariés, avec 90 % de confiance.</p>
+<p><b>2.4</b> Plus grand : à 95 %, z = 1,96 &gt; 1,645, donc la marge est plus grande.</p>
+</details></div>
+
+<div class="ex"><h3>Exercice 8 · Présidentielle 2002 <span class="tag t-c">confiance proportion</span></h3>
+<p>n = 989. Chirac 20 %, Jospin 18 %, Le Pen 14 %.</p>
+<details><summary>Voir la correction</summary>
+<p><b>1)</b></p>
+<div class="f">Chirac : 0,20 ± 1,96√(0,20×0,80/989) = 0,20 ± 0,0249 → [0,175 ; 0,225]
+Jospin : 0,18 ± 1,96√(0,18×0,82/989) = 0,18 ± 0,0239 → [0,156 ; 0,204]
+Le Pen : 0,14 ± 1,96√(0,14×0,86/989) = 0,14 ± 0,0216 → [0,118 ; 0,162]</div>
+<p><b>2)</b> Chirac 19,88 % : dedans. Jospin 16,18 % : dedans. <b>Le Pen 16,86 % : en dehors</b> (au-dessus de 16,2 %). Le sondage a sous-estimé Le Pen.</p>
+<p><b>3)</b> Non. Les intervalles de Jospin [15,6 ; 20,4] et de Le Pen [11,8 ; 16,2] se chevauchent : on ne pouvait pas écarter Le Pen du second tour.</p>
+<p><b>4)</b> Il faut que les intervalles ne se touchent plus. Entre Jospin et Le Pen (écart de 4 points) : n ≥ 1 284. Entre Chirac et Jospin (écart de 2 points seulement) : n ≥ 5 906.</p>
+<p class="ans">Il faudrait interroger environ 5 906 personnes pour séparer les trois candidats.</p>
+<p>(Méthode : on cherche n tel que 1,96√(0,2×0,8/n) + 1,96√(0,18×0,82/n) &lt; 0,02, soit √n &gt; 1,96 × (0,4 + 0,384)/0,02.)</p>
+</details></div>
+
+<div class="ex"><h3>Exercice 9 · Médicament contre placebo <span class="tag t-c">comparer deux groupes</span></h3>
+<p>Groupes de 125. A (médicament) : 73 soulagés. B (placebo) : 64 soulagés.</p>
+<details><summary>Voir la correction</summary>
+<p><b>1)</b> f_A = 73/125 = 0,584 ; f_B = 64/125 = 0,512.</p>
+<div class="f">A : 0,584 ± 1,96√(0,584×0,416/125) = 0,584 ± 0,0864 → [0,498 ; 0,670]
+B : 0,512 ± 1,96√(0,512×0,488/125) = 0,512 ± 0,0876 → [0,424 ; 0,600]</div>
+<p><b>2)</b> Non : les intervalles se chevauchent (entre 0,498 et 0,600). On ne peut pas dire que le médicament marche mieux que le placebo.</p>
+<p><b>3)</b> Il faut que le bas de A dépasse le haut de B : 1,96(√(0,584×0,416) + √(0,512×0,488))/√n &lt; 0,072.</p>
+<p class="ans">n ≥ 731 patients par groupe.</p>
+</details></div>
+
+<div class="ex"><h3>Exercice 10 · Modèle A dans deux villes <span class="tag t-c">comparer deux groupes</span></h3>
+<p>Ville 1 : 63 % de 400. Ville 2 : 69 % de 500. Différence au niveau 95 % ?</p>
+<details><summary>Voir la correction</summary>
+<div class="f">Ville 1 : 0,63 ± 1,96√(0,63×0,37/400) = 0,63 ± 0,0473 → [0,583 ; 0,677]
+Ville 2 : 0,69 ± 1,96√(0,69×0,31/500) = 0,69 ± 0,0405 → [0,650 ; 0,730]</div>
+<p class="ans">Les intervalles se chevauchent (entre 0,650 et 0,677) : on ne peut pas affirmer qu'il y a une différence de préférence entre les deux villes.</p>
+</details></div>
+
+<div class="ex"><h3>Exercice 11 · Perception extra-sensorielle <span class="tag t-f">fluctuation</span></h3>
+<p>31 bonnes réponses sur 50. Règle : dans l'intervalle de fluctuation autour de 50 % → pas de don.</p>
+<details><summary>Voir la correction</summary>
+<div class="f">p = 0,5 ; n = 50 ; f = 31/50 = 0,62
+I = 0,5 ± 1,96√(0,25/50) = 0,5 ± 0,1386 → [0,361 ; 0,639]</div>
+<p class="ans">0,62 est dans l'intervalle : on considère que le sujet n'a pas de don (il a pu deviner au hasard).</p>
+</details></div>
+
+<h2 id="td2">Feuille 2 (corrigée)</h2>
+
+<div class="ex"><h3>Disques de 40 mm <span class="tag t-n">moyenne d'échantillon</span></h3>
+<p>X suit N(40 ; 4), échantillons de 49 disques.</p>
+<details><summary>Voir la correction</summary>
+<p><b>1.</b> X̄ suit N(40 ; 4/√49) = <b>N(40 ; 0,571)</b>.</p>
+<div class="f">2. P(X̄ &lt; 39) = P(Z &lt; (39−40)/0,571) = P(Z &lt; −1,75) ≈ 0,040
+3. P(X̄ &gt; 41) = P(Z &gt; 1,75) ≈ 0,040 (par symétrie)
+4. P(39 &lt; X̄ &lt; 41) = 1 − 0,040 − 0,040 ≈ 0,920</div>
+</details></div>
+
+<div class="ex"><h3>Tiges métalliques (moyenne 10 mm) <span class="tag t-c">estimation ponctuelle</span></h3>
+<p>n = 100, moyenne 10 mm, écart-type 0,20 mm.</p>
+<details><summary>Voir la correction</summary>
+<p><b>1)</b> m ≈ <b>10 mm</b> (on prend la moyenne de l'échantillon).</p>
+<p><b>2)</b> Écart-type de la population : s = 0,20 × √(100/99) ≈ 0,201. Écart-type des moyennes : s/√n = 0,201/10 ≈ <b>0,020 mm</b>.</p>
+</details></div>
+
+<div class="ex"><h3>Sondage, 45 sur 150 <span class="tag t-c">confiance proportion</span></h3>
+<details><summary>Voir la correction</summary>
+<p><b>1)</b> f = 45/150 = <b>0,30</b>, donc p ≈ 0,30.</p>
+<div class="f">2) 0,30 ± 1,96√(0,30×0,70/150) = 0,30 ± 0,0733 → [0,227 ; 0,373]</div>
+<p class="ans">Entre 22,7 % et 37,3 % des électeurs, avec 95 % de confiance.</p>
+</details></div>
+
+<div class="ex"><h3>Tiges (moyenne 12 mm, σ = 0,15) <span class="tag t-c">confiance moyenne</span></h3>
+<details><summary>Voir la correction</summary>
+<div class="f">σ/√n = 0,15/√100 = 0,015
+1) 95 % : 12 ± 1,96 × 0,015  = 12 ± 0,029 → [11,971 ; 12,029]
+2) 99 % : 12 ± 2,576 × 0,015 = 12 ± 0,039 → [11,961 ; 12,039]
+3) 2,576 × 0,15/√n ≤ 0,30  →  √n ≥ 1,29  →  n ≥ 2</div>
+<p>Avec ± 0,30 mm, n = 2 suffit (la précision demandée est très large). Si ton prof voulait ± 0,03 mm : n ≥ (2,576 × 0,15/0,03)² ≈ 165,9 → <b>n = 166</b>.</p>
+</details></div>
+
+<div class="ex"><h3>Piles de 170 heures <span class="tag t-c">confiance moyenne</span></h3>
+<p>n = 100, moyenne 158 h, écart-type 30 h.</p>
+<details><summary>Voir la correction</summary>
+<div class="f">1) 158 ± 2,576 × 30/√100 = 158 ± 7,73 → [150,27 ; 165,73]</div>
+<p class="ans">2) 170 h n'est pas dans l'intervalle : oui, on peut accuser le fabricant de publicité mensongère (au risque de 1 %).</p>
+</details></div>
+
+<div class="ex"><h3>Smartphones, 70 % de 200 <span class="tag t-c">confiance proportion</span></h3>
+<details><summary>Voir la correction</summary>
+<div class="f">1) 95 % : 0,70 ± 1,96√(0,70×0,30/200)  = 0,70 ± 0,064 → [0,636 ; 0,764]
+2) 99 % : 0,70 ± 2,576√(0,70×0,30/200) = 0,70 ± 0,084 → [0,617 ; 0,783]
+3) n ≥ 2,576² × 0,70 × 0,30 / 0,10² ≈ 139,4  →  n = 140</div>
+<p>(Si on ne veut pas utiliser 0,70 et qu'on prend le pire cas p = 0,5 : n ≥ 166.)</p>
+</details></div>
+
+<h2 id="entrainement">Entraînement rapide</h2>
+<p class="lead">Cinq exos courts du même type que le contrôle. Réponses dans la correction.</p>
+
+<div class="ex"><h3>A. Un sondage de 400 clients : 120 sont satisfaits. IC à 95 % ?</h3>
+<details><summary>Réponse</summary><div class="f">f = 0,30 ; 0,30 ± 1,96√(0,30×0,70/400) = 0,30 ± 0,045 → [0,255 ; 0,345]</div></details></div>
+
+<div class="ex"><h3>B. Une marque dit que 40 % des clients la préfèrent. Sur 200 clients, 66 la préfèrent. Elle dit vrai (95 %) ?</h3>
+<details><summary>Réponse</summary><div class="f">I = 0,40 ± 1,96√(0,40×0,60/200) = 0,40 ± 0,068 → [0,332 ; 0,468]
+f = 66/200 = 0,33 → en dehors (juste en dessous) → la marque exagère.</div></details></div>
+
+<div class="ex"><h3>C. 64 paniers, moyenne 52 €, écart-type 16 €. IC du panier moyen à 95 % ?</h3>
+<details><summary>Réponse</summary><div class="f">52 ± 1,96 × 16/√64 = 52 ± 3,92 → [48,08 ; 55,92] €</div></details></div>
+
+<div class="ex"><h3>D. X suit N(100 ; 15). P(85 &lt; X &lt; 115) ?</h3>
+<details><summary>Réponse</summary><div class="f">Z entre −1 et 1 → P ≈ 0,683</div></details></div>
+
+<div class="ex"><h3>E. Combien interroger de personnes pour estimer une proportion à ± 5 % près, au niveau 95 %, sans rien savoir de p ?</h3>
+<details><summary>Réponse</summary><div class="f">On prend p = 0,5 : n ≥ 1,96² × 0,25 / 0,05² = 384,2 → n = 385</div></details></div>
+
+</div>
