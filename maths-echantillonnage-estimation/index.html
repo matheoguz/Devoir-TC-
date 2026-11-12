@@ -53,12 +53,12 @@ ol.steps li{margin:4px 0}
 </style>
 
 <nav><div class="in">
-  <a href="#plan">Le plan pour 10</a><a href="#cours">Cours</a><a href="#fiche">Fiche</a><a href="#td1">TD (11 exos)</a><a href="#td2">Feuille 2</a><a href="#entrainement">Entraînement</a>
+  <a href="#plan">Le plan pour 10</a><a href="#controle">Le contrôle</a><a href="#blanc">Contrôle blanc</a><a href="#cours">Cours</a><a href="#fiche">Fiche</a><a href="#td1">TD (11 exos)</a><a href="#td2">Feuille 2</a><a href="#entrainement">Entraînement</a>
 </div></nav>
 
 <div class="wrap">
 <h1>Échantillonnage et estimation</h1>
-<p class="lead">Cours simple, fiche de révision et tous les exercices des feuilles corrigés. BUT TC, maths.</p>
+<p class="lead">Le contrôle type du prof expliqué, un contrôle blanc, le cours, la fiche de révision et tous les exercices des feuilles corrigés. BUT TC, Étude marketing.</p>
 
 <h2 id="plan">Le plan pour avoir au moins 10</h2>
 <p>Tout le chapitre tient dans <b>une seule question</b> et <b>trois formules</b>. Si tu sais faire les exos de type « intervalle », tu as déjà la moyenne.</p>
@@ -67,7 +67,104 @@ ol.steps li{margin:4px 0}
 <li><b>Oui</b> → on fait de l'<b>échantillonnage</b> : intervalle de <b>fluctuation</b> autour de cette vraie valeur, puis on regarde si l'échantillon tombe dedans.</li>
 <li><b>Non</b> (on ne connaît que l'échantillon) → on fait de l'<b>estimation</b> : intervalle de <b>confiance</b> autour du résultat de l'échantillon.</li>
 </ul></div>
-<p>Ordre conseillé : apprends la fiche (10 min), refais les exos 2, 7, 11 et 3 de la feuille 2 en cachant la correction. Ce sont les plus « tombables ».</p>
+<div class="box"><b>Le contrôle ressemble à celui du prof (corrigé ci-dessous) :</b> 1 h 15, calculatrice et table de la loi normale autorisées, 13 questions en 5 parties. Toujours les mêmes types :
+<ul>
+<li>estimation ponctuelle d'une proportion (p = nombre ÷ n) : 1 question gratuite ;</li>
+<li>intervalle de confiance d'une proportion à 95 %, 98 %, 99 %, 96 % ;</li>
+<li>moyenne et écart-type de la moyenne (σ/√n), puis une probabilité avec la table ;</li>
+<li>intervalle de confiance d'une moyenne, puis la taille n ;</li>
+<li>un tableau par classes : moyenne, écart-type, intervalle de confiance.</li>
+</ul></div>
+<p><b>Ordre conseillé :</b> lis le <a href="#controle">corrigé du contrôle</a> en suivant chaque étape, apprends la <a href="#fiche">fiche</a>, puis fais le <a href="#blanc">contrôle blanc</a> sans regarder les réponses. Si tu le réussis, tu as largement ton 10.</p>
+
+
+<h2 id="controle">Le contrôle du prof, expliqué pas à pas</h2>
+<p class="lead">Évaluation « Étude marketing », BUT2 TC. Les réponses sont celles du corrigé du prof, avec sa méthode et ses notations.</p>
+
+<div class="box"><b>Les 6 règles de la table</b> (écrites en haut du sujet). π(a) se lit dans la table de la loi normale.
+<div class="f">P(X &lt; a)       = π(a)
+P(X &gt; a)       = 1 − π(a)
+P(X &lt; −a)      = 1 − π(a)
+P(X &gt; −a)      = π(a)
+P(a &lt; X &lt; b)   = π(b) − π(a)
+P(−a &lt; X &lt; a)  = 2π(a) − 1</div></div>
+
+<div class="ex"><h3>Partie I · Logiciel : 220 entreprises sur 400 <span class="tag t-c">proportion</span></h3>
+<p><b>1) Estimation ponctuelle :</b> p = 220/400 = <b>0,55</b>.</p>
+<p><b>2) IC à 95 %.</b> On cherche t : 2π(t) − 1 = 0,95 → π(t) = 0,975 → dans la table, <b>t = 1,96</b>.</p>
+<div class="f">σp = √(p × q / n) = √(0,55 × 0,45 / 400) ≈ 0,025      (q = 1 − p)
+I = [0,55 − 1,96 × 0,025 ; 0,55 + 1,96 × 0,025] = [0,501 ; 0,599]</div>
+<p><b>3) Risque 1 % = confiance 99 %.</b> 2π(t) − 1 = 0,99 → π(t) = 0,995. Dans la table : π(2,57) = 0,99492 et π(2,58) = 0,99506, donc t ≈ 2,576, arrondi <b>t = 2,58</b>.</p>
+<div class="f">I = [0,55 − 2,58 × 0,025 ; 0,55 + 2,58 × 0,025] = [0,4855 ; 0,6145]</div>
+</div>
+
+<div class="ex"><h3>Partie II · Commerciaux : 136 jours, σ = 35, n = 196 <span class="tag t-n">moyenne d'échantillon</span></h3>
+<p><b>4)</b> La moyenne de la moyenne est la même : <b>m = 136</b>. Son écart-type : σ' = σ/√n = 35/√196 = 35/14 = <b>2,5</b>.</p>
+<p><b>5)</b> P(132 &lt; X̄ &lt; 140). On centre et on réduit : (132 − 136)/2,5 = −1,6 et (140 − 136)/2,5 = 1,6.</p>
+<div class="f">P(−1,6 &lt; Z &lt; 1,6) = 2π(1,6) − 1 = 2 × 0,94520 − 1 = 0,8904</div>
+</div>
+
+<div class="ex"><h3>Partie III · Tiges : x̄ = 20 cm, σ = 1,33, n = 200 <span class="tag t-c">moyenne</span></h3>
+<p><b>6)</b> σ' = 1,33/√200 ≈ 0,094. Confiance 95 % → t = 1,96.</p>
+<div class="f">I = [20 − 1,96 × 0,094 ; 20 + 1,96 × 0,094] = [19,816 ; 20,184]</div>
+<p><b>7) Taille n pour ± 2 mm.</b> Piège : 2 mm = <b>0,2 cm</b>. On veut t × σ/√n = 0,2 :</p>
+<div class="f">1,96 × 1,33 / √n = 0,2  →  √n = 1,96 × 1,33 / 0,2 ≈ 13  →  n = 13² = 169</div>
+<p>(Sans arrondir √n, on trouve 169,9, donc 170. Le prof a mis 169 : écris le calcul, les deux passent.)</p>
+</div>
+
+<div class="ex"><h3>Partie IV · Harcèlement : 180 sur 600 <span class="tag t-c">proportion</span></h3>
+<p><b>8)</b> p = 180/600 = <b>0,3</b>. σp = √(0,3 × 0,7 / 600) ≈ 0,0187.</p>
+<p><b>9) 98 %.</b> 2π(t) − 1 = 0,98 → π(t) = 0,99 → <b>t = 2,33</b>.</p>
+<div class="f">I = [0,3 − 2,33 × 0,0187 ; 0,3 + 2,33 × 0,0187] = [0,2564 ; 0,3436]</div>
+<p><b>10) Risque 4 % = confiance 96 %.</b> 2π(t) − 1 = 0,96 → π(t) = 0,98 → <b>t = 2,05</b>.</p>
+<div class="f">I = [0,3 − 2,05 × 0,0187 ; 0,3 + 2,05 × 0,0187] = [0,2617 ; 0,3383]</div>
+</div>
+
+<div class="ex"><h3>Partie V · Chiffre d'affaires par classes <span class="tag t-c">tableau</span></h3>
+<p>On remplace chaque classe par son <b>centre</b> cᵢ ([0 ; 2[ → 1, [2 ; 4[ → 3…), puis on fait ce tableau :</p>
+<div class="tbl"><table>
+<tr><th>cᵢ</th><th>nᵢ</th><th>nᵢ × cᵢ</th><th>cᵢ − x̄</th><th>(cᵢ − x̄)²</th><th>nᵢ(cᵢ − x̄)²</th></tr>
+<tr><td>1</td><td>16</td><td>16</td><td>−3,2</td><td>10,24</td><td>163,84</td></tr>
+<tr><td>3</td><td>28</td><td>84</td><td>−1,2</td><td>1,44</td><td>40,32</td></tr>
+<tr><td>5</td><td>36</td><td>180</td><td>0,8</td><td>0,64</td><td>23,04</td></tr>
+<tr><td>7</td><td>20</td><td>140</td><td>2,8</td><td>7,84</td><td>156,80</td></tr>
+<tr><th>Total</th><th>100</th><th>420</th><th></th><th></th><th>384</th></tr>
+</table></div>
+<p><b>11)</b> x̄ = 420/100 = <b>4,2</b>.</p>
+<p><b>12)</b> Variance V = 384/100 = 3,84 → σ = √3,84 = <b>1,96</b>. Écart-type de la moyenne : σ' = 1,96/√100 = 0,196.</p>
+<p><b>13)</b> Risque 5 % → t = 1,96.</p>
+<div class="f">I = [4,2 − 1,96 × 0,196 ; 4,2 + 1,96 × 0,196] = [3,8158 ; 4,5842]</div>
+<div class="box trap"><b>Attention :</b> dans ce corrigé, le prof n'a <b>pas</b> utilisé la correction √(n/(n−1)) pour l'écart-type de la population mère. Fais comme lui : σ = √V. (Avec la correction on trouverait 1,97 : ça ne change presque rien.)</div>
+</div>
+
+<h2 id="blanc">Contrôle blanc (même format, autres chiffres)</h2>
+<p class="lead">Fais-le avec la table et la calculatrice, en 1 h 15. Ouvre les réponses à la fin.</p>
+<div class="ex">
+<p><b>I)</b> Une marque interroge 500 clients au hasard : 310 sont intéressés par un nouveau produit.<br>
+1) Estimation ponctuelle de p. 2) IC au seuil de confiance 0,95. 3) IC au risque 1 %.</p>
+<p><b>II)</b> Le panier moyen d'un magasin est de 48 €, avec un écart-type de 24 €. On prend un échantillon de 144 tickets.<br>
+4) Moyenne et écart-type de la moyenne ? 5) P(45 &lt; X̄ &lt; 51) ?</p>
+<p><b>III)</b> Des pièces ont un écart-type de 0,8 cm. Sur 100 pièces, la moyenne est 15 cm.<br>
+6) IC de la moyenne à 95 %. 7) Taille minimale n pour estimer m à ± 1 mm près, risque 5 %.</p>
+<p><b>IV)</b> Sur 800 étudiants interrogés, 240 ont un job étudiant.<br>
+8) Estimation ponctuelle. 9) IC à 90 %. 10) IC au risque 2 %.</p>
+<p><b>V)</b> Dépenses mensuelles (en dizaines d'euros) : [0 ; 4[ : 10 ; [4 ; 8[ : 30 ; [8 ; 12[ : 40 ; [12 ; 16[ : 20.<br>
+11) Moyenne. 12) Écart-type. 13) IC de la moyenne au risque 5 %.</p>
+<details><summary>Voir les réponses</summary>
+<div class="f">1)  p = 310/500 = 0,62
+2)  σp = √(0,62×0,38/500) ≈ 0,0217 ; t = 1,96 → [0,5775 ; 0,6625]
+3)  t = 2,58 → [0,564 ; 0,676]
+4)  m = 48 ; σ' = 24/√144 = 2
+5)  P(−1,5 &lt; Z &lt; 1,5) = 2π(1,5) − 1 = 2×0,93319 − 1 = 0,8664
+6)  σ' = 0,8/10 = 0,08 ; 15 ± 1,96×0,08 → [14,8432 ; 15,1568]
+7)  1 mm = 0,1 cm ; √n = 1,96×0,8/0,1 = 15,68 → n = 245,9 → 246
+8)  p = 240/800 = 0,3
+9)  σp = √(0,3×0,7/800) ≈ 0,0162 ; π(t) = 0,95 → t = 1,645 → [0,2733 ; 0,3267]
+10) confiance 98 % → t = 2,33 → [0,2622 ; 0,3378]
+11) centres 2, 6, 10, 14 ; Σnᵢcᵢ = 880 → x̄ = 8,8
+12) Σnᵢ(cᵢ−x̄)² = 462,4 + 235,2 + 57,6 + 540,8 = 1296 ; V = 12,96 ; σ = 3,6
+13) σ' = 3,6/10 = 0,36 ; 8,8 ± 1,96×0,36 → [8,0944 ; 9,5056]</div>
+</details></div>
 
 <h2 id="cours">Le cours, en simple</h2>
 
@@ -77,32 +174,34 @@ ol.steps li{margin:4px 0}
 <tr><td>Population</td><td>Tout le monde (tous les clients, tous les tubes…)</td><td>p (proportion), m (moyenne), σ (écart-type)</td></tr>
 <tr><td>Échantillon</td><td>Le petit groupe qu'on a vraiment interrogé ou mesuré</td><td>n (taille), f (proportion), x̄ (moyenne), s (écart-type)</td></tr>
 <tr><td>Proportion</td><td>Un pourcentage écrit en décimal : 29 % → 0,29</td><td>f = nombre de « oui » ÷ n</td></tr>
-<tr><td>Seuil / niveau de confiance</td><td>95 % = on a 95 % de chances d'avoir raison (risque 5 %)</td><td>donne le nombre z</td></tr>
+<tr><td>Seuil / niveau de confiance</td><td>95 % = on a 95 % de chances d'avoir raison (risque 5 %)</td><td>donne le nombre t</td></tr>
 </table></div>
 
-<h3>Le nombre z (à connaître par cœur)</h3>
+<h3>Le nombre t (à connaître par cœur)</h3>
 <div class="tbl"><table>
-<tr><th>Niveau de confiance</th><th>90 %</th><th>95 %</th><th>99 %</th></tr>
-<tr><td>Risque</td><td>10 %</td><td>5 %</td><td>1 %</td></tr>
-<tr><td><b>z</b></td><td><b>1,645</b></td><td><b>1,96</b></td><td><b>2,576</b></td></tr>
+<tr><th>Niveau de confiance</th><th>90 %</th><th>95 %</th><th>96 %</th><th>98 %</th><th>99 %</th></tr>
+<tr><td>Risque</td><td>10 %</td><td>5 %</td><td>4 %</td><td>2 %</td><td>1 %</td></tr>
+<tr><td>π(t) à chercher</td><td>0,95</td><td>0,975</td><td>0,98</td><td>0,99</td><td>0,995</td></tr>
+<tr><td><b>t</b></td><td><b>1,645</b></td><td><b>1,96</b></td><td><b>2,05</b></td><td><b>2,33</b></td><td><b>2,58</b></td></tr>
 </table></div>
-<p>Plus on veut être sûr (99 %), plus z est grand, donc plus l'intervalle est <b>large</b>.</p>
+<p><b>Comment le prof trouve t :</b> 2π(t) − 1 = niveau de confiance. Exemple 95 % : 2π(t) − 1 = 0,95 → π(t) = 0,975 → on cherche 0,975 dans la table → t = 1,96. Écris toujours cette ligne, elle rapporte des points.</p>
+<p>Plus on veut être sûr (99 %), plus t est grand, donc plus l'intervalle est <b>large</b>.</p>
 
 <h3>1. Intervalle de fluctuation (on connaît p)</h3>
 <p>On connaît la vraie proportion p. On regarde si la proportion f de l'échantillon est « normale ».</p>
-<div class="f">I = [ p − z × √(p(1−p)/n) ; p + z × √(p(1−p)/n) ]</div>
+<div class="f">I = [ p − t × √(p(1−p)/n) ; p + t × √(p(1−p)/n) ]</div>
 <p>f est <b>dans</b> I → rien d'anormal, c'est le hasard. f est <b>hors</b> de I → il y a un vrai problème (au risque choisi).</p>
 
 <h3>2. Intervalle de confiance d'une proportion (on ne connaît pas p)</h3>
-<div class="f">IC = [ f − z × √(f(1−f)/n) ; f + z × √(f(1−f)/n) ]</div>
-<p>C'est la même formule, mais on met <b>f</b> à la place de p. On dit : « la vraie proportion p est entre … et … avec 95 % de confiance ».</p>
+<div class="f">IC = [ f − t × √(f(1−f)/n) ; f + t × √(f(1−f)/n) ]</div>
+<p>Le prof écrit σp = √(p × q / n) avec q = 1 − p (p = 10 % → q = 90 %), puis I = [p − t × σp ; p + t × σp]. C'est la même formule, mais on met <b>f</b> (la proportion de l'échantillon) à la place de p. On dit : « la vraie proportion p est entre … et … avec 95 % de confiance ».</p>
 
 <h3>3. Intervalle de confiance d'une moyenne</h3>
-<div class="f">IC = [ x̄ − z × s/√n ; x̄ + z × s/√n ]</div>
+<div class="f">IC = [ x̄ − t × s/√n ; x̄ + t × s/√n ]</div>
 <p>Si l'énoncé donne l'écart-type de la population σ, on met σ à la place de s.</p>
 <div class="box trap"><b>Piège de l'écart-type :</b> si on te donne l'écart-type <i>de l'échantillon</i> σₑ et qu'on demande une estimation de celui de la population, on corrige :
 <div class="f">s = σₑ × √( n / (n−1) )</div>
-Avec n = 100 ou plus, ça change presque rien : tu peux le dire et passer.</div>
+Dans son corrigé, le prof ne l'a pas utilisée (il prend σ = √V). Avec n = 100 ou plus, ça ne change presque rien.</div>
 
 <h3>4. La loi normale (exos « quelle est la probabilité… »)</h3>
 <p>Si X suit la loi normale N(m ; σ), on se ramène à la loi normale centrée réduite avec :</p>
@@ -117,13 +216,13 @@ Avec n = 100 ou plus, ça change presque rien : tu peux le dire et passer.</div>
 
 <h3>5. La moyenne d'un échantillon</h3>
 <p>Si on prend des échantillons de taille n, la moyenne X̄ varie moins que les valeurs seules :</p>
-<div class="f">X̄ suit N( m ; σ/√n )</div>
+<div class="f">X̄ suit N( m ; σ' )   avec   σ' = σ/√n</div>
 <p>Donc : même moyenne m, mais l'écart-type est divisé par √n.</p>
 
 <h3>6. Trouver la taille n de l'échantillon</h3>
 <p>On veut une précision E (la « marge », le ± ). On résout :</p>
-<div class="f">Proportion : n ≥ z² × p(1−p) / E²
-Moyenne    : n ≥ (z × σ / E)²</div>
+<div class="f">Proportion : n ≥ t² × p(1−p) / E²
+Moyenne    : n ≥ (t × σ / E)²</div>
 <p>On arrondit toujours <b>au-dessus</b> (139,4 → 140).</p>
 
 <h3>7. Comparer deux groupes</h3>
@@ -134,29 +233,31 @@ Moyenne    : n ≥ (z × σ / E)²</div>
 <p><b>Étape 0.</b> Je connais la vraie valeur de la population ? Oui → fluctuation. Non → confiance.</p>
 <ol class="steps">
 <li>J'écris les données : n = … ; f = … (ou p, ou x̄ et s).</li>
-<li>Je choisis z : 90 % → 1,645 ; 95 % → 1,96 ; 99 % → 2,576.</li>
-<li>Je calcule la marge E = z × √(p(1−p)/n) &nbsp;ou&nbsp; z × s/√n.</li>
+<li>Je trouve t : 2π(t) − 1 = confiance, puis la table. Par cœur : 90 % → 1,645 ; 95 % → 1,96 ; 96 % → 2,05 ; 98 % → 2,33 ; 99 % → 2,58.</li>
+<li>Je calcule la marge E = t × √(p(1−p)/n) &nbsp;ou&nbsp; t × s/√n.</li>
 <li>J'écris l'intervalle [ centre − E ; centre + E ] avec 3 ou 4 chiffres après la virgule.</li>
 <li>Je fais une phrase de conclusion avec le contexte.</li>
 </ol>
 </div>
 <div class="tbl"><table>
 <tr><th>Situation</th><th>Formule</th></tr>
-<tr><td>Fluctuation (p connu)</td><td><code>p ± z√(p(1−p)/n)</code></td></tr>
-<tr><td>Confiance proportion</td><td><code>f ± z√(f(1−f)/n)</code></td></tr>
-<tr><td>Confiance moyenne</td><td><code>x̄ ± z·s/√n</code></td></tr>
+<tr><td>Fluctuation (p connu)</td><td><code>p ± t√(p(1−p)/n)</code></td></tr>
+<tr><td>Confiance proportion</td><td><code>f ± t√(f(1−f)/n)</code></td></tr>
+<tr><td>Confiance moyenne</td><td><code>x̄ ± t·s/√n</code></td></tr>
 <tr><td>Loi normale</td><td><code>Z = (X − m)/σ</code></td></tr>
 <tr><td>Moyenne d'échantillon</td><td><code>X̄ ~ N(m ; σ/√n)</code></td></tr>
+<tr><td>Probabilité entre −a et a</td><td><code>2π(a) − 1</code></td></tr>
 <tr><td>Écart-type corrigé</td><td><code>s = σₑ√(n/(n−1))</code></td></tr>
+<tr><td>Tableau par classes</td><td><code>centres cᵢ ; x̄ = Σnᵢcᵢ/N ; V = Σnᵢ(cᵢ−x̄)²/N ; σ = √V</code></td></tr>
 <tr><td>Variance avec Σ</td><td><code>x̄ = Σx/n ; σₑ² = Σx²/n − x̄²</code></td></tr>
-<tr><td>Taille d'échantillon</td><td><code>n ≥ z²p(1−p)/E²</code> ou <code>n ≥ (zσ/E)²</code></td></tr>
+<tr><td>Taille d'échantillon</td><td><code>n ≥ t²p(1−p)/E²</code> ou <code>n ≥ (tσ/E)²</code></td></tr>
 </table></div>
 <div class="box tip"><b>Les phrases qui rapportent des points :</b>
 <ul>
 <li>« f = 0,479 appartient à l'intervalle de fluctuation, donc l'écart est dû au hasard : on ne peut pas accuser … au seuil de 95 %. »</li>
 <li>« Avec un niveau de confiance de 95 %, la proportion de … est comprise entre … et … »</li>
 <li>« Les deux intervalles se chevauchent : on ne peut pas conclure à une différence. »</li>
-<li>« 95 % → 99 % : z augmente, donc l'intervalle est plus grand. »</li>
+<li>« 95 % → 99 % : t augmente, donc l'intervalle est plus grand. »</li>
 </ul></div>
 
 <h2 id="td1">TD Échantillonnage et estimation (corrigé)</h2>
@@ -221,7 +322,7 @@ P(146 &lt; X̄ &lt; 154) = P(−2 &lt; Z &lt; 2) ≈ 0,954</div>
 <p><b>1.3</b></p>
 <div class="f">σₑ² = 19486/150 − 10,013² ≈ 29,64
 s = √(29,64 × 150/149) ≈ 5,46</div>
-<p><b>1.4</b> 99 % → z = 2,576.</p>
+<p><b>1.4</b> 99 % → t = 2,58.</p>
 <div class="f">E = 2,576 × 5,46/√150 ≈ 1,15
 IC = [8,86 ; 11,16]</div>
 <p class="ans">Avec 99 % de confiance, le nombre moyen de bonnes réponses est entre 8,86 et 11,16.</p>
@@ -232,11 +333,11 @@ IC = [8,86 ; 11,16]</div>
 <details><summary>Voir la correction</summary>
 <p><b>2.1</b> Population : les salariés en France. Variable : « a subi un harcèlement » (oui/non), qualitative. Paramètre : la proportion p.</p>
 <p><b>2.2</b> f = 145/500 = <b>0,29</b> (29 %).</p>
-<p><b>2.3</b> 90 % → z = 1,645.</p>
+<p><b>2.3</b> 90 % → t = 1,645.</p>
 <div class="f">E = 1,645 × √(0,29 × 0,71 / 500) ≈ 0,0334
 IC = [0,2566 ; 0,3234]</div>
 <p class="ans">Entre 25,7 % et 32,3 % des salariés, avec 90 % de confiance.</p>
-<p><b>2.4</b> Plus grand : à 95 %, z = 1,96 &gt; 1,645, donc la marge est plus grande.</p>
+<p><b>2.4</b> Plus grand : à 95 %, t = 1,96 &gt; 1,645, donc la marge est plus grande.</p>
 </details></div>
 
 <div class="ex"><h3>Exercice 8 · Présidentielle 2002 <span class="tag t-c">confiance proportion</span></h3>
