@@ -1,526 +1,222 @@
 <title>Contrôle Excel TC2</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
 <style>
-/* Mise en page : une colonne, chaque partie a sa couleur (violet, corail, turquoise, jaune), gros badges d'étape et cartes « truc pour retenir ». */
+/* Fiche de révision papier : fond blanc, encre noire, rouge = attention, vert = formule/résultat, bleu = à retenir, surligneur jaune. Thème clair unique, voulu. */
 :root{
-  --bg:#fbf8ff; --paper:#ffffff; --ink:#1f1640; --muted:#655c85; --line:#e7e0f7;
-  --p1:#7c3aed; --p1s:#efe7ff;   /* partie 1 : fichier clients */
-  --p2:#f2545b; --p2s:#ffe7e8;   /* partie 2 : trier, filtrer, résumer */
-  --p3:#0ea5a0; --p3s:#ddf7f5;   /* partie 3 : commerciaux */
-  --sun:#ffc23d; --suns:#fff4d6;
-  --good:#16a34a; --goods:#dcfce7; --bad:#dc2626; --bads:#fee2e2;
-  --code-bg:#1d1440; --code-fg:#f1ecff; --code-ref:#ffd166; --code-fn:#7ef0d9;
-  --f-display:"Fredoka","Nunito",system-ui,sans-serif;
-  --f-body:"Nunito","Segoe UI",system-ui,sans-serif;
-  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+  --paper:#ffffff; --ink:#111111; --grey:#555555; --line:#d4d4d4;
+  --red:#d01c1c; --redbg:#fdecec; --green:#0f7a33; --greenbg:#eaf6ee; --blue:#1f4fd1; --bluebg:#ebf0fd; --hl:#fff27a;
+  --f:"Inter",Arial,sans-serif; --mono:"JetBrains Mono",Consolas,monospace;
+  color-scheme:light;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#120d24; --paper:#1c1535; --ink:#f3efff; --muted:#b4a9d6; --line:#30275a;
-  --p1:#a78bfa; --p1s:#2a1f52; --p2:#ff7a80; --p2s:#3d1d2a; --p3:#34d3cc; --p3s:#123536;
-  --sun:#ffc23d; --suns:#3a2f12; --good:#4ade80; --goods:#14331f; --bad:#f87171; --bads:#3b1717;
-  --code-bg:#0b0718; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#120d24; --paper:#1c1535; --ink:#f3efff; --muted:#b4a9d6; --line:#30275a;
-  --p1:#a78bfa; --p1s:#2a1f52; --p2:#ff7a80; --p2s:#3d1d2a; --p3:#34d3cc; --p3s:#123536;
-  --sun:#ffc23d; --suns:#3a2f12; --good:#4ade80; --goods:#14331f; --bad:#f87171; --bads:#3b1717;
-  --code-bg:#0b0718; color-scheme:dark}
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16.5px;line-height:1.6;
-  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 72px}
-.wrap{max-width:880px;margin:0 auto}
-h1,h2,h3,h4{font-family:var(--f-display);text-wrap:balance;line-height:1.15;margin:0;font-weight:700}
-code{font-family:var(--f-mono);font-size:.86em;background:var(--suns);padding:1px 5px;border-radius:5px}
-:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
-mark{background:linear-gradient(transparent 55%,var(--sun) 55%);color:inherit;padding:0 2px}
-
-/* HERO */
-.hero{margin-top:20px;border-radius:24px;padding:28px 22px;color:#fff;position:relative;overflow:hidden;
-  background:linear-gradient(135deg,#7c3aed 0%,#c026d3 45%,#f2545b 100%)}
-.hero::after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.12) 1px,transparent 1px);background-size:34px 24px;pointer-events:none}
-.hero > *{position:relative;z-index:1}
-.hero .tag{display:inline-block;background:rgba(255,255,255,.22);padding:4px 12px;border-radius:99px;font-weight:700;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase}
-.hero h1{font-size:clamp(2.3rem,7vw,4rem);margin-top:10px}
-.hero p{max-width:60ch;margin:8px 0 0;font-size:1.05rem;opacity:.95}
-.hero .fxbar{margin-top:16px;display:flex;background:#fff;color:#1f1640;border-radius:10px;overflow:hidden;font-family:var(--f-mono);font-size:.85rem;max-width:100%;box-shadow:0 6px 0 rgba(0,0,0,.15)}
-.hero .fxbar span{padding:8px 10px}
-.hero .fxbar .fx{background:#ffc23d;font-weight:700;font-style:italic}
-.hero .fxbar .v{overflow-x:auto;white-space:nowrap}
-.langrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:16px;font-weight:700;font-size:.9rem}
-.lang{display:inline-flex;background:rgba(255,255,255,.2);border-radius:99px;padding:3px}
-.lang button{font:inherit;font-size:.82rem;border:0;background:transparent;color:#fff;padding:5px 12px;border-radius:99px;cursor:pointer}
-.lang button[aria-pressed="true"]{background:#fff;color:#7c3aed}
-
-/* Progression collante */
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
-.progress{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:12px 10px}
-.prow{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.bar{flex:1 1 200px;height:16px;background:var(--line);border-radius:99px;overflow:hidden}
-.bar i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--p1),var(--p2),var(--sun),var(--p3));transition:width .5s}
-.count{font-family:var(--f-display);font-weight:700;font-variant-numeric:tabular-nums}
-.dots{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
-.dots a{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-family:var(--f-display);font-weight:700;font-size:.85rem;text-decoration:none;border:2px solid var(--c);color:var(--c);background:var(--paper)}
-.dots a.done{background:var(--c);color:#fff}
-
-/* Carte mentale */
-.map{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:22px}
-.map a{text-decoration:none;color:var(--ink);border-radius:18px;padding:16px;background:var(--s);border:2px solid var(--c);display:grid;gap:6px}
-.map a:hover{transform:translateY(-2px)}
-.map b{font-family:var(--f-display);font-size:1.15rem;color:var(--c)}
-.map span{font-size:.9rem;color:var(--muted)}
-
-/* Bandeaux de partie */
-.part{margin-top:40px;border-radius:20px;padding:18px 20px;color:#fff;background:var(--c);display:flex;gap:14px;align-items:center;scroll-margin-top:110px}
-.part .num{font-family:var(--f-display);font-size:2.6rem;line-height:1;background:rgba(255,255,255,.22);border-radius:14px;padding:6px 14px}
-.part h2{font-size:1.6rem}
-.part p{margin:2px 0 0;opacity:.95}
-
-/* Étapes */
-.step{background:var(--paper);border:2px solid var(--line);border-radius:20px;padding:20px;margin-top:18px;display:grid;gap:14px;scroll-margin-top:120px;border-top:8px solid var(--c)}
-.shead{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
-.badge{flex:0 0 auto;width:52px;height:52px;border-radius:16px;background:var(--c);color:#fff;font-family:var(--f-display);font-weight:700;font-size:1.5rem;display:grid;place-items:center;box-shadow:0 4px 0 color-mix(in srgb,var(--c) 55%,#000)}
-.shead .t{flex:1;min-width:0}
-.shead h3{font-size:1.35rem}
-.shead .where{font-size:.88rem;color:var(--muted);font-weight:600}
-.know{display:flex;align-items:center;gap:8px;font-weight:700;font-size:.88rem;cursor:pointer;user-select:none;border:2px solid var(--c);color:var(--c);padding:7px 12px;border-radius:99px}
-.know input{accent-color:var(--c);width:18px;height:18px;margin:0}
-.know:has(input:checked){background:var(--c);color:#fff}
-.step p{margin:0}
-ol.how,ul.how{margin:0;padding-left:1.3em;display:grid;gap:5px}
-.path{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:.88rem}
-.path b{background:var(--s);color:var(--c);border:1.5px solid color-mix(in srgb,var(--c) 40%,transparent);padding:3px 10px;border-radius:99px;font-weight:700}
-.path i{font-style:normal;color:var(--muted);font-weight:800}
-
-.formula{background:var(--code-bg);color:var(--code-fg);border-radius:14px;overflow:hidden}
-.ftop{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 12px;font-size:.78rem;font-weight:700;color:#cfc4ff;background:rgba(255,255,255,.06)}
-.formula pre{margin:0;padding:14px;overflow-x:auto;font-family:var(--f-mono);font-size:.9rem;line-height:1.6;white-space:pre}
-.formula .r{color:var(--code-ref)} .formula .f{color:var(--code-fn);font-weight:700}
-.copy{font:inherit;font-size:.75rem;background:var(--sun);color:#1f1640;border:0;border-radius:99px;padding:4px 12px;cursor:pointer;font-weight:800}
-
-/* Trucs pour retenir */
-.trick{border-radius:16px;padding:14px 16px;background:var(--suns);border:2px dashed var(--sun);display:grid;gap:4px}
-.trick .lbl{font-family:var(--f-display);font-weight:700;color:#b7791f;font-size:.95rem}
-:root[data-theme="dark"] .trick .lbl{color:var(--sun)}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .trick .lbl{color:var(--sun)}}
-.trick .big{font-family:var(--f-display);font-size:1.25rem;font-weight:700}
-.trap{border-radius:16px;padding:14px 16px;background:var(--bads);border:2px solid color-mix(in srgb,var(--bad) 40%,transparent);display:grid;gap:4px}
-.trap .lbl{font-family:var(--f-display);font-weight:700;color:var(--bad)}
-.ok{border-radius:16px;padding:14px 16px;background:var(--goods);border:2px solid color-mix(in srgb,var(--good) 40%,transparent);display:grid;gap:4px}
-.ok .lbl{font-family:var(--f-display);font-weight:700;color:var(--good)}
-
-/* Tableaux */
-.tbl{border-radius:14px;overflow-x:auto;border:2px solid var(--line)}
-.tbl table{border-collapse:collapse;width:100%;font-size:.88rem;font-variant-numeric:tabular-nums}
-.tbl th,.tbl td{padding:7px 10px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line)}
-.tbl th{background:var(--s);color:var(--c);font-weight:800;text-align:center}
-.tbl td:first-child,.tbl th:first-child{text-align:left;font-weight:700}
-.tbl tr:last-child td{border-bottom:0}
-.tbl caption{caption-side:top;text-align:left;padding:8px 10px;font-weight:800;color:var(--muted);font-size:.82rem}
-
-/* Schéma TTC → HT */
-.flow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;padding:6px 0}
-.flow .box{border-radius:14px;padding:10px 16px;font-family:var(--f-display);font-weight:700;text-align:center;min-width:110px}
-.flow .ttc{background:var(--p2s);color:var(--p2);border:2px solid var(--p2)}
-.flow .ht{background:var(--p1s);color:var(--p1);border:2px solid var(--p1)}
-.flow .op{font-family:var(--f-display);font-weight:700;color:var(--muted);text-align:center;font-size:.9rem}
-.flow .op b{display:block;font-size:1.4rem;color:var(--ink)}
-
-/* Escalier des tranches */
-.stairs{display:flex;align-items:flex-end;gap:6px;height:190px;padding-top:10px;overflow-x:auto}
-.stairs div{flex:1 0 70px;border-radius:12px 12px 4px 4px;color:#fff;display:flex;flex-direction:column;justify-content:flex-start;align-items:center;padding:8px 4px;font-family:var(--f-display);font-weight:700;text-align:center;font-size:.8rem;line-height:1.2;transition:transform .2s,outline .2s;outline:0 solid var(--sun)}
-.stairs div b{font-size:1.3rem}
-.stairs div.on{outline:4px solid var(--sun);transform:translateY(-6px)}
-
-/* Simulateurs */
-.sim{border-radius:16px;padding:16px;background:var(--s);display:grid;gap:12px}
-.sim h4{color:var(--c);font-size:1.05rem}
-.srow{display:flex;gap:12px;flex-wrap:wrap;align-items:end}
-.sim label{display:grid;gap:4px;font-size:.82rem;font-weight:800;color:var(--muted)}
-.sim input,.sim select{font:inherit;font-weight:700;font-size:1.05rem;padding:9px 12px;border:2px solid var(--line);border-radius:12px;background:var(--paper);color:var(--ink);width:180px;max-width:100%}
-.out{font-family:var(--f-mono);font-size:.92rem;line-height:1.8;background:var(--paper);border-radius:12px;padding:10px 12px}
-.out b{color:var(--c);font-size:1.05rem}
-.out .k{color:var(--muted)}
-
-/* Graphique */
-.chart{border-radius:14px;border:2px solid var(--line);background:var(--paper);padding:10px;overflow-x:auto}
-.chart svg{display:block;width:100%;min-width:520px;height:auto}
-.chart text{fill:var(--muted);font-family:var(--f-body);font-size:11px;font-weight:700}
-
-/* Quiz */
-.quizbox{margin-top:40px;border-radius:24px;padding:22px;background:linear-gradient(135deg,var(--p3) 0%,#2563eb 100%);color:#fff}
-.quizbox h2{font-size:1.8rem}
-.quizbox p{margin:4px 0 0;opacity:.95}
-.score{font-family:var(--f-display);font-size:1.1rem;margin-top:10px;font-weight:700}
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-top:16px}
-.card{background:var(--paper);color:var(--ink);border-radius:16px;padding:14px;display:grid;gap:10px;align-content:start;min-height:150px;border:0;text-align:left;font:inherit}
-.card .q{font-weight:800}
-.card .rev{font:inherit;font-weight:800;font-size:.85rem;border:2px dashed var(--p3);background:transparent;color:var(--p3);border-radius:12px;padding:8px;cursor:pointer}
-.card .a{font-family:var(--f-mono);font-size:.85rem;background:var(--p3s);color:var(--ink);border-radius:10px;padding:8px;word-break:break-word}
-.card .btns{display:flex;gap:6px}
-.card .btns button{flex:1;font:inherit;font-weight:800;font-size:.8rem;border:0;border-radius:10px;padding:7px;cursor:pointer}
-.card .yes{background:var(--goods);color:var(--good)} .card .no{background:var(--bads);color:var(--bad)}
-.card.k-yes{outline:3px solid var(--good)} .card.k-no{outline:3px solid var(--bad)}
-
-.check{display:grid;gap:10px;padding:0;margin:16px 0 0;list-style:none;counter-reset:c}
-.check li{display:flex;gap:12px;align-items:flex-start;background:var(--paper);border:2px solid var(--line);border-radius:16px;padding:12px 14px}
-.check li::before{counter-increment:c;content:counter(c);flex:0 0 32px;height:32px;border-radius:10px;display:grid;place-items:center;background:var(--sun);color:#1f1640;font-family:var(--f-display);font-weight:700}
-footer{margin-top:40px;color:var(--muted);font-size:.85rem}
-.p1{--c:var(--p1);--s:var(--p1s)} .p2{--c:var(--p2);--s:var(--p2s)} .p3{--c:var(--p3);--s:var(--p3s)}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+body{background:var(--paper);color:var(--ink);font-family:var(--f);font-size:16px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 60px}
+.wrap{max-width:820px;margin:0 auto}
+h1{font-size:2rem;margin:0;text-align:center;letter-spacing:-.01em}
+.sub{text-align:center;color:var(--grey);margin:4px 0 0}
+h2{font-size:1.35rem;margin:36px 0 0;padding-bottom:4px;border-bottom:3px solid var(--ink);text-transform:uppercase;letter-spacing:.02em}
+h3{font-size:1.1rem;margin:24px 0 6px}
+h3 .n{display:inline-block;min-width:28px;height:28px;line-height:28px;text-align:center;border:2px solid var(--ink);border-radius:50%;margin-right:8px;font-size:.9rem}
+p{margin:6px 0}
+ul,ol{margin:6px 0;padding-left:1.4em}
+li{margin:3px 0}
+.hl{background:var(--hl);padding:0 3px}
+.red{color:var(--red);font-weight:700}
+.green{color:var(--green);font-weight:700}
+.blue{color:var(--blue);font-weight:700}
+.clic{font-weight:700}
+.clic::after{content:""}
+code{font-family:var(--mono);font-size:.88em;color:var(--green);font-weight:700}
+.f{font-family:var(--mono);font-size:.9rem;color:var(--green);font-weight:700;background:var(--greenbg);border-left:4px solid var(--green);padding:8px 12px;margin:8px 0;overflow-x:auto;white-space:pre}
+.box{border:2px solid;padding:8px 12px;margin:10px 0}
+.box b.t{display:block;text-transform:uppercase;font-size:.8rem;letter-spacing:.05em;margin-bottom:2px}
+.retenir{border-color:var(--blue);background:var(--bluebg)} .retenir b.t{color:var(--blue)}
+.attention{border-color:var(--red);background:var(--redbg)} .attention b.t{color:var(--red)}
+.tbl{overflow-x:auto;margin:8px 0}
+table{border-collapse:collapse;width:100%;font-size:.9rem;font-variant-numeric:tabular-nums}
+th,td{border:1px solid var(--ink);padding:5px 8px;text-align:right;white-space:nowrap}
+th{background:#f0f0f0;text-align:center}
+td:first-child{text-align:left}
+.ok td{color:var(--green)}
+.neg{color:var(--red)} .pos{color:var(--green)}
+footer{margin-top:40px;color:var(--grey);font-size:.85rem;border-top:1px solid var(--line);padding-top:8px}
 </style>
 
 <div class="wrap">
-<header class="hero">
-  <span class="tag">BUT TC · Contrôle Excel</span>
-  <h1>Contrôle Excel TC2</h1>
-  <p>Le sujet « Bijouterie » refait en 12 étapes. Pour chacune : les clics, la formule, les résultats pour te corriger et un <b>truc pour retenir</b>. Coche quand tu sais, la barre se remplit.</p>
-  <div class="fxbar" aria-hidden="true"><span>O2</span><span class="fx">fx</span><span class="v">=SI(N2&lt;10000;N2*5%;SI(N2&lt;15000;N2*8%;…</span></div>
-  <div class="langrow">Formules en
-    <div class="lang" role="group" aria-label="Langue des formules">
-      <button type="button" id="lang-fr" aria-pressed="true">Excel français</button>
-      <button type="button" id="lang-en" aria-pressed="false">Excel anglais</button>
-    </div>
-  </div>
-</header>
+<h1>CONTRÔLE EXCEL TC2</h1>
+<p class="sub">Fiche de révision · sujet « Bijouterie » (373 clients + 7 commerciaux)</p>
 
-<div class="progress">
-  <div class="prow"><div class="bar" aria-hidden="true"><i id="bar"></i></div><span class="count" id="count">0 / 12</span></div>
-  <nav class="dots" id="dots" aria-label="Aller à une étape"></nav>
+<div class="box retenir"><b class="t">Légende</b>
+<span class="green">Vert</span> = formule ou résultat juste · <span class="red">Rouge</span> = attention / piège · <span class="blue">Bleu</span> = à retenir · <span class="hl">Surligné</span> = mot-clé</div>
+
+<div class="box retenir"><b class="t">La méthode pour tout le contrôle</b>
+Je <span class="hl">copie</span> la feuille → je <span class="hl">bloque</span> avec $ → je <span class="hl">tire</span> vers le bas → je <span class="hl">vérifie</span> une ligne.<br>
+Copier une feuille : clic droit sur l'onglet › <b>Déplacer ou copier</b> › cocher <b>Créer une copie</b> › renommer (double-clic).</div>
+
+<p><b>Au départ :</b> feuille <b>BDD</b> (clients, TTC en M, code TVA en K), feuille <b>TVA</b> (code 1 = 5,5 % en C3 · code 2 = 10 % en C4 · code 3 = 20 % en C5), feuille <b>Exercice final</b> (CA des commerciaux).</p>
+
+<!-- ============ PARTIE 1 ============ -->
+<h2>Partie 1 · Le fichier clients</h2>
+
+<h3><span class="n">1</span>Préparer et trier</h3>
+<ul>
+  <li>Renommer <b>BDD</b> en <b>FICHIER CLIENTS</b>.</li>
+  <li>Titres : N1 « Montant annuel HT », O1 « Honoraires », P1 « Gestion des clients ».</li>
+  <li>Trier par Nom Société : <b>Données › Trier › Nom Société › A à Z</b>.</li>
+</ul>
+<div class="box attention"><b class="t">Attention : erreur dans la correction</b>
+Les HT et TVA du corrigé sont <span class="red">faux pour les codes 2 et 3</span> : la formule contient <code style="color:var(--red)">'FICHIER CLIENTS'!K203</code> au lieu de <code>K2</code>. Le nom de la feuille s'est ajouté, puis le tri a tout décalé. → Écrire la formule <b>sans cliquer sur une autre feuille</b> (sauf pour le taux dans TVA).</div>
+
+<h3><span class="n">2</span>Montant HT (colonne J)</h3>
+<p><span class="blue">HT = TTC ÷ (1 + taux)</span> &nbsp;·&nbsp; TTC = HT × (1 + taux)</p>
+<div class="f">J2 =SI(K2=1;M2/(1+TVA!$C$3);SI(K2=2;M2/(1+TVA!$C$4);M2/(1+TVA!$C$5)))</div>
+<p>Version courte (bonus) :</p>
+<div class="f">J2 =M2/(1+RECHERCHEV(K2;TVA!$A$3:$C$5;3;FAUX))</div>
+<div class="box retenir"><b class="t">À retenir</b>
+Pour <span class="hl">descendre</span> au HT, je <span class="hl">divise</span>.<br>
+<b>$C$3</b> = cellule bloquée quand on tire la formule (touche <b>F4</b>).</div>
+
+<h3><span class="n">3</span>TVA (L) et annuel HT (N)</h3>
+<div class="f">L2 =SI(K2=1;J2*TVA!$C$3;SI(K2=2;J2*TVA!$C$4;J2*TVA!$C$5))
+N2 =J2*12</div>
+<p>Vérification : TVA = <code>=M2-J2</code>. Puis sélectionner J2:O2 et <b>double-cliquer sur le petit carré</b> en bas à droite. Format € : Accueil › Comptabilité.</p>
+<div class="tbl"><table>
+  <tr><th>Client</th><th>Code</th><th>TTC</th><th>HT</th><th>TVA</th><th>Annuel HT</th></tr>
+  <tr class="ok"><td>A Offrir</td><td>1</td><td>3 420,54</td><td>3 242,21</td><td>178,32</td><td>38 906,57</td></tr>
+  <tr class="ok"><td>Alliance</td><td>2</td><td>4 178,83</td><td>3 798,94</td><td>379,89</td><td>45 587,23</td></tr>
+  <tr class="ok"><td>Alliage (C0257)</td><td>3</td><td>4 178,83</td><td>3 482,36</td><td>696,47</td><td>41 788,29</td></tr>
+</table></div>
+
+<h3><span class="n">4</span>Honoraires par tranches (colonne O)</h3>
+<div class="tbl"><table style="max-width:420px">
+  <tr><th>Annuel HT</th><th>Taux</th></tr>
+  <tr><td>&lt; 10 000 €</td><td>5 %</td></tr>
+  <tr><td>&lt; 15 000 €</td><td>8 %</td></tr>
+  <tr><td>&lt; 25 000 €</td><td>10 %</td></tr>
+  <tr><td>&lt; 35 000 €</td><td>15 %</td></tr>
+  <tr><td>&lt; 50 000 €</td><td>20 %</td></tr>
+  <tr><td>50 000 € et plus</td><td>25 %</td></tr>
+</table></div>
+<div class="f">O2 =SI(N2&lt;10000;N2*5%;
+    SI(N2&lt;15000;N2*8%;
+    SI(N2&lt;25000;N2*10%;
+    SI(N2&lt;35000;N2*15%;
+    SI(N2&lt;50000;N2*20%;N2*25%)))))</div>
+<div class="box retenir"><b class="t">À retenir : l'escalier</b>
+On monte les tranches dans l'ordre avec <span class="hl">&lt;</span>. Excel s'arrête à la première vraie → pas besoin d'écrire « entre ».<br>
+<span class="hl">6 tranches = 5 SI = 5 parenthèses</span> à la fin. Taux : 5 · 8 · 10 · 15 · 20 · 25.<br>
+Exemple : 38 906,57 € → tranche &lt; 50 000 → 20 % → <span class="green">7 781,31 €</span></div>
+
+<h3><span class="n">5</span>Liste déroulante + couleurs (colonne P)</h3>
+<ul>
+  <li>Sélectionner P2:P374 › <b>Données › Validation des données › Liste</b>, source :<br><code>Bon client;Client à rencontrer;Solvabilité à vérifier</code></li>
+  <li><b>Accueil › Mise en forme conditionnelle › Texte qui contient</b> : « bon client » → <span class="green">vert</span>, « solvabilité » → <span class="red">rouge gras</span>.</li>
+</ul>
+<div class="box retenir"><b class="t">À retenir</b>Liste = <span class="hl">Données</span> · Couleurs = <span class="hl">Accueil</span></div>
+
+<!-- ============ PARTIE 2 ============ -->
+<h2>Partie 2 · Trier, filtrer, résumer</h2>
+<p>Chaque exercice se fait sur une <b>copie</b> de FICHIER CLIENTS.</p>
+
+<h3><span class="n">6</span>Onglet Tarifs : colorer les TTC</h3>
+<ul>
+  <li>M2:M374 › <b>Mise en forme conditionnelle › Inférieur à</b> 5000 (couleur 1).</li>
+  <li><b>Mise en forme conditionnelle › Entre</b> 5000 et 10000 (couleur 2).</li>
+  <li>Modifier / supprimer : <b>Gérer les règles</b>.</li>
+</ul>
+
+<h3><span class="n">7</span>Onglet LISTING : filtre</h3>
+<ol>
+  <li><b>Données › Filtrer</b> (Ctrl + Maj + L).</li>
+  <li>Type Société → cocher seulement <b>TGE</b>.</li>
+  <li>Montant annuel HT → <b>Filtres numériques › Au-dessus de la moyenne</b>.</li>
+</ol>
+<p class="green">Résultat : 17 sociétés TGE affichées (numéros de ligne en bleu).</p>
+<div class="box attention"><b class="t">Attention</b>Filtrer = <span class="red">cacher</span>, pas supprimer.</div>
+
+<h3><span class="n">8</span>Onglet HONORAIRES : sous-totaux</h3>
+<ol>
+  <li><span class="hl">D'abord trier</span> par Type Société.</li>
+  <li><b>Données › Sous-total</b> : à chaque changement de Type Société · <b>Somme</b> · Honoraires.</li>
+  <li>Refaire : <b>Somme</b> · Montant mensuel TTC · <span class="red">décocher « Remplacer les sous-totaux existants »</span>.</li>
+  <li>Refaire : <b>Moyenne</b> · Montant annuel HT · toujours décoché.</li>
+</ol>
+<div class="f">=SOUS.TOTAL(9;O2:O49)   → 9 = somme
+=SOUS.TOTAL(1;N2:N49)   → 1 = moyenne</div>
+<div class="box retenir"><b class="t">À retenir</b>On <span class="hl">trie avant de totaliser</span>. Boutons 1 · 2 · 3 à gauche = total général / total par type / tout le détail.</div>
+
+<h3><span class="n">9</span>TCD 1 : moyenne, max, min</h3>
+<ul>
+  <li><b>Insertion › Tableau croisé dynamique › Nouvelle feuille</b>.</li>
+  <li>Lignes : <b>Type Société</b> puis <b>Code TVA</b> (filtré sur 3).</li>
+  <li>Valeurs : Montant mensuel TTC <b>3 fois</b> → <b>Paramètres des champs de valeurs</b> → Moyenne, Max, Min. Format €.</li>
+</ul>
+<div class="tbl"><table>
+  <tr><th>Type</th><th>Moyenne</th><th>Max</th><th>Min</th></tr>
+  <tr class="ok"><td>PME</td><td>3 627,88 €</td><td>4 937,12 €</td><td>2 216,74 €</td></tr>
+  <tr class="ok"><td>TGE</td><td>3 836,74 €</td><td>5 884,99 €</td><td>2 046,13 €</td></tr>
+  <tr class="ok"><td>TPE</td><td>3 705,27 €</td><td>8 946,60 €</td><td>1 799,68 €</td></tr>
+  <tr class="ok"><td><b>Total</b></td><td>3 702,27 €</td><td>8 946,60 €</td><td>1 799,68 €</td></tr>
+</table></div>
+
+<h3><span class="n">10</span>TCD 2 : pourcentages</h3>
+<ul>
+  <li>Filtres : <b>Ville Société</b> · Lignes : <b>Type Société</b> · Valeurs : <b>Somme TTC</b>.</li>
+  <li>Clic droit sur un chiffre › <b>Afficher les valeurs › % du total de la colonne</b>.</li>
+</ul>
+<p class="green">Résultat : TPE 78,51 % · PME 12,61 % · TGE 8,88 % · Total 100 %</p>
+<div class="box retenir"><b class="t">À retenir</b>Calcul (moyenne, max…) = <span class="hl">Paramètres des champs</span> · Pourcentage = <span class="hl">Afficher les valeurs</span></div>
+
+<!-- ============ PARTIE 3 ============ -->
+<h2>Partie 3 · Exercice final (commerciaux)</h2>
+
+<h3><span class="n">11</span>CA, part, évolution, prime</h3>
+<div class="f">N4  =SOMME(B4:M4)                              CA total
+B11 =SOMME(B4:B10)                             total du mois
+O4  =N4/$N$11                                  part (format %)
+P4  =(SOMME(H4:M4)-SOMME(B4:G4))/SOMME(B4:G4)  évolution S2/S1 (format %)
+Q4  =SI(N4&gt;60000;N4*10%;500)                   prime</div>
+<div class="box retenir"><b class="t">À retenir</b>
+Taux d'évolution = <span class="hl">(arrivée − départ) ÷ départ</span><br>
+Départ = S1 = janvier → juin = <b>B à G</b> · Arrivée = S2 = juillet → décembre = <b>H à M</b><br>
+Part : tout le monde divisé par le <b>même total</b> → <b>$N$11</b></div>
+<div class="tbl"><table>
+  <tr><th>Commercial</th><th>CA total</th><th>Part</th><th>Évolution</th><th>Prime</th></tr>
+  <tr><td>SEVERINE</td><td>70 824</td><td>16,61 %</td><td class="neg">−15,35 %</td><td>7 082,40</td></tr>
+  <tr><td>GAETAN</td><td>35 859</td><td>8,41 %</td><td class="neg">−58,63 %</td><td>500</td></tr>
+  <tr><td>CHRISTELLE</td><td>55 492</td><td>13,02 %</td><td class="neg">−4,96 %</td><td>500</td></tr>
+  <tr><td>YOHANN</td><td>66 005</td><td>15,48 %</td><td class="neg">−14,25 %</td><td>6 600,50</td></tr>
+  <tr><td>CHRISTIAN</td><td>42 952</td><td>10,08 %</td><td class="neg">−3,96 %</td><td>500</td></tr>
+  <tr><td>DYLAN</td><td>61 739</td><td>14,48 %</td><td class="pos">+1,16 %</td><td>6 173,90</td></tr>
+  <tr><td>MORGAN</td><td>93 419</td><td>21,91 %</td><td class="neg">−6,93 %</td><td>9 341,90</td></tr>
+  <tr><td><b>CA TOTAL</b></td><td><b>426 290</b></td><td>100 %</td><td></td><td></td></tr>
+</table></div>
+<p><b>Icônes :</b> Mise en forme conditionnelle › <b>Jeux d'icônes</b> → feux sur O4:O10 (vert à partir de 0,15) ; flèches sur P4:P10 (seuil 0). Seuils dans <b>Gérer les règles › Modifier</b>.</p>
+
+<h3><span class="n">12</span>Graphiques</h3>
+<ul>
+  <li><b>Graphique 1</b> : A3:A10 + <b>Ctrl</b> + H3:M10 › <b>Insertion › Histogramme groupé</b>. Titre « Répartition CA 2ème semestre », axes « Commerciaux » / « CA en € ». <b>Déplacer le graphique › Nouvelle feuille</b>.</li>
+  <li><b>Graphique 2</b> : A3:A10 + <b>Ctrl</b> + N3:N10 › <b>Insertion › Secteurs</b>, étiquettes en %.</li>
+</ul>
+<div class="box attention"><b class="t">Attention</b>Camembert = <span class="red">une seule série</span>, et <span class="red">jamais la ligne CA TOTAL</span> dedans.</div>
+
+<!-- ============ RÉCAP ============ -->
+<h2>Récap express</h2>
+<div class="tbl"><table>
+  <tr><th>Je veux…</th><th>Où / formule</th></tr>
+  <tr><td>Passer du TTC au HT</td><td style="text-align:left"><code>=TTC/(1+taux)</code></td></tr>
+  <tr><td>Bloquer une cellule</td><td style="text-align:left"><code>$C$3</code> (F4)</td></tr>
+  <tr><td>Tranches</td><td style="text-align:left">SI imbriqués, tranches − 1 SI, toujours &lt;</td></tr>
+  <tr><td>Liste déroulante</td><td style="text-align:left">Données › Validation des données › Liste</td></tr>
+  <tr><td>Couleurs automatiques</td><td style="text-align:left">Accueil › Mise en forme conditionnelle</td></tr>
+  <tr><td>Filtrer</td><td style="text-align:left">Données › Filtrer (Ctrl + Maj + L)</td></tr>
+  <tr><td>Sous-totaux</td><td style="text-align:left">Trier puis Données › Sous-total (9 = somme, 1 = moyenne)</td></tr>
+  <tr><td>Moyenne / max / min dans un TCD</td><td style="text-align:left">Paramètres des champs de valeurs</td></tr>
+  <tr><td>% dans un TCD</td><td style="text-align:left">Afficher les valeurs › % du total</td></tr>
+  <tr><td>Évolution</td><td style="text-align:left"><code>(arrivée-départ)/départ</code></td></tr>
+  <tr><td>Prime conditionnelle</td><td style="text-align:left"><code>=SI(N4&gt;60000;N4*10%;500)</code></td></tr>
+</table></div>
+
+<footer>D'après TC2_EXCEL_2025 et sa correction du 12/11. Formules en Excel français (séparateur ;). En Excel anglais : SI = IF, SOMME = SUM, RECHERCHEV = VLOOKUP, SOUS.TOTAL = SUBTOTAL, séparateur virgule.</footer>
 </div>
-
-<nav class="map" aria-label="Les 3 parties">
-  <a href="#partie1" class="p1"><b>1 · Le fichier clients</b><span>HT, TVA, annuel, honoraires, liste déroulante</span></a>
-  <a href="#partie2" class="p2"><b>2 · Trier, filtrer, résumer</b><span>couleurs, filtre, sous-totaux, TCD</span></a>
-  <a href="#partie3" class="p3"><b>3 · Les commerciaux</b><span>CA, part, évolution, prime, graphiques</span></a>
-</nav>
-
-<div class="trick" style="margin-top:18px">
-  <span class="lbl">💡 La phrase à retenir pour tout le contrôle</span>
-  <span class="big">« Je <mark>copie</mark> la feuille, je <mark>bloque</mark> avec $, je <mark>tire</mark> vers le bas, je <mark>vérifie</mark> une ligne. »</span>
-  <span>Avant chaque exercice : clic droit sur l'onglet › Déplacer ou copier › cocher <b>Créer une copie</b> › renommer.</span>
-</div>
-
-<!-- PARTIE 1 -->
-<div class="part p1" id="partie1"><span class="num">1</span><div><h2>Le fichier clients</h2><p>On part du TTC et d'un code TVA, on remplit les colonnes J à P.</p></div></div>
-
-<article class="step p1" id="s1" data-step="1">
-  <div class="shead"><span class="badge">1</span><div class="t"><h3>Préparer et trier</h3><div class="where">BDD → FICHIER CLIENTS</div></div><label class="know"><input type="checkbox" id="k1"> Je sais</label></div>
-  <ol class="how">
-    <li>Double-clic sur l'onglet <b>BDD</b> → renommer <b>FICHIER CLIENTS</b>.</li>
-    <li>Écrire les titres : N1 « Montant annuel HT », O1 « Honoraires », P1 « Gestion des clients ».</li>
-    <li>Trier par <b>Nom Société</b> de A à Z.</li>
-  </ol>
-  <div class="path"><b>Données</b><i>›</i><b>Trier</b><i>›</i><b>Nom Société</b><i>›</i><b>A → Z</b></div>
-  <div class="trap"><span class="lbl">⚠️ Le piège caché dans la correction</span>Le corrigé a des HT faux pour les codes TVA 2 et 3. La formule contient <code>'FICHIER CLIENTS'!K203</code> au lieu de <code>K2</code> : Excel a ajouté le nom de la feuille, puis le tri a tout décalé. Écris tes formules <b>sans cliquer sur une autre feuille</b>, sauf pour aller chercher le taux dans TVA.</div>
-</article>
-
-<article class="step p1" id="s2" data-step="2">
-  <div class="shead"><span class="badge">2</span><div class="t"><h3>Du TTC au HT</h3><div class="where">Colonne J · Montant mensuel HT</div></div><label class="know"><input type="checkbox" id="k2"> Je sais</label></div>
-  <div class="flow" aria-label="Schéma : HT fois 1 plus taux égale TTC, TTC divisé par 1 plus taux égale HT">
-    <div class="box ht">HT</div>
-    <div class="op"><b>× (1 + taux) →</b>on ajoute la TVA</div>
-    <div class="box ttc">TTC</div>
-    <div class="op"><b>← ÷ (1 + taux)</b>on enlève la TVA</div>
-  </div>
-  <p>Les taux sont dans la feuille TVA : code <b>1 = 5,5 %</b> (C3), code <b>2 = 10 %</b> (C4), code <b>3 = 20 %</b> (C5).</p>
-  <div class="formula"><div class="ftop">J2 · avec des SI<button class="copy" type="button">Copier</button></div>
-<pre data-fr="=SI(K2=1;M2/(1+TVA!$C$3);SI(K2=2;M2/(1+TVA!$C$4);M2/(1+TVA!$C$5)))" data-en="=IF(K2=1,M2/(1+TVA!$C$3),IF(K2=2,M2/(1+TVA!$C$4),M2/(1+TVA!$C$5)))"></pre></div>
-  <div class="formula"><div class="ftop">J2 · version courte (bonus)<button class="copy" type="button">Copier</button></div>
-<pre data-fr="=M2/(1+RECHERCHEV(K2;TVA!$A$3:$C$5;3;FAUX))" data-en="=M2/(1+VLOOKUP(K2,TVA!$A$3:$C$5,3,FALSE))"></pre></div>
-  <div class="trick"><span class="lbl">💡 Truc pour retenir</span><span class="big">« Pour <mark>descendre</mark> au HT, je <mark>divise</mark>. »</span><span>TTC est plus grand que HT : pour aller vers le plus petit, on divise. Et le <b>$</b> bloque le taux quand tu tires vers le bas (touche <b>F4</b>).</span></div>
-  <div class="sim">
-    <h4>À toi : TTC → HT</h4>
-    <div class="srow">
-      <label for="ht-ttc">Montant TTC (€)<input id="ht-ttc" type="number" step="0.01" value="4178.83"></label>
-      <label for="ht-code">Code TVA<select id="ht-code"><option value="1">1 · 5,5 %</option><option value="2">2 · 10 %</option><option value="3" selected>3 · 20 %</option></select></label>
-    </div>
-    <div class="out" id="ht-out" aria-live="polite"></div>
-  </div>
-</article>
-
-<article class="step p1" id="s3" data-step="3">
-  <div class="shead"><span class="badge">3</span><div class="t"><h3>TVA et montant annuel</h3><div class="where">Colonnes L et N</div></div><label class="know"><input type="checkbox" id="k3"> Je sais</label></div>
-  <div class="formula"><div class="ftop">L2 · TVA du mois<button class="copy" type="button">Copier</button></div>
-<pre data-fr="=SI(K2=1;J2*TVA!$C$3;SI(K2=2;J2*TVA!$C$4;J2*TVA!$C$5))" data-en="=IF(K2=1,J2*TVA!$C$3,IF(K2=2,J2*TVA!$C$4,J2*TVA!$C$5))"></pre></div>
-  <div class="formula"><div class="ftop">N2 · annuel HT<button class="copy" type="button">Copier</button></div>
-<pre data-fr="=J2*12" data-en="=J2*12"></pre></div>
-  <div class="trick"><span class="lbl">💡 Truc pour retenir</span><span class="big">TVA = TTC − HT</span><span>Pour te vérifier, <code>=M2-J2</code> donne la même TVA. Annuel = mensuel × <b>12 mois</b>.</span></div>
-  <p>Ensuite : sélectionne J2:O2 et <b>double-clique sur le petit carré</b> en bas à droite → ça recopie jusqu'en bas. Format € : Accueil › Comptabilité.</p>
-  <div class="tbl"><table>
-    <caption>✅ Résultats pour te corriger</caption>
-    <tr><th>Client</th><th>Code</th><th>TTC</th><th>HT</th><th>TVA</th><th>Annuel HT</th></tr>
-    <tr><td>A Offrir</td><td>1</td><td>3 420,54</td><td>3 242,21</td><td>178,32</td><td>38 906,57</td></tr>
-    <tr><td>Alliance</td><td>2</td><td>4 178,83</td><td>3 798,94</td><td>379,89</td><td>45 587,23</td></tr>
-    <tr><td>Alliage (C0257)</td><td>3</td><td>4 178,83</td><td>3 482,36</td><td>696,47</td><td>41 788,29</td></tr>
-  </table></div>
-</article>
-
-<article class="step p1" id="s4" data-step="4">
-  <div class="shead"><span class="badge">4</span><div class="t"><h3>Les honoraires en escalier</h3><div class="where">Colonne O · calculés sur l'annuel HT</div></div><label class="know"><input type="checkbox" id="k4"> Je sais</label></div>
-  <div class="stairs" id="stairs" aria-label="Barème : 5, 8, 10, 15, 20 et 25 pour cent"></div>
-  <div class="formula"><div class="ftop">O2 · 5 SI pour 6 marches<button class="copy" type="button">Copier</button></div>
-<pre data-fr="=SI(N2<10000;N2*5%;
- SI(N2<15000;N2*8%;
-  SI(N2<25000;N2*10%;
-   SI(N2<35000;N2*15%;
-    SI(N2<50000;N2*20%;N2*25%)))))" data-en="=IF(N2<10000,N2*5%,
- IF(N2<15000,N2*8%,
-  IF(N2<25000,N2*10%,
-   IF(N2<35000,N2*15%,
-    IF(N2<50000,N2*20%,N2*25%)))))"></pre></div>
-  <div class="trick"><span class="lbl">💡 Truc pour retenir : l'escalier</span><span class="big">« Je monte les marches avec <mark>&lt;</mark>, une à une. »</span><span>Excel s'arrête à la première marche vraie, donc jamais besoin d'écrire « entre ». <b>6 marches = 5 SI = 5 parenthèses</b> à la fin. Les taux : <b>5 · 8 · 10 · 15 · 20 · 25</b>.</span></div>
-  <div class="sim">
-    <h4>À toi : sur quelle marche ?</h4>
-    <div class="srow"><label for="hon-n">Annuel HT (€)<input id="hon-n" type="number" step="1" value="38906.57"></label></div>
-    <div class="out" id="hon-out" aria-live="polite"></div>
-  </div>
-</article>
-
-<article class="step p1" id="s5" data-step="5">
-  <div class="shead"><span class="badge">5</span><div class="t"><h3>Liste déroulante + couleurs</h3><div class="where">Colonne P · P2:P374</div></div><label class="know"><input type="checkbox" id="k5"> Je sais</label></div>
-  <p><b>La liste</b> :</p>
-  <div class="path"><b>Données</b><i>›</i><b>Validation des données</b><i>›</i><b>Liste</b><i>›</i><b>Source</b></div>
-  <div class="formula"><div class="ftop">Source de la liste<button class="copy" type="button">Copier</button></div><pre data-fr="Bon client;Client à rencontrer;Solvabilité à vérifier" data-en="Bon client,Client à rencontrer,Solvabilité à vérifier"></pre></div>
-  <p><b>Les couleurs</b> :</p>
-  <div class="path"><b>Accueil</b><i>›</i><b>Mise en forme conditionnelle</b><i>›</i><b>Texte qui contient…</b></div>
-  <ul class="how">
-    <li>« bon client » → <span style="background:var(--goods);color:var(--good);font-weight:800;padding:1px 8px;border-radius:6px">vert</span></li>
-    <li>« solvabilité » → <span style="background:var(--bads);color:var(--bad);font-weight:800;padding:1px 8px;border-radius:6px">rouge gras</span></li>
-  </ul>
-  <div class="trick"><span class="lbl">💡 Truc pour retenir</span><span class="big">Liste = <mark>Données</mark> · Couleurs = <mark>Accueil</mark></span><span>On « valide » des données, on « met en forme » à l'accueil.</span></div>
-</article>
-
-<!-- PARTIE 2 -->
-<div class="part p2" id="partie2"><span class="num">2</span><div><h2>Trier, filtrer, résumer</h2><p>Chaque exercice sur sa propre copie de FICHIER CLIENTS.</p></div></div>
-
-<article class="step p2" id="s6" data-step="6">
-  <div class="shead"><span class="badge">6</span><div class="t"><h3>Colorer les TTC</h3><div class="where">Onglet Tarifs · M2:M374</div></div><label class="know"><input type="checkbox" id="k6"> Je sais</label></div>
-  <div class="path"><b>Accueil</b><i>›</i><b>Mise en forme conditionnelle</b><i>›</i><b>Inférieur à… 5000</b></div>
-  <div class="path"><b>Accueil</b><i>›</i><b>Mise en forme conditionnelle</b><i>›</i><b>Entre… 5000 et 10000</b></div>
-  <div class="trick"><span class="lbl">💡 Truc pour retenir</span><span>2 règles = 2 couleurs différentes. Pour corriger : <b>Gérer les règles</b>.</span></div>
-</article>
-
-<article class="step p2" id="s7" data-step="7">
-  <div class="shead"><span class="badge">7</span><div class="t"><h3>Filtrer les TGE</h3><div class="where">Onglet LISTING</div></div><label class="know"><input type="checkbox" id="k7"> Je sais</label></div>
-  <ol class="how">
-    <li><b>Données › Filtrer</b> (ou <b>Ctrl + Maj + L</b>) : des flèches apparaissent.</li>
-    <li>Flèche <b>Type Société</b> → cocher seulement <b>TGE</b>.</li>
-    <li>Flèche <b>Montant annuel HT</b> → <b>Filtres numériques › Au-dessus de la moyenne</b>.</li>
-  </ol>
-  <div class="ok"><span class="lbl">✅ Tu dois voir</span>17 sociétés TGE, et les numéros de ligne deviennent bleus.</div>
-  <div class="trick"><span class="lbl">💡 Truc pour retenir</span><span class="big">Filtrer = <mark>cacher</mark>, pas supprimer.</span></div>
-</article>
-
-<article class="step p2" id="s8" data-step="8">
-  <div class="shead"><span class="badge">8</span><div class="t"><h3>Les sous-totaux</h3><div class="where">Onglet HONORAIRES</div></div><label class="know"><input type="checkbox" id="k8"> Je sais</label></div>
-  <ol class="how">
-    <li><b>Trier</b> par Type Société.</li>
-    <li><b>Données › Sous-total</b> : à chaque changement de <b>Type Société</b>, <b>Somme</b>, cocher <b>Honoraires</b>.</li>
-    <li>Recommencer : <b>Somme</b> sur <b>Montant mensuel TTC</b>, et <b>décocher « Remplacer »</b>.</li>
-    <li>Encore : <b>Moyenne</b> sur <b>Montant annuel HT</b>, toujours décoché.</li>
-  </ol>
-  <div class="formula"><div class="ftop">Ce qu'Excel écrit tout seul<button class="copy" type="button">Copier</button></div>
-<pre data-fr="=SOUS.TOTAL(9;O2:O49)   9 = somme
-=SOUS.TOTAL(1;N2:N49)   1 = moyenne" data-en="=SUBTOTAL(9,O2:O49)   9 = sum
-=SUBTOTAL(1,N2:N49)   1 = average"></pre></div>
-  <div class="trick"><span class="lbl">💡 Truc pour retenir</span><span class="big">« On <mark>trie</mark> avant de <mark>totaliser</mark>. »</span><span>Sinon un total à chaque ligne. <b>1</b> = moyenne (la 1ʳᵉ chose qu'on calcule en classe), <b>9</b> = somme. Les boutons 1 · 2 · 3 à gauche : total général, un total par type, tout le détail.</span></div>
-</article>
-
-<article class="step p2" id="s9" data-step="9">
-  <div class="shead"><span class="badge">9</span><div class="t"><h3>TCD 1 : moyenne, max, min</h3><div class="where">Nouvel onglet TCD1</div></div><label class="know"><input type="checkbox" id="k9"> Je sais</label></div>
-  <div class="path"><b>Insertion</b><i>›</i><b>Tableau croisé dynamique</b><i>›</i><b>Nouvelle feuille</b></div>
-  <ul class="how">
-    <li><b>Lignes</b> : Type Société, puis Code TVA (filtré sur 3).</li>
-    <li><b>Valeurs</b> : Montant mensuel TTC <b>3 fois</b> → clic › <b>Paramètres des champs de valeurs</b> › Moyenne, Max, Min.</li>
-  </ul>
-  <div class="tbl"><table>
-    <caption>✅ Résultat du corrigé (code TVA 3)</caption>
-    <tr><th>Type</th><th>Moyenne</th><th>Max</th><th>Min</th></tr>
-    <tr><td>PME</td><td>3 627,88 €</td><td>4 937,12 €</td><td>2 216,74 €</td></tr>
-    <tr><td>TGE</td><td>3 836,74 €</td><td>5 884,99 €</td><td>2 046,13 €</td></tr>
-    <tr><td>TPE</td><td>3 705,27 €</td><td>8 946,60 €</td><td>1 799,68 €</td></tr>
-    <tr><td>Total</td><td>3 702,27 €</td><td>8 946,60 €</td><td>1 799,68 €</td></tr>
-  </table></div>
-  <div class="trick"><span class="lbl">💡 Truc pour retenir</span><span class="big">Calcul = <mark>Paramètres des champs</mark></span><span>Somme, moyenne, max, min : tout se change au même endroit.</span></div>
-</article>
-
-<article class="step p2" id="s10" data-step="10">
-  <div class="shead"><span class="badge">10</span><div class="t"><h3>TCD 2 : les pourcentages</h3><div class="where">Nouvel onglet TCD2</div></div><label class="know"><input type="checkbox" id="k10"> Je sais</label></div>
-  <ul class="how">
-    <li><b>Filtres</b> : Ville Société · <b>Lignes</b> : Type Société · <b>Valeurs</b> : Somme TTC.</li>
-  </ul>
-  <div class="path"><b>Clic droit sur un chiffre</b><i>›</i><b>Afficher les valeurs</b><i>›</i><b>% du total de la colonne</b></div>
-  <div class="ok"><span class="lbl">✅ Tu dois voir</span>TPE 78,51 % · PME 12,61 % · TGE 8,88 % · Total 100 %</div>
-  <div class="trick"><span class="lbl">💡 Truc pour retenir</span><span class="big">% = <mark>Afficher</mark> les valeurs</span><span>On calcule avec « Paramètres », on <b>affiche</b> en % avec « Afficher les valeurs ».</span></div>
-</article>
-
-<!-- PARTIE 3 -->
-<div class="part p3" id="partie3"><span class="num">3</span><div><h2>Les commerciaux</h2><p>7 commerciaux, 12 mois de CA (B4:M10). On ajoute N, O, P, Q et la ligne 11.</p></div></div>
-
-<article class="step p3" id="s11" data-step="11">
-  <div class="shead"><span class="badge">11</span><div class="t"><h3>CA, part, évolution, prime</h3><div class="where">Onglet Exercice final</div></div><label class="know"><input type="checkbox" id="k11"> Je sais</label></div>
-  <div class="formula"><div class="ftop">Les 5 formules<button class="copy" type="button">Copier</button></div>
-<pre data-fr="N4  =SOMME(B4:M4)
-B11 =SOMME(B4:B10)
-O4  =N4/$N$11
-P4  =(SOMME(H4:M4)-SOMME(B4:G4))/SOMME(B4:G4)
-Q4  =SI(N4>60000;N4*10%;500)" data-en="N4  =SUM(B4:M4)
-B11 =SUM(B4:B10)
-O4  =N4/$N$11
-P4  =(SUM(H4:M4)-SUM(B4:G4))/SUM(B4:G4)
-Q4  =IF(N4>60000,N4*10%,500)"></pre></div>
-  <div class="trick"><span class="lbl">💡 Truc pour retenir : le taux d'évolution</span><span class="big">« <mark>Arrivée moins départ</mark>, divisé par le <mark>départ</mark>. »</span><span>Départ = 1ᵉʳ semestre (janvier → juin = <b>B à G</b>), arrivée = 2ᵉ semestre (juillet → décembre = <b>H à M</b>). La part : chacun divisé par <b>le même total</b>, donc <code>$N$11</code>.</span></div>
-  <div class="tbl"><table>
-    <caption>✅ Résultats pour te corriger</caption>
-    <tr><th>Commercial</th><th>CA total</th><th>Part</th><th>Évolution</th><th>Prime</th></tr>
-    <tr><td>SEVERINE</td><td>70 824</td><td>16,61 %</td><td style="color:var(--bad)">−15,35 %</td><td>7 082,40</td></tr>
-    <tr><td>GAETAN</td><td>35 859</td><td>8,41 %</td><td style="color:var(--bad)">−58,63 %</td><td>500</td></tr>
-    <tr><td>CHRISTELLE</td><td>55 492</td><td>13,02 %</td><td style="color:var(--bad)">−4,96 %</td><td>500</td></tr>
-    <tr><td>YOHANN</td><td>66 005</td><td>15,48 %</td><td style="color:var(--bad)">−14,25 %</td><td>6 600,50</td></tr>
-    <tr><td>CHRISTIAN</td><td>42 952</td><td>10,08 %</td><td style="color:var(--bad)">−3,96 %</td><td>500</td></tr>
-    <tr><td>DYLAN</td><td>61 739</td><td>14,48 %</td><td style="color:var(--good)">+1,16 %</td><td>6 173,90</td></tr>
-    <tr><td>MORGAN</td><td>93 419</td><td>21,91 %</td><td style="color:var(--bad)">−6,93 %</td><td>9 341,90</td></tr>
-    <tr><td>CA TOTAL</td><td>426 290</td><td>100 %</td><td></td><td></td></tr>
-  </table></div>
-  <p><b>Icônes</b> : Mise en forme conditionnelle › <b>Jeux d'icônes</b>. Feux sur O4:O10 (vert à partir de 0,15), <b>flèches</b> sur P4:P10 (seuil 0). Modifier les seuils dans Gérer les règles.</p>
-</article>
-
-<article class="step p3" id="s12" data-step="12">
-  <div class="shead"><span class="badge">12</span><div class="t"><h3>Les deux graphiques</h3><div class="where">Onglets Graphique1 et Graphique2</div></div><label class="know"><input type="checkbox" id="k12"> Je sais</label></div>
-  <p><b>Graphique 1</b> : sélectionner A3:A10, tenir <b>Ctrl</b>, sélectionner H3:M10 → <b>Insertion › Histogramme groupé</b>. Titre « Répartition CA 2ème semestre », axes « Commerciaux » et « CA en € ». Puis <b>Déplacer le graphique › Nouvelle feuille</b>.</p>
-  <div class="chart" role="img" aria-label="Histogramme groupé du CA de juillet à décembre par commercial"><svg id="chart" viewBox="0 0 760 300"></svg></div>
-  <p><b>Graphique 2</b> : A3:A10 + Ctrl + N3:N10 → <b>Insertion › Secteurs</b>, étiquettes en %.</p>
-  <div class="trick"><span class="lbl">💡 Truc pour retenir</span><span class="big"><mark>Ctrl</mark> pour sélectionner deux morceaux · camembert = <mark>une seule série</mark></span><span>Jamais la ligne « CA TOTAL » dans le camembert, sinon elle devient une part.</span></div>
-</article>
-
-<!-- QUIZ -->
-<section class="quizbox" id="quiz">
-  <h2>Quiz flash</h2>
-  <p>Réponds dans ta tête, retourne la carte, puis dis honnêtement si tu savais.</p>
-  <div class="score" id="score">0 / 12 su</div>
-  <div class="cards" id="cards"></div>
-</section>
-
-<section style="margin-top:40px">
-  <h2 style="font-size:1.7rem">Le jour J</h2>
-  <p style="color:var(--muted);margin:4px 0 0">Jeudi tu auras d'autres chiffres, la méthode reste la même.</p>
-  <ul class="check">
-    <li>Lire tout le sujet, repérer les feuilles de paramètres (comme TVA) : leurs cellules prendront des $.</li>
-    <li>Copier la feuille de base avant chaque exercice et la renommer exactement comme demandé.</li>
-    <li>Écrire la formule en ligne 2, la vérifier à la calculatrice, puis double-clic pour recopier.</li>
-    <li>Tranches : compter les marches, écrire marches − 1 SI, toujours avec &lt;.</li>
-    <li>Sous-totaux : trier d'abord, décocher « Remplacer » à partir du 2ᵉ.</li>
-    <li>Formats à la fin : € et %.</li>
-  </ul>
-</section>
-
-<footer>Fiche faite à partir de TC2_EXCEL_2025 et de sa correction du 12/11. Les HT et TVA des étapes 2–3 sont recalculés avec la bonne formule.</footer>
-</div>
-
-<script>
-(function(){
-  var lang='fr';
-  function load(k){try{return localStorage.getItem('xltc2-'+k);}catch(e){return null;}}
-  function save(k,v){try{localStorage.setItem('xltc2-'+k,v);}catch(e){}}
-  function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-  function paint(s){
-    var h=esc(s);
-    h=h.replace(/\b(SI|SOMME|RECHERCHEV|SOUS\.TOTAL|FAUX|IF|SUM|VLOOKUP|SUBTOTAL|FALSE)\b/g,'<span class="f">$1</span>');
-    h=h.replace(/(TVA!)?\$?[A-Q]\$?\d+(:\$?[A-Q]\$?\d+)?/g,function(m){return '<span class="r">'+m+'</span>';});
-    return h;
-  }
-  function render(){
-    document.querySelectorAll('pre[data-fr]').forEach(function(p){p.innerHTML=paint(p.getAttribute('data-'+lang));});
-    document.getElementById('lang-fr').setAttribute('aria-pressed',lang==='fr');
-    document.getElementById('lang-en').setAttribute('aria-pressed',lang==='en');
-  }
-  document.getElementById('lang-fr').onclick=function(){lang='fr';save('lang','fr');render();};
-  document.getElementById('lang-en').onclick=function(){lang='en';save('lang','en');render();};
-  if(load('lang')==='en')lang='en';
-  render();
-
-  document.querySelectorAll('.copy').forEach(function(b){
-    b.addEventListener('click',function(){
-      var pre=b.closest('.formula').querySelector('pre'), txt=pre.getAttribute('data-'+lang);
-      var done=function(){b.textContent='Copié !';setTimeout(function(){b.textContent='Copier';},1400);};
-      if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(done,function(){sel(pre);});}else sel(pre);
-    });
-  });
-  function sel(el){var r=document.createRange();r.selectNodeContents(el);var s=getSelection();s.removeAllRanges();s.addRange(r);}
-
-  var steps=[].slice.call(document.querySelectorAll('.step')), dots=document.getElementById('dots');
-  steps.forEach(function(st){
-    var a=document.createElement('a');a.href='#'+st.id;a.textContent=st.dataset.step;a.id='dot-'+st.id;
-    a.className=st.classList.contains('p1')?'p1':st.classList.contains('p2')?'p2':'p3';
-    a.title=st.querySelector('h3').textContent;dots.appendChild(a);
-    var cb=st.querySelector('input[type=checkbox]');
-    if(load(cb.id)==='1')cb.checked=true;
-    cb.addEventListener('change',function(){save(cb.id,cb.checked?'1':'0');update();});
-  });
-  function update(){
-    var n=0;steps.forEach(function(st){var on=st.querySelector('input').checked;if(on)n++;document.getElementById('dot-'+st.id).classList.toggle('done',on);});
-    document.getElementById('bar').style.width=(n/steps.length*100)+'%';
-    document.getElementById('count').textContent=n===steps.length?'12 / 12 · prêt pour jeudi 🎉':n+' / 12';
-  }
-  update();
-
-  var eur=function(x){return x.toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2})+' €';};
-  var rates={1:.055,2:.10,3:.20}, cells={1:'$C$3',2:'$C$4',3:'$C$5'};
-  function ht(){
-    var m=parseFloat(document.getElementById('ht-ttc').value)||0, c=document.getElementById('ht-code').value, t=rates[c], j=m/(1+t);
-    document.getElementById('ht-out').innerHTML='<span class="k">taux :</span> TVA!'+cells[c]+' = '+(t*100).toLocaleString('fr-FR')+' %<br><span class="k">HT :</span> '+eur(m)+' ÷ '+(1+t).toLocaleString('fr-FR')+' = <b>'+eur(j)+'</b><br><span class="k">TVA :</span> '+eur(m-j)+'<br><span class="k">annuel HT :</span> '+eur(j*12);
-  }
-  document.getElementById('ht-ttc').addEventListener('input',ht);document.getElementById('ht-code').addEventListener('change',ht);ht();
-
-  var tr=[[10000,5,'< 10 000'],[15000,8,'< 15 000'],[25000,10,'< 25 000'],[35000,15,'< 35 000'],[50000,20,'< 50 000'],[Infinity,25,'sinon']];
-  var col=['#a78bfa','#8b5cf6','#c026d3','#f2545b','#f97316','#ffb020'];
-  var stairs=document.getElementById('stairs');
-  stairs.innerHTML=tr.map(function(t,i){return '<div style="height:'+(38+i*24)+'%;background:'+col[i]+'"><b>'+t[1]+' %</b>'+t[2]+'</div>';}).join('');
-  function hon(){
-    var n=parseFloat(document.getElementById('hon-n').value)||0, hit=0;
-    for(var i=0;i<tr.length;i++){if(n<tr[i][0]){hit=i;break;}}
-    [].forEach.call(stairs.children,function(d,i){d.classList.toggle('on',i===hit);});
-    document.getElementById('hon-out').innerHTML='<span class="k">marche '+(hit+1)+' sur 6 →</span> '+eur(n)+' × '+tr[hit][1]+' % = <b>'+eur(n*tr[hit][1]/100)+'</b><br><span class="k">SI lus avant de trouver :</span> '+(hit<5?hit+1:5);
-  }
-  document.getElementById('hon-n').addEventListener('input',hon);hon();
-
-  var data=[['SEVERINE',[8793,2574,4586,9356,2574,4586]],['GAETAN',[1236,2634,1245,1500,2634,1245]],['CHRISTELLE',[4586,2599,4875,7507,2599,4875]],['YOHANN',[1245,4567,8766,2560,4567,8766]],['CHRISTIAN',[4875,1234,4567,4565,1234,4567]],['DYLAN',[8762,5432,2345,6732,5432,2345]],['MORGAN',[4567,9876,5421,9871,9876,5421]]];
-  var months=['Juil.','Août','Sept.','Oct.','Nov.','Déc.'], cols=['#7c3aed','#c026d3','#f2545b','#f97316','#ffb020','#0ea5a0'];
-  var W=760,H=300,L=56,R=12,T=34,B=40,max=10000,s='';
-  for(var g=0;g<=max;g+=2500){var y=T+(H-T-B)*(1-g/max);s+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y+'" y2="'+y+'" stroke="var(--line)"/><text x="'+(L-6)+'" y="'+(y+4)+'" text-anchor="end">'+g.toLocaleString('fr-FR')+'</text>';}
-  var gw=(W-L-R)/data.length,bw=(gw-14)/6;
-  data.forEach(function(d,i){
-    d[1].forEach(function(v,k){var h=(H-T-B)*v/max,x=L+i*gw+7+k*bw;s+='<rect rx="2" x="'+x+'" y="'+(H-B-h)+'" width="'+(bw-1.5)+'" height="'+h+'" fill="'+cols[k]+'"><title>'+d[0]+' · '+months[k]+' : '+v.toLocaleString('fr-FR')+' €</title></rect>';});
-    s+='<text x="'+(L+i*gw+gw/2)+'" y="'+(H-B+16)+'" text-anchor="middle">'+d[0]+'</text>';
-  });
-  months.forEach(function(m,k){var x=L+k*82;s+='<rect x="'+x+'" y="8" width="11" height="11" rx="3" fill="'+cols[k]+'"/><text x="'+(x+15)+'" y="18">'+m+'</text>';});
-  s+='<text x="'+(W/2)+'" y="'+(H-4)+'" text-anchor="middle">Commerciaux</text><text transform="translate(12,'+(H/2)+') rotate(-90)" text-anchor="middle">CA en €</text>';
-  document.getElementById('chart').innerHTML=s;
-
-  var qa=[
-    ['TTC → HT : je multiplie ou je divise ?','Je divise : HT = TTC / (1 + taux)'],
-    ['À quoi sert le $ dans $C$3 ?','Bloquer la cellule quand je tire la formule (touche F4)'],
-    ['6 tranches = combien de SI ?','5 SI, et 5 parenthèses à la fin'],
-    ['Les 6 taux des honoraires ?','5 · 8 · 10 · 15 · 20 · 25 %'],
-    ['Où se fait une liste déroulante ?','Données › Validation des données › Liste'],
-    ['Avant un sous-total, je dois…','Trier par Type Société'],
-    ['SOUS.TOTAL(9) et SOUS.TOTAL(1) ?','9 = somme, 1 = moyenne'],
-    ['2ᵉ sous-total sans effacer le 1ᵉʳ ?','Décocher « Remplacer les sous-totaux existants »'],
-    ['TCD en pourcentage ?','Clic droit › Afficher les valeurs › % du total de la colonne'],
-    ['Formule du taux d\'évolution ?','(arrivée − départ) / départ'],
-    ['Prime : > 60 000 € → 10 %, sinon 500 € ?','=SI(N4>60000;N4*10%;500)'],
-    ['Garder les TGE au-dessus de la moyenne ?','Filtre › Filtres numériques › Au-dessus de la moyenne']
-  ];
-  var box=document.getElementById('cards'), known={};
-  function score(){var n=0;for(var k in known)if(known[k])n++;document.getElementById('score').textContent=n+' / 12 su'+(n===12?' · parfait !':'');}
-  qa.forEach(function(x,i){
-    var c=document.createElement('div');c.className='card';
-    c.innerHTML='<span class="q">'+x[0]+'</span><button type="button" class="rev" id="rev-'+i+'">Voir la réponse</button><span class="a" hidden>'+x[1]+'</span><div class="btns" hidden><button type="button" class="yes" id="yes-'+i+'">Je savais</button><button type="button" class="no" id="no-'+i+'">À revoir</button></div>';
-    c.querySelector('.rev').onclick=function(){c.querySelector('.a').hidden=false;c.querySelector('.btns').hidden=false;this.hidden=true;};
-    c.querySelector('.yes').onclick=function(){known[i]=true;c.className='card k-yes';score();};
-    c.querySelector('.no').onclick=function(){known[i]=false;c.className='card k-no';score();};
-    box.appendChild(c);
-  });
-})();
-</script>
