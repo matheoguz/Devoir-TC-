@@ -2,83 +2,183 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap">
 <style>
-/* Mise en page : une seule colonne courte, comme une fiche bristol. Une idée par bloc, gros chiffres pour les calculs. */
+/* Mise en page : une colonne type fiche bristol. Pour chaque cas : les données, le schéma, puis chaque question avec « comment répondre » et la phrase à écrire. */
 :root{
-  --bg:#fffdf7; --ink:#1d2330; --muted:#6b7280; --line:#ece6d6;
-  --hl:#ffe680; --accent:#2f6fde; --ok:#16803c;
+  --bg:#fffdf7; --ink:#1d2330; --muted:#6b7280; --line:#e6dfcc; --card:#ffffff;
+  --hl:#ffe680; --accent:#2f6fde; --ok:#16803c; --up:#16803c; --down:#c2341b;
   --f:"Nunito",system-ui,sans-serif;
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16181d;--ink:#eceef2;--muted:#a0a7b4;--line:#2b2f38;--hl:#6b5a12;--accent:#7aa7ff;--ok:#5fd38a;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#16181d;--ink:#eceef2;--muted:#a0a7b4;--line:#2b2f38;--hl:#6b5a12;--accent:#7aa7ff;--ok:#5fd38a;color-scheme:dark}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16181d;--ink:#eceef2;--muted:#a0a7b4;--line:#2f343e;--card:#1e2128;--hl:#6b5a12;--accent:#7aa7ff;--ok:#5fd38a;--up:#5fd38a;--down:#ff8b75;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#16181d;--ink:#eceef2;--muted:#a0a7b4;--line:#2f343e;--card:#1e2128;--hl:#6b5a12;--accent:#7aa7ff;--ok:#5fd38a;--up:#5fd38a;--down:#ff8b75;color-scheme:dark}
 body{background:var(--bg);color:var(--ink);font-family:var(--f);font-size:18px;line-height:1.6}
-.wrap{max-width:640px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:32px 64px}
+.wrap{max-width:680px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:32px 64px}
 h1{font-size:30px;line-height:1.2;margin:0 0 6px;font-weight:800}
-h2{font-size:23px;margin:44px 0 6px;font-weight:800}
+h2{font-size:25px;margin:48px 0 4px;font-weight:800}
 h2 span{color:var(--accent)}
-p{margin:10px 0}
+h3{font-size:19px;margin:26px 0 4px;font-weight:800}
+p{margin:8px 0}
+ul{padding-left:22px;margin:6px 0}
 .muted{color:var(--muted)}
 mark{background:var(--hl);color:inherit;padding:0 4px;border-radius:4px}
-.big{font-size:22px;font-weight:800;margin:14px 0;padding:14px 16px;border:2px solid var(--line);border-radius:14px;text-align:center}
-.step{display:grid;grid-template-columns:34px 1fr;gap:10px;margin:14px 0;align-items:start}
-.step b.n{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--accent);color:var(--bg);font-weight:800;font-size:16px}
-.step div{min-width:0}
-.rep{border-left:4px solid var(--ok);padding:4px 0 4px 14px;margin:14px 0}
-.rep b:first-child{color:var(--ok)}
-hr{border:none;border-top:2px dashed var(--line);margin:40px 0 0}
+.data{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:10px 14px;margin:10px 0}
+.big{font-size:20px;font-weight:800;margin:12px 0;padding:12px 14px;border:2px solid var(--line);border-radius:14px;text-align:center}
+.how{margin:6px 0}
+.how::before{content:"Comment répondre : ";font-weight:800;color:var(--accent)}
+.say{border-left:4px solid var(--ok);background:var(--card);padding:8px 12px;margin:10px 0;border-radius:0 10px 10px 0}
+.say::before{content:"Ce que tu écris";display:block;font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ok)}
+hr{border:none;border-top:2px dashed var(--line);margin:44px 0 0}
+/* Schéma */
+.schema{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:14px;margin:14px 0;display:grid;gap:10px}
+.schema .title{font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.br{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.br.sub{padding-left:22px;border-left:3px solid var(--line);margin-left:12px}
+.bx{border:2px solid var(--line);border-radius:10px;padding:6px 10px;font-weight:700;background:var(--bg);line-height:1.3}
+.bx small{display:block;font-weight:800;font-size:15px}
+.bx.root{border-color:var(--accent)}
+.op{font-weight:800;color:var(--muted)}
+.up{color:var(--up)} .down{color:var(--down)} .eq{color:var(--muted)}
+.tbl{overflow-x:auto;margin:10px 0}
+table{border-collapse:collapse;width:100%;font-size:16px}
+th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+th{background:var(--card)}
 </style>
 
 <div class="wrap">
-  <h1>Le contrôle en 4 exercices</h1>
-  <p class="muted">Le sujet de l'an dernier, expliqué simplement. Lis d'abord le truc à comprendre : il sert partout.</p>
+  <h1>Le contrôle : toute la feuille de l'an dernier</h1>
+  <p class="muted">Pour chaque cas : les données, le schéma, puis chaque question avec comment y répondre et la phrase à écrire.</p>
 
-  <h2>Le truc à comprendre</h2>
-  <p>Le chiffre d'affaires, c'est :</p>
-  <div class="big">CA = nombre de clients × panier moyen</div>
-  <p>Et le nombre de clients, c'est :</p>
-  <div class="big">clients = visiteurs × taux de transformation</div>
-  <p>Quand on te donne des <mark>pourcentages d'évolution</mark>, imagine <b>100 visiteurs</b> au départ. C'est le plus simple.</p>
-  <p><b>Exemple :</b> visiteurs +20 %, taux de transformation −10 %.</p>
+  <h2>La base : le schéma du CA</h2>
+  <p>Presque tout le contrôle tourne autour de ce schéma. Fais-le au brouillon à chaque fois.</p>
+  <div class="schema">
+    <div class="br"><span class="bx root">Chiffre d'affaires</span></div>
+    <div class="br sub"><span class="bx">Nb de clients</span><span class="op">=</span><span class="bx">Fréquentation</span><span class="op">×</span><span class="bx">Taux de transformation</span></div>
+    <div class="br sub"><span class="bx">Panier moyen</span><span class="op">=</span><span class="bx">Indice des ventes</span><span class="op">×</span><span class="bx">Prix moyen</span></div>
+  </div>
+  <div class="big">CA = nb de clients × panier moyen</div>
+  <p><b>Le calcul qui sert tout le temps.</b> Quand on te donne des évolutions en %, tu les <mark>multiplies</mark> :</p>
   <ul>
-    <li>Avant : 100 visiteurs, 30 % achètent → <b>30 clients</b>.</li>
-    <li>Après : 120 visiteurs, 27 % achètent (30 % − 10 % de 30 %) → <b>32,4 clients</b>.</li>
-    <li>On passe de 30 à 32,4 clients : <mark>+8 %</mark>.</li>
+    <li>+20 % devient 1,20 ; −10 % devient 0,90 ; +8 % devient 1,08.</li>
+    <li>1,20 × 0,90 = 1,08 → <b>+8 %</b>. (Pas 20 − 10 = 10 !)</li>
   </ul>
-  <p>Le raccourci : <b>1,20 × 0,90 = 1,08</b>, donc +8 %. Les évolutions se <b>multiplient</b>, on ne fait pas 20 − 10.</p>
+  <p class="muted">Pour vérifier avec des vrais chiffres : 100 visiteurs × 30 % = 30 clients. Après : 120 visiteurs × 27 % = 32,4 clients. De 30 à 32,4, c'est bien +8 %.</p>
 
   <hr>
-  <h2><span>1.</span> Analyser un magasin</h2>
-  <p class="muted">Visiteurs +20 %, transformation −10 %, panier 50 €, CA +8 %. Il y a eu une pub et une nouvelle gamme.</p>
-  <div class="step"><b class="n">1</b><div>Calcule les clients : 1,20 × 0,90 = 1,08 → <b>+8 % de clients</b>.</div></div>
-  <div class="step"><b class="n">2</b><div>Compare au CA : il fait aussi +8 %. Donc le <b>panier n'a pas bougé</b>. Toute la hausse vient des visiteurs en plus.</div></div>
-  <div class="step"><b class="n">3</b><div>Explique : la pub a fait venir du monde, mais le magasin vend moins bien à chaque visiteur. Peut-être trop de monde pour les vendeurs, ou des vendeurs qui connaissent mal la nouvelle gamme.</div></div>
-  <div class="rep"><b>2 actions :</b> mettre plus de vendeurs aux heures de rush, et former les vendeurs à la nouvelle gamme. On les suit avec le <b>taux de transformation</b>.</div>
+  <h2><span>Cas 1.</span> Analyser un point de vente</h2>
+  <div class="data">Fréquentation <b class="up">+20 %</b> · Taux de transformation <b class="down">−10 %</b> · Panier moyen <b>50 €</b> · CA <b class="up">+8 %</b><br><span class="muted">Contexte : campagne de pub locale + nouvelle gamme de produits.</span></div>
+
+  <div class="schema">
+    <div class="title">Le schéma rempli</div>
+    <div class="br"><span class="bx root">CA <small class="up">+8 %</small></span></div>
+    <div class="br sub"><span class="bx">Nb de clients <small class="up">+8 %</small></span><span class="op">=</span><span class="bx">Fréquentation <small class="up">+20 %</small></span><span class="op">×</span><span class="bx">Tx transformation <small class="down">−10 %</small></span></div>
+    <div class="br sub"><span class="bx">Panier moyen <small class="eq">50 €, stable</small></span><span class="op">=</span><span class="bx">Indice des ventes</span><span class="op">×</span><span class="bx">Prix moyen</span></div>
+  </div>
+
+  <h3>Q1. Identifiez les relations entre les indicateurs et analysez la situation.</h3>
+  <p class="how">tu recopies le schéma, tu calcules les clients (1,20 × 0,90), puis tu compares au CA pour savoir ce qu'a fait le panier.</p>
+  <div class="say">Le chiffre d'affaires est égal au nombre de clients multiplié par le panier moyen, et le nombre de clients est égal à la fréquentation multipliée par le taux de transformation. Ici, le nombre de clients évolue de 1,20 × 0,90 = 1,08, soit +8 %. Comme le CA progresse lui aussi de 8 %, le panier moyen est resté stable à 50 €. La hausse du CA vient donc uniquement de la hausse du nombre de clients, grâce à la fréquentation.</div>
+
+  <h3>Q2. Expliquez pourquoi le CA a progressé malgré la baisse du taux de transformation.</h3>
+  <p class="how">1) la fréquentation monte plus que la transformation ne baisse ; 2) le lien avec la pub ; 3) une ou deux raisons possibles de la baisse.</p>
+  <div class="say">Le CA progresse parce que la hausse de la fréquentation (+20 %) est plus forte que la baisse du taux de transformation (−10 %). Même si une plus petite part des visiteurs achète, il y a tellement plus de visiteurs que le nombre de clients augmente de 8 %. La campagne de publicité a donc bien attiré du monde, mais le magasin transforme moins bien ces visiteurs. Cela peut venir d'une équipe débordée par l'affluence, de visiteurs simplement curieux venus grâce à la pub, ou de vendeurs qui connaissent encore mal la nouvelle gamme.</div>
+
+  <h3>Q3. Proposez deux actions pour améliorer le taux de transformation tout en gardant la fréquentation. Justifiez avec les objectifs stratégiques.</h3>
+  <p class="how">pour chaque action : ce qu'on fait, pourquoi ça aide, et comment on la suit. Puis une phrase sur la stratégie.</p>
+  <div class="say"><b>Action 1 :</b> renforcer l'équipe de vente aux heures de forte affluence (planning adapté, renfort temporaire), pour que chaque visiteur soit accueilli et conseillé. On la suit avec le taux de transformation.<br><br>
+  <b>Action 2 :</b> former les vendeurs à la nouvelle gamme et la mettre en avant en magasin (démonstrations, PLV), pour mieux répondre aux visiteurs qui viennent la découvrir. On la suit avec le taux de transformation et les ventes de la nouvelle gamme.<br><br>
+  Ces actions vont dans le sens de la stratégie : l'entreprise a investi dans la pub et la nouvelle gamme pour faire progresser son CA. Le trafic est déjà là, il faut maintenant le transformer en ventes.</div>
 
   <hr>
-  <h2><span>2.</span> Calculer un NPS</h2>
-  <p class="muted">200 clients : 80 promoteurs, 70 passifs, 50 détracteurs. Secteur : 10. Concurrents : 15 et 20.</p>
-  <div class="step"><b class="n">1</b><div>Le NPS mesure si les clients <b>recommanderaient</b> l'entreprise (note de 0 à 10).</div></div>
-  <div class="step"><b class="n">2</b><div>Mets en % : promoteurs 80 ÷ 200 = <b>40 %</b>, détracteurs 50 ÷ 200 = <b>25 %</b>. Les passifs, on les oublie.</div></div>
-  <div class="step"><b class="n">3</b><div>NPS = 40 − 25 = <mark>+15 points</mark>.</div></div>
-  <div class="step"><b class="n">4</b><div>Compare : mieux que le secteur (10), pareil que le 1<sup>er</sup> concurrent (15), moins bien que le 2<sup>e</sup> (20).</div></div>
-  <div class="rep"><b>Pour l'améliorer :</b> rappeler les détracteurs pour savoir ce qui ne va pas et le corriger, et donner aux passifs une raison de recommander (carte de fidélité, parrainage).</div>
+  <h2><span>Cas 2.</span> La satisfaction client</h2>
+  <div class="data">200 clients : <b>80 promoteurs</b> (notes 9-10), <b>70 passifs</b> (7-8), <b>50 détracteurs</b> (0-6).<br>Secteur : <b>10</b> · Concurrents : <b>15</b> et <b>20</b>.</div>
+
+  <div class="schema">
+    <div class="title">Le schéma du NPS</div>
+    <div class="br"><span class="bx root">NPS <small>+15 points</small></span><span class="op">=</span><span class="bx">% promoteurs <small class="up">40 %</small></span><span class="op">−</span><span class="bx">% détracteurs <small class="down">25 %</small></span></div>
+    <div class="br sub"><span class="bx">Passifs <small class="eq">35 %, on ne les compte pas</small></span></div>
+  </div>
+
+  <h3>Q1. Quel est le nom de l'indicateur ? À quoi sert-il ?</h3>
+  <p class="how">tu donnes le nom complet, ce qu'il mesure, et à quoi il sert pour l'entreprise.</p>
+  <div class="say">Il s'agit du NPS (Net Promoter Score). Il mesure la propension des clients à recommander l'entreprise, sur une échelle de 0 à 10. Il sert à évaluer la fidélité des clients et le bouche-à-oreille, et à se comparer au secteur et aux concurrents.</div>
+
+  <h3>Q2. Calculez-le et comparez au secteur et aux concurrents.</h3>
+  <p class="how">1) mets chaque groupe en % (divise par 200) ; 2) promoteurs − détracteurs ; 3) compare chiffre par chiffre.</p>
+  <div class="say">Promoteurs : 80 ÷ 200 = 40 %. Détracteurs : 50 ÷ 200 = 25 %. Les passifs ne comptent pas.<br>NPS = 40 − 25 = <b>+15 points</b>.<br>L'entreprise fait 5 points de mieux que la moyenne du secteur (10). Elle est au même niveau que le premier concurrent (15), mais 5 points derrière le meilleur (20). Le résultat est correct mais pas excellent : un quart des clients sont détracteurs.</div>
+
+  <h3>Q3. Identifiez deux axes d'amélioration.</h3>
+  <p class="how">un axe sur les détracteurs, un axe sur les passifs.</p>
+  <div class="say"><b>Axe 1 :</b> réduire le nombre de détracteurs (25 %) en comprenant et en corrigeant leurs motifs d'insatisfaction.<br><b>Axe 2 :</b> transformer les passifs (35 %) en promoteurs, en leur donnant une vraie raison de recommander l'entreprise (programme de fidélité, parrainage, service en plus).</div>
+
+  <h3>Q4. Proposez un plan d'action pour une des améliorations.</h3>
+  <p class="how">un plan d'action a toujours 5 parties : objectif chiffré, actions, responsable, échéance, indicateur de suivi.</p>
+  <div class="tbl"><table>
+    <tr><th>Objectif</th><td>Passer de 25 % à 15 % de détracteurs en 6 mois</td></tr>
+    <tr><th>Actions</th><td>Rappeler chaque détracteur sous 48 h pour connaître ses motifs, regrouper les motifs, corriger les plus fréquents, former l'équipe</td></tr>
+    <tr><th>Responsable</th><td>Le responsable du magasin ou du service client</td></tr>
+    <tr><th>Échéance</th><td>Bilan à 3 mois, objectif à 6 mois</td></tr>
+    <tr><th>Indicateur de suivi</th><td>NPS et % de détracteurs</td></tr>
+  </table></div>
 
   <hr>
-  <h2><span>3.</span> Choisir les indicateurs</h2>
-  <p class="muted">Objectifs : CA +10 %, moins de clients perdus (attrition), satisfaction (CSAT) &gt; 90 %.</p>
-  <div class="step"><b class="n">1</b><div>Prends chaque objectif et demande-toi : <b>quel indicateur le mesure ?</b></div></div>
-  <div class="step"><b class="n">2</b><div>CA → <b>taux de transformation</b> et <b>panier moyen</b> (les deux leviers du CA).</div></div>
-  <div class="step"><b class="n">3</b><div>Clients perdus → <b>taux de fidélisation</b> (c'est l'inverse : 85 % de fidèles = 15 % de perdus).</div></div>
-  <div class="step"><b class="n">4</b><div>Satisfaction → <b>NPS</b>, parce que le CSAT n'est pas dans la liste.</div></div>
-  <p>Le taux de digitalisation ne sert à aucun objectif : on l'enlève.</p>
-  <div class="rep"><b>Le tableau :</b> une ligne par indicateur, et en colonnes : objectif, réalisé, écart, évolution, et un feu vert / orange / rouge.</div>
+  <h2><span>Cas 3.</span> Construire un tableau de bord</h2>
+  <div class="data">Objectifs : <b>CA +10 %</b> · <b>réduire le taux d'attrition de 5 %</b> · <b>CSAT &gt; 90 %</b><br>Indicateurs disponibles : fréquentation, taux de transformation, panier moyen, taux de fidélisation, NPS, taux de digitalisation.</div>
+  <p class="muted">Taux d'attrition = la part des clients qu'on perd. C'est le contraire du taux de fidélisation : 85 % de clients fidèles = 15 % d'attrition.</p>
+
+  <div class="schema">
+    <div class="title">Le schéma : un objectif → ses indicateurs</div>
+    <div class="br"><span class="bx root">CA +10 %</span><span class="op">→</span><span class="bx">Taux de transformation</span><span class="op">+</span><span class="bx">Panier moyen</span></div>
+    <div class="br"><span class="bx root">Attrition −5 %</span><span class="op">→</span><span class="bx">Taux de fidélisation</span></div>
+    <div class="br"><span class="bx root">CSAT &gt; 90 %</span><span class="op">→</span><span class="bx">NPS</span></div>
+    <div class="br"><span class="bx">Taux de digitalisation</span><span class="op">→</span><span class="muted">aucun objectif, on l'enlève</span></div>
+  </div>
+
+  <h3>Q1. Sélectionnez les 4 indicateurs les plus pertinents. Justifiez.</h3>
+  <p class="how">un indicateur = une phrase : « je retiens X pour suivre l'objectif Y, parce que… ». Puis tu dis lesquels tu enlèves et pourquoi.</p>
+  <div class="say">Je retiens le <b>taux de transformation</b> et le <b>panier moyen</b> pour suivre l'objectif de CA, car le CA dépend du nombre de clients et de ce qu'ils dépensent : ce sont les deux leviers sur lesquels l'équipe peut agir.<br>Je retiens le <b>taux de fidélisation</b> pour suivre l'attrition, car c'est son contraire : si la fidélisation monte, l'attrition baisse.<br>Je retiens le <b>NPS</b> pour la satisfaction, car le CSAT n'est pas disponible et le NPS est l'indicateur de satisfaction le plus proche. Il faudrait quand même mettre en place un vrai CSAT.<br>J'écarte le taux de digitalisation, qui ne correspond à aucun objectif, et la fréquentation, qui dépend surtout de l'environnement.</div>
+
+  <h3>Q2. Proposez la structure visuelle du tableau de bord.</h3>
+  <p class="how">tu dessines le tableau : les indicateurs en lignes, et ces colonnes-là. Puis tu ajoutes les couleurs et un graphique.</p>
+  <div class="tbl"><table>
+    <tr><th>Indicateur</th><th>Objectif</th><th>Réalisé</th><th>Mois d'avant</th><th>Écart</th><th>Évolution</th><th>Feu</th></tr>
+    <tr><td>Taux de transformation</td><td></td><td></td><td></td><td></td><td></td><td>🟢</td></tr>
+    <tr><td>Panier moyen</td><td></td><td></td><td></td><td></td><td></td><td>🟠</td></tr>
+    <tr><td>Taux de fidélisation</td><td></td><td></td><td></td><td></td><td></td><td>🔴</td></tr>
+    <tr><td>NPS</td><td></td><td></td><td></td><td></td><td></td><td>🟢</td></tr>
+  </table></div>
+  <div class="say">Le tableau de bord présente un indicateur par ligne. Pour chacun, on lit l'objectif, le résultat réalisé, celui du mois précédent, l'écart à l'objectif et l'évolution. Un feu de couleur indique la situation : vert si l'objectif est atteint, orange s'il en est proche, rouge s'il en est loin. On ajoute un graphique de l'évolution du CA mois par mois avec la ligne de l'objectif, et une zone pour noter les actions à mener sur les indicateurs en rouge.</div>
 
   <hr>
-  <h2><span>4.</span> Comparer deux magasins</h2>
-  <p class="muted">Conforama : visiteurs +15 %, transformation −5 %, CA +5 %. But : visiteurs −10 %, transformation +8 %, CA +2 %.</p>
-  <div class="step"><b class="n">1</b><div>Calcule les clients. Conforama : 1,15 × 0,95 = <b>+9 %</b>. But : 0,90 × 1,08 = <b>−3 %</b>.</div></div>
-  <div class="step"><b class="n">2</b><div>Conforama <b>attire</b> beaucoup de monde mais <b>vend moins bien</b>.</div></div>
-  <div class="step"><b class="n">3</b><div>But <b>vend très bien</b> (ses vendeurs transforment plus) mais <b>attire moins</b> de monde.</div></div>
-  <div class="rep"><b>Pour But :</b> le problème, c'est le monde qui vient, pas les vendeurs. Donc faire de la pub locale et rendre la vitrine plus attirante. On suit les <b>visiteurs</b>, la <b>transformation</b> (qu'elle reste haute) et le <b>CA</b>.</div>
+  <h2><span>Cas 4.</span> Comparer deux magasins</h2>
+  <div class="data"><b>Conforama</b> : fréquentation <b class="up">+15 %</b> · transformation <b class="down">−5 %</b> · panier <b>40 €</b> · CA <b class="up">+5 %</b><br>
+  <b>But</b> : fréquentation <b class="down">−10 %</b> · transformation <b class="up">+8 %</b> · panier <b>45 €</b> · CA <b class="up">+2 %</b></div>
+
+  <div class="schema">
+    <div class="title">Conforama</div>
+    <div class="br"><span class="bx root">CA <small class="up">+5 %</small></span></div>
+    <div class="br sub"><span class="bx">Nb de clients <small class="up">+9 %</small></span><span class="op">=</span><span class="bx">Fréquentation <small class="up">+15 %</small></span><span class="op">×</span><span class="bx">Tx transformation <small class="down">−5 %</small></span></div>
+    <div class="br sub"><span class="bx">Panier moyen <small class="down">40 €, en baisse</small></span></div>
+  </div>
+  <div class="schema">
+    <div class="title">But</div>
+    <div class="br"><span class="bx root">CA <small class="up">+2 %</small></span></div>
+    <div class="br sub"><span class="bx">Nb de clients <small class="down">−3 %</small></span><span class="op">=</span><span class="bx">Fréquentation <small class="down">−10 %</small></span><span class="op">×</span><span class="bx">Tx transformation <small class="up">+8 %</small></span></div>
+    <div class="br sub"><span class="bx">Panier moyen <small class="up">45 €, en hausse</small></span></div>
+  </div>
+  <p class="muted">Calculs : Conforama 1,15 × 0,95 = 1,09 → +9 % de clients. But 0,90 × 1,08 = 0,97 → −3 % de clients. Conforama a plus de clients mais son CA monte moins vite (+5 %) : son panier baisse. But a moins de clients mais son CA monte quand même (+2 %) : son panier monte.</p>
+
+  <h3>Q1. Comparez les deux magasins. Points forts et points faibles de chacun.</h3>
+  <p class="how">un paragraphe par magasin : d'abord le point fort avec son chiffre, puis le point faible avec son chiffre. Puis une phrase de conclusion.</p>
+  <div class="say"><b>Conforama</b> a pour point fort son attractivité : sa fréquentation augmente de 15 %, ce qui lui donne environ 9 % de clients en plus et la meilleure progression du CA (+5 %). Son point faible est la vente : son taux de transformation baisse de 5 % et son panier moyen (40 €) est plus faible et en baisse.<br><br>
+  <b>But</b> a pour point fort l'efficacité de ses vendeurs : son taux de transformation augmente de 8 % et son panier moyen (45 €) est plus élevé et en hausse. Son point faible est l'attractivité : sa fréquentation baisse de 10 %, donc il perd environ 3 % de clients et son CA ne progresse que de 2 %.<br><br>
+  En résumé, Conforama sait attirer mais vend moins bien ; But vend bien mais attire moins.</div>
+
+  <h3>Q2. Deux actions pour améliorer But, en s'inspirant de Conforama.</h3>
+  <p class="how">le problème de But, c'est le monde qui vient. Donc tes actions doivent faire venir du monde, comme Conforama.</p>
+  <div class="say"><b>Action 1 :</b> développer la communication locale (publicité, réseaux sociaux, promotions, événements en magasin) pour faire revenir des visiteurs, comme l'a fait Conforama.<br><b>Action 2 :</b> rendre le magasin plus attractif de l'extérieur (vitrine, devanture, opérations visibles) pour donner envie d'entrer.<br>But doit garder ses bons vendeurs pour transformer ces nouveaux visiteurs, et ne pas trop baisser ses prix pour ne pas perdre son panier moyen.</div>
+
+  <h3>Q3. Quels indicateurs suivre pour voir si les actions marchent ?</h3>
+  <p class="how">ici on veut des <b>indicateurs</b> (des chiffres à surveiller), pas des actions. Un indicateur + ce qu'il permet de vérifier.</p>
+  <div class="say">Pour mesurer l'impact des actions, But doit suivre :<br>– la <b>fréquentation</b>, pour voir si les actions font venir plus de monde ;<br>– le <b>taux de transformation</b>, pour vérifier qu'il reste élevé avec plus de visiteurs ;<br>– le <b>panier moyen</b>, pour vérifier qu'il ne baisse pas avec les promotions ;<br>– le <b>nombre de clients et le CA</b>, pour voir le résultat final.</div>
 
   <hr>
   <h2>Les 3 erreurs à ne pas faire</h2>
