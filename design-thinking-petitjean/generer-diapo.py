@@ -119,7 +119,7 @@ for col,(t,items,c) in enumerate([("Freins",fr,BRUN),("Motivations",mo,FEU)]):
         y=Inches(2.5)+i*Inches(0.95)
         box(s,x,y,Inches(2.2),Inches(0.85),fill=BLANC); box(s,x,y,Inches(0.07),Inches(0.85),fill=c)
         text(s,x+Inches(0.2),y,Inches(1.9),Inches(0.85),it,size=13,anchor=MSO_ANCHOR.MIDDLE,spacing=1.0)
-text(s,Inches(0.8),Inches(6.35),Inches(11.7),Inches(0.4),[[("Recueil : ",{'bold':True,'color':FEU}),("échanges dans le groupe + [X] étudiants interrogés à l'IUT",{})]],size=13)
+text(s,Inches(0.8),Inches(6.35),Inches(11.7),Inches(0.4),[[("Recueil : ",{'bold':True,'color':FEU}),("échanges au sein de notre groupe de l'IUT",{})]],size=13)
 
 # 4 Définir
 s=new("Étape 2 · Définir","Léa, 19 ans, et notre question")
