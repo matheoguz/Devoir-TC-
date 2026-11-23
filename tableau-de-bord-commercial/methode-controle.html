@@ -55,173 +55,119 @@ th{background:var(--soft)}
 
 <div class="wrap">
   <h1>La méthode pour toutes les questions</h1>
-  <p class="muted">Pas d'exemple ici : seulement ce qu'il faut faire, dans quel ordre, et des phrases à trous. Les cases en pointillés <span class="b">comme ça</span> sont à remplir avec les données du sujet.</p>
+  <p class="muted">Pour chaque question : ce que tu fais, puis la phrase à écrire. Remplace les cases <span class="b">comme ça</span> par les données du sujet.</p>
 
-  <h2>Les réflexes de départ</h2>
-  <ol class="steps">
-    <li><b>Lis les données et note le sens de chaque indicateur</b> : ↑ s'il monte, ↓ s'il baisse.<p class="why">c'est ce que tu vas mettre dans le schéma.</p></li>
-    <li><b>Fais le schéma du CA au brouillon</b>, même si on ne le demande pas.<p class="why">presque toutes les questions se répondent avec lui.</p></li>
-    <li><b>Repère le type de question</b> avec les verbes : « analysez », « calculez », « comparez », « proposez », « sélectionnez », « justifiez ».<p class="why">chaque type a sa méthode, plus bas.</p></li>
-  </ol>
-
-  <h2>Le schéma à connaître</h2>
+  <h2>1. Le schéma à connaître</h2>
   <figure class="schema"><div class="sct">Le schéma du CA</div><svg viewBox="0 0 414 248" style="max-width:538px" role="img" aria-label="Le schéma du CA"><defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="ah"/></marker></defs><rect x="2" y="101.0" width="88" height="46" rx="7" class="nr"/><text x="46.0" y="129.0" class="lb">CA</text><rect x="124" y="39.0" width="124" height="46" rx="7" class="n"/><text x="186.0" y="67.0" class="lb">Nb de clients</text><path d="M248,62.0 C270,62.0 264,31.0 281,31.0" class="e" marker-end="url(#a)"/><rect x="286" y="8.0" width="126" height="46" rx="7" class="n"/><text x="349.0" y="36.0" class="lb">Fréquentation</text><path d="M248,62.0 C270,62.0 264,93.0 281,93.0" class="e" marker-end="url(#a)"/><rect x="286" y="70.0" width="126" height="46" rx="7" class="n"/><text x="349.0" y="98.0" class="lb">Tx transformation</text><text x="349.0" y="68.0" class="op">×</text><rect x="124" y="163.0" width="124" height="46" rx="7" class="n"/><text x="186.0" y="191.0" class="lb">Panier moyen</text><path d="M248,186.0 C270,186.0 264,155.0 281,155.0" class="e" marker-end="url(#a)"/><rect x="286" y="132.0" width="126" height="46" rx="7" class="n"/><text x="349.0" y="160.0" class="lb">Indice des ventes</text><path d="M248,186.0 C270,186.0 264,217.0 281,217.0" class="e" marker-end="url(#a)"/><rect x="286" y="194.0" width="126" height="46" rx="7" class="n"/><text x="349.0" y="222.0" class="lb">Prix moyen</text><text x="349.0" y="192.0" class="op">×</text><path d="M90,124.0 C110,124.0 104,62.0 119,62.0" class="e" marker-end="url(#a)"/><path d="M90,124.0 C110,124.0 104,186.0 119,186.0" class="e" marker-end="url(#a)"/></svg></figure>
-  <div class="big">CA = nb de clients × panier moyen</div>
-  <div class="big">nb de clients = fréquentation × taux de transformation</div>
-  <div class="big">panier moyen = indice des ventes × prix moyen</div>
+  <div class="big">CA = clients × panier moyen</div>
+  <div class="big">clients = fréquentation × taux de transformation</div>
 
-  <h3>Comment s'en servir</h3>
+  <h2>2. La règle de calcul</h2>
+  <p>Les pourcentages se <b>multiplient</b>. On ne les additionne jamais.</p>
+  <div class="big">+ … % → 1,… &nbsp;&nbsp;|&nbsp;&nbsp; − … % → 0,…</div>
+  <div class="big">coef 1 × coef 2 = coef du résultat</div>
+  <p>Pour trouver une case qui manque, on <b>divise</b> :</p>
+  <div class="big">coef du CA ÷ coef des clients = coef du panier</div>
+
+  <h2>3. Analyser</h2>
+
+  <h3>« Identifiez les relations et analysez »</h3>
   <ol class="steps">
-    <li><b>Mets les flèches ↑ ↓ de l'énoncé dans les cases.</b></li>
-    <li><b>Remonte de droite à gauche</b> : si les deux cases de droite montent, celle de gauche monte. Si l'une monte et l'autre baisse, ça dépend de laquelle bouge le plus.</li>
-    <li><b>Pour avoir le chiffre exact</b>, transforme chaque % en coefficient puis multiplie :
-      <div class="big">(1 + évolution 1) × (1 + évolution 2) = 1 + évolution du résultat</div>
-      <p class="why">les pourcentages se multiplient, ils ne s'additionnent jamais.</p></li>
-    <li><b>Pour retrouver une case manquante</b>, divise :
-      <div class="big">(1 + évolution du CA) ÷ (1 + évolution des clients) = 1 + évolution du panier</div></li>
+    <li>Écris le schéma en phrase.</li>
+    <li>Calcule les clients (multiplie).</li>
+    <li>Compare au CA → tu sais ce qu'a fait le panier.</li>
   </ol>
-  <figure class="schema"><div class="sct">Le schéma à remplir avec les flèches de l'énoncé</div><svg viewBox="0 0 414 248" style="max-width:538px" role="img" aria-label="Le schéma à remplir avec les flèches de l'énoncé"><defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="ah"/></marker></defs><rect x="2" y="101.0" width="88" height="46" rx="7" class="nr"/><text x="46.0" y="121.0" class="lb">CA</text><text x="46.0" y="139.0" class="v ">↑ ou ↓</text><rect x="124" y="39.0" width="124" height="46" rx="7" class="n"/><text x="186.0" y="59.0" class="lb">Nb de clients</text><text x="186.0" y="77.0" class="v ">↑ ou ↓</text><path d="M248,62.0 C270,62.0 264,31.0 281,31.0" class="e" marker-end="url(#a)"/><rect x="286" y="8.0" width="126" height="46" rx="7" class="n"/><text x="349.0" y="28.0" class="lb">Fréquentation</text><text x="349.0" y="46.0" class="v ">↑ ou ↓</text><path d="M248,62.0 C270,62.0 264,93.0 281,93.0" class="e" marker-end="url(#a)"/><rect x="286" y="70.0" width="126" height="46" rx="7" class="n"/><text x="349.0" y="90.0" class="lb">Tx transformation</text><text x="349.0" y="108.0" class="v ">↑ ou ↓</text><text x="349.0" y="68.0" class="op">×</text><rect x="124" y="163.0" width="124" height="46" rx="7" class="n"/><text x="186.0" y="183.0" class="lb">Panier moyen</text><text x="186.0" y="201.0" class="v ">↑ ou ↓</text><path d="M248,186.0 C270,186.0 264,155.0 281,155.0" class="e" marker-end="url(#a)"/><rect x="286" y="132.0" width="126" height="46" rx="7" class="n"/><text x="349.0" y="160.0" class="lb">Indice des ventes</text><path d="M248,186.0 C270,186.0 264,217.0 281,217.0" class="e" marker-end="url(#a)"/><rect x="286" y="194.0" width="126" height="46" rx="7" class="n"/><text x="349.0" y="222.0" class="lb">Prix moyen</text><text x="349.0" y="192.0" class="op">×</text><path d="M90,124.0 C110,124.0 104,62.0 119,62.0" class="e" marker-end="url(#a)"/><path d="M90,124.0 C110,124.0 104,186.0 119,186.0" class="e" marker-end="url(#a)"/></svg></figure>
+  <div class="say">Le CA est égal au nombre de clients multiplié par le panier moyen. Le nombre de clients évolue de <span class="b">coef 1</span> × <span class="b">coef 2</span> = <span class="b">… %</span>. Le CA évolue de <span class="b">… %</span>, donc le panier moyen <span class="b">est stable / monte / baisse</span>.</div>
 
-  <h2>Les autres formules</h2>
+  <h3>« Expliquez pourquoi X monte malgré Y qui baisse »</h3>
+  <ol class="steps">
+    <li>Dis quel indicateur a bougé le plus.</li>
+    <li>Relie au contexte du sujet.</li>
+    <li>Donne une cause possible avec « peut venir de ».</li>
+  </ol>
+  <div class="say"><span class="b">X</span> monte car la hausse de <span class="b">…</span> est plus forte que la baisse de <span class="b">…</span>. Cette baisse peut venir de <span class="b">cause</span>.</div>
+
+  <h3>« Proposez deux actions »</h3>
+  <ol class="steps">
+    <li>Vise l'indicateur qui va mal.</li>
+    <li>Pour chaque action : ce qu'on fait + l'indicateur qui la suit.</li>
+    <li>Justifie avec l'objectif de l'entreprise.</li>
+  </ol>
+  <div class="say"><b>Action 1 :</b> <span class="b">ce qu'on fait</span>, suivie avec <span class="b">indicateur</span>.<br><b>Action 2 :</b> <span class="b">ce qu'on fait</span>, suivie avec <span class="b">indicateur</span>.<br>Ces actions aident l'entreprise à <span class="b">objectif</span>.</div>
+
+  <h2>4. La satisfaction</h2>
   <div class="tbl"><table>
-    <tr><th>Indicateur</th><th>Formule</th><th>Unité</th></tr>
-    <tr><td>Taux de transformation</td><td>nb de clients ÷ fréquentation × 100</td><td>%</td></tr>
-    <tr><td>Panier moyen</td><td>CA ÷ nb de clients</td><td>€</td></tr>
-    <tr><td>Indice des ventes</td><td>nb d'articles ÷ nb de clients</td><td>sans unité</td></tr>
-    <tr><td>Prix moyen</td><td>CA ÷ nb d'articles</td><td>€</td></tr>
-    <tr><td>Évolution</td><td>(arrivée − départ) ÷ départ × 100</td><td>%</td></tr>
-    <tr><td>Écart à l'objectif</td><td>réalisé − objectif</td><td>€, points…</td></tr>
-    <tr><td>Taux d'attrition</td><td>1 − taux de fidélisation</td><td>%</td></tr>
-    <tr><td>NPS</td><td>% promoteurs (9-10) − % détracteurs (0-6)</td><td>points</td></tr>
-    <tr><td>CSAT</td><td>satisfaits ÷ total des réponses × 100</td><td>%</td></tr>
-  </table></div>
-
-  <h2><span>A.</span> Analyser des indicateurs</h2>
-
-  <h3>« Identifiez les relations entre les indicateurs et analysez la situation »</h3>
-  <ol class="steps">
-    <li><b>Écris les relations</b> du schéma en phrase.<p class="why">c'est la partie « identifiez les relations ».</p></li>
-    <li><b>Calcule l'évolution du nombre de clients</b> en multipliant les coefficients.</li>
-    <li><b>Compare-la à l'évolution du CA</b> pour savoir ce qu'a fait le panier moyen.<p class="why">si c'est pareil, le panier est stable ; si le CA monte plus, le panier monte ; si le CA monte moins, le panier baisse.</p></li>
-    <li><b>Conclus</b> : la hausse ou la baisse du CA vient de quelle case ?</li>
-  </ol>
-  <div class="say">Le chiffre d'affaires est égal au nombre de clients multiplié par le panier moyen, et le nombre de clients est égal à la fréquentation multipliée par le taux de transformation. Ici, le nombre de clients évolue de <span class="b">coef. 1</span> × <span class="b">coef. 2</span> = <span class="b">résultat</span>, soit <span class="b">± … %</span>. Le CA évolue de <span class="b">± … %</span>, donc le panier moyen <span class="b">est stable / monte / baisse</span>. L'évolution du CA vient donc surtout de <span class="b">la case qui a le plus bougé</span>.</div>
-
-  <h3>« Expliquez pourquoi X a progressé malgré la baisse de Y »</h3>
-  <ol class="steps">
-    <li><b>Dis quelle case a compensé l'autre</b> : celle qui a le plus bougé.</li>
-    <li><b>Relie au contexte de l'énoncé</b> (pub, nouveau produit, travaux, concurrence…).</li>
-    <li><b>Donne une ou deux causes possibles</b> à la baisse, avec « peut venir de ».<p class="why">on ne sait jamais à coup sûr : ce sont des hypothèses.</p></li>
-  </ol>
-  <div class="say"><span class="b">X</span> progresse parce que la hausse de <span class="b">indicateur qui monte</span> (<span class="b">+ … %</span>) est plus forte que la baisse de <span class="b">indicateur qui baisse</span> (<span class="b">− … %</span>). <span class="b">Élément du contexte</span> a permis <span class="b">ce qu'il a fait monter</span>, mais <span class="b">indicateur qui baisse</span> recule. Cela peut venir de <span class="b">cause possible 1</span> ou de <span class="b">cause possible 2</span>.</div>
-
-  <h3>« Proposez deux actions pour améliorer X tout en gardant Y. Justifiez. »</h3>
-  <ol class="steps">
-    <li><b>Vise la case qui va mal</b> dans le schéma. Chaque action doit agir dessus.</li>
-    <li><b>Pour chaque action, 3 morceaux</b> : ce qu'on fait, pourquoi ça aide, l'indicateur qui la suit.</li>
-    <li><b>Termine par la justification</b> : en quoi ça sert l'objectif ou la stratégie de l'entreprise.</li>
-  </ol>
-  <div class="say"><b>Action 1 :</b> <span class="b">ce qu'on fait</span>, pour <span class="b">ce que ça corrige</span>. On la suit avec <span class="b">indicateur</span>.<br><b>Action 2 :</b> <span class="b">ce qu'on fait</span>, pour <span class="b">ce que ça corrige</span>. On la suit avec <span class="b">indicateur</span>.<br>Ces actions vont dans le sens de la stratégie de l'entreprise, qui veut <span class="b">objectif stratégique</span> : <span class="b">ce qui marche déjà</span> est acquis, il faut maintenant améliorer <span class="b">ce qui va mal</span>.</div>
-
-  <h2><span>B.</span> La satisfaction client</h2>
-  <div class="tbl"><table>
-    <tr><th>Indicateur</th><th>Ce qu'il mesure</th><th>Échelle</th><th>Résultat</th></tr>
-    <tr><td><b>CSAT</b></td><td>la satisfaction après une expérience</td><td>de « pas satisfait » à « très satisfait »</td><td>en %</td></tr>
-    <tr><td><b>NPS</b></td><td>l'envie de recommander l'entreprise</td><td>de 0 à 10</td><td>en points</td></tr>
-    <tr><td><b>CES</b></td><td>l'effort du client pour faire une action</td><td>de 1 à 5 ou 7</td><td>une moyenne</td></tr>
+    <tr><th>Indicateur</th><th>Il mesure</th><th>Résultat</th></tr>
+    <tr><td><b>CSAT</b></td><td>la satisfaction</td><td>en %</td></tr>
+    <tr><td><b>NPS</b></td><td>l'envie de recommander (0 à 10)</td><td>en points</td></tr>
+    <tr><td><b>CES</b></td><td>l'effort du client</td><td>une moyenne</td></tr>
   </table></div>
   <figure class="schema"><div class="sct">NPS = % promoteurs − % détracteurs</div><svg viewBox="0 0 250 186" style="max-width:325px" role="img" aria-label="NPS = % promoteurs − % détracteurs"><defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="ah"/></marker></defs><rect x="2" y="70.0" width="88" height="46" rx="7" class="nr"/><text x="46.0" y="90.0" class="lb">NPS</text><text x="46.0" y="108.0" class="v ">en points</text><rect x="124" y="8.0" width="124" height="46" rx="7" class="n"/><text x="186.0" y="28.0" class="lb">Promoteurs 9-10</text><text x="186.0" y="46.0" class="v ">en %</text><rect x="124" y="70.0" width="124" height="46" rx="7" class="n"/><text x="186.0" y="90.0" class="lb">Détracteurs 0-6</text><text x="186.0" y="108.0" class="v ">en %</text><rect x="124" y="132.0" width="124" height="46" rx="7" class="n"/><text x="186.0" y="152.0" class="lb">Passifs 7-8</text><text x="186.0" y="170.0" class="v eq">on ignore</text><path d="M90,93.0 C110,93.0 104,31.0 119,31.0" class="e" marker-end="url(#a)"/><path d="M90,93.0 C110,93.0 104,93.0 119,93.0" class="e" marker-end="url(#a)"/><path d="M90,93.0 C110,93.0 104,155.0 119,155.0" class="e" marker-end="url(#a)"/></svg></figure>
 
-  <h3>« Quel est le nom de l'indicateur ? À quoi sert-il ? »</h3>
-  <ol class="steps">
-    <li><b>Reconnais-le</b> à la question posée au client ou à l'échelle (tableau ci-dessus).</li>
-    <li><b>Donne le nom complet</b>, ce qu'il mesure, puis à quoi il sert pour l'entreprise.</li>
-  </ol>
-  <div class="say">Il s'agit du <span class="b">sigle</span> (<span class="b">nom complet en anglais</span>). Il mesure <span class="b">ce qu'il mesure</span>, sur une échelle de <span class="b">…</span>. Il sert à <span class="b">évaluer la fidélité / la satisfaction / la facilité du parcours</span> et à se comparer au secteur et aux concurrents.</div>
+  <h3>« Nom de l'indicateur, à quoi il sert »</h3>
+  <div class="say">C'est le <span class="b">sigle</span>. Il mesure <span class="b">…</span>. Il sert à suivre <span class="b">la fidélité / la satisfaction</span> et à se comparer aux concurrents.</div>
 
-  <h3>« Calculez l'indicateur et comparez-le »</h3>
+  <h3>« Calculez et comparez »</h3>
   <ol class="steps">
-    <li><b>Mets chaque groupe en %</b> : nombre du groupe ÷ total des réponses × 100.</li>
-    <li><b>Applique la formule</b> (NPS : promoteurs − détracteurs, sans les passifs).</li>
-    <li><b>Compare chaque valeur donnée</b>, une par une, avec l'écart en points.</li>
-    <li><b>Conclus</b> : bon, moyen ou mauvais, et pourquoi.</li>
+    <li>Chaque groupe en % : nombre ÷ total.</li>
+    <li>NPS = promoteurs − détracteurs.</li>
+    <li>Compare chaque valeur donnée.</li>
   </ol>
-  <div class="say">Promoteurs : <span class="b">nb</span> ÷ <span class="b">total</span> = <span class="b">… %</span>. Détracteurs : <span class="b">nb</span> ÷ <span class="b">total</span> = <span class="b">… %</span>. Les passifs ne comptent pas.<br>NPS = <span class="b">… %</span> − <span class="b">… %</span> = <span class="b">± … points</span>.<br>C'est <span class="b">… points de plus / de moins</span> que <span class="b">le secteur</span>, et <span class="b">… points de plus / de moins</span> que <span class="b">chaque concurrent</span>. Le résultat est donc <span class="b">bon / moyen / insuffisant</span>, car <span class="b">ce qui le montre</span>.</div>
+  <div class="say">NPS = <span class="b">… %</span> − <span class="b">… %</span> = <span class="b">… points</span>. C'est <span class="b">plus / moins</span> que <span class="b">le secteur</span> et <span class="b">les concurrents</span>.</div>
 
-  <h3>« Identifiez deux axes d'amélioration »</h3>
-  <ol class="steps">
-    <li><b>Un axe par groupe qui pèse</b> : réduire les détracteurs, et transformer les passifs en promoteurs.<p class="why">ce sont les deux seules façons de faire monter un NPS.</p></li>
-  </ol>
-  <div class="say"><b>Axe 1 :</b> réduire le nombre de détracteurs (<span class="b">… %</span>) en comprenant et en corrigeant leurs motifs d'insatisfaction.<br><b>Axe 2 :</b> transformer les passifs (<span class="b">… %</span>) en promoteurs, en leur donnant une raison de recommander l'entreprise.</div>
+  <h3>« Deux axes d'amélioration »</h3>
+  <div class="say"><b>Axe 1 :</b> réduire les détracteurs.<br><b>Axe 2 :</b> transformer les passifs en promoteurs.</div>
 
-  <h3>« Proposez un plan d'action »</h3>
-  <p>Un plan d'action a <b>toujours ces 5 parties</b>. Recopie le tableau et remplis-le.</p>
+  <h3>« Plan d'action »</h3>
+  <p>Toujours ces 5 lignes :</p>
   <div class="tbl"><table>
-    <tr><th>Objectif</th><td>ce qu'on veut atteindre, <b>chiffré</b>, avec une date</td></tr>
-    <tr><th>Actions</th><td>ce qu'on fait concrètement, dans l'ordre</td></tr>
-    <tr><th>Responsable</th><td>qui s'en occupe</td></tr>
-    <tr><th>Échéance</th><td>quand on fait le point, quand ça doit être fini</td></tr>
-    <tr><th>Indicateur de suivi</th><td>le chiffre qui dira si ça marche</td></tr>
+    <tr><th>Objectif</th><td>chiffré et daté</td></tr>
+    <tr><th>Actions</th><td>ce qu'on fait</td></tr>
+    <tr><th>Responsable</th><td>qui</td></tr>
+    <tr><th>Échéance</th><td>quand</td></tr>
+    <tr><th>Indicateur</th><td>le chiffre qu'on surveille</td></tr>
   </table></div>
 
-  <h2><span>C.</span> Construire un tableau de bord</h2>
+  <h2>5. Construire un tableau de bord</h2>
   <figure class="schema"><div class="sct">Un objectif → ses indicateurs</div><svg viewBox="0 0 414 248" style="max-width:538px" role="img" aria-label="Un objectif → ses indicateurs"><defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="ah"/></marker></defs><rect x="2" y="121.66666666666666" width="88" height="46" rx="7" class="nr"/><text x="46.0" y="149.66666666666666" class="lb">Objectifs</text><rect x="124" y="39.0" width="124" height="46" rx="7" class="n"/><text x="186.0" y="67.0" class="lb">Objectif 1</text><path d="M248,62.0 C270,62.0 264,31.0 281,31.0" class="e" marker-end="url(#a)"/><rect x="286" y="8.0" width="126" height="46" rx="7" class="n"/><text x="349.0" y="36.0" class="lb">Indicateur</text><path d="M248,62.0 C270,62.0 264,93.0 281,93.0" class="e" marker-end="url(#a)"/><rect x="286" y="70.0" width="126" height="46" rx="7" class="n"/><text x="349.0" y="98.0" class="lb">Indicateur</text><rect x="124" y="132.0" width="124" height="46" rx="7" class="n"/><text x="186.0" y="160.0" class="lb">Objectif 2</text><path d="M248,155.0 C270,155.0 264,155.0 281,155.0" class="e" marker-end="url(#a)"/><rect x="286" y="132.0" width="126" height="46" rx="7" class="n"/><text x="349.0" y="160.0" class="lb">Indicateur</text><rect x="124" y="194.0" width="124" height="46" rx="7" class="n"/><text x="186.0" y="222.0" class="lb">Objectif 3</text><path d="M248,217.0 C270,217.0 264,217.0 281,217.0" class="e" marker-end="url(#a)"/><rect x="286" y="194.0" width="126" height="46" rx="7" class="n"/><text x="349.0" y="222.0" class="lb">Indicateur ou rien</text><path d="M90,144.66666666666666 C110,144.66666666666666 104,62.0 119,62.0" class="e" marker-end="url(#a)"/><path d="M90,144.66666666666666 C110,144.66666666666666 104,155.0 119,155.0" class="e" marker-end="url(#a)"/><path d="M90,144.66666666666666 C110,144.66666666666666 104,217.0 119,217.0" class="e" marker-end="url(#a)"/></svg></figure>
 
-  <h3>« Sélectionnez les indicateurs les plus pertinents. Justifiez. »</h3>
+  <h3>« Sélectionnez les indicateurs »</h3>
   <ol class="steps">
-    <li><b>Prends les objectifs un par un</b> et cherche dans la liste ce qui permet de le suivre.</li>
-    <li><b>Pour un objectif de CA</b>, prends les cases du schéma : panier moyen, fréquentation, taux de transformation.</li>
-    <li><b>Pour un objectif sur les clients perdus (attrition)</b>, prends le taux de fidélisation : c'est son contraire.</li>
-    <li><b>Si un objectif n'a pas d'indicateur dans la liste</b>, dis-le : on ne peut pas le calculer par manque de données.</li>
-    <li><b>Dis quels indicateurs tu enlèves</b> et pourquoi : ils ne correspondent à aucun objectif.</li>
+    <li>Prends chaque objectif, un par un.</li>
+    <li>Trouve l'indicateur qui le suit.</li>
+    <li>Pas de données ? Dis-le.</li>
   </ol>
-  <div class="say">Pour suivre l'objectif de <span class="b">objectif 1</span>, je retiens <span class="b">indicateurs</span>, car <span class="b">lien avec le schéma ou avec l'objectif</span>.<br>Pour suivre l'objectif de <span class="b">objectif 2</span>, je retiens <span class="b">indicateur</span>, car <span class="b">lien</span>.<br><span class="b">Objectif sans données</span> ne peut pas être calculé par manque de données. Je ne retiens pas <span class="b">indicateurs restants</span>, qui ne correspondent à aucun objectif.</div>
+  <div class="say">Pour <span class="b">objectif</span>, je retiens <span class="b">indicateur</span>, car <span class="b">lien</span>. <span class="b">Objectif</span> ne peut pas être calculé par manque de données.</div>
 
-  <h3>« Proposez la structure visuelle du tableau de bord »</h3>
-  <ol class="steps">
-    <li><b>Un indicateur par colonne.</b></li>
-    <li><b>Sous chaque indicateur qu'on calcule, écris sa formule.</b></li>
-    <li><b>Laisse des lignes vides</b> en dessous pour les chiffres.</li>
-  </ol>
+  <h3>« Structure visuelle »</h3>
+  <p>Un indicateur par colonne, la formule en dessous.</p>
   <div class="tbl"><table>
-    <tr><th>Panier moyen</th><th>Fréquentation</th><th>Tx de transformation</th><th>Nb de clients</th><th>CA</th><th>Tx d'attractivité</th><th>Tx de fidélisation</th></tr>
-    <tr><td></td><td></td><td></td><td>fréquentation × tx de transfo</td><td>panier moyen × nb de clients</td><td></td><td>1 − tx d'attrition</td></tr>
-    <tr><td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><th>Panier moyen</th><th>Fréquentation</th><th>Tx de transfo</th><th>Nb de clients</th><th>CA</th><th>Tx de fidélisation</th></tr>
+    <tr><td></td><td></td><td></td><td>fréquentation × tx de transfo</td><td>panier × nb de clients</td><td>1 − tx d'attrition</td></tr>
+    <tr><td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td></tr>
   </table></div>
-  <div class="say">Le tableau de bord présente un indicateur par colonne : <span class="b">liste des indicateurs</span>. <span class="b">Indicateur calculé</span> se calcule en multipliant <span class="b">…</span> par <span class="b">…</span>. Il permet de suivre les objectifs de <span class="b">objectifs</span>.</div>
 
-  <h2><span>D.</span> Comparer deux unités commerciales</h2>
+  <h2>6. Comparer deux magasins</h2>
   <figure class="schema"><div class="sct">Deux magasins, deux colonnes</div><svg viewBox="0 0 414 248" style="max-width:538px" role="img" aria-label="Deux magasins, deux colonnes"><defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="ah"/></marker></defs><rect x="2" y="101.0" width="88" height="46" rx="7" class="nr"/><text x="46.0" y="129.0" class="lb">Comparer</text><rect x="124" y="39.0" width="124" height="46" rx="7" class="n"/><text x="186.0" y="67.0" class="lb">Magasin A</text><path d="M248,62.0 C270,62.0 264,31.0 281,31.0" class="e" marker-end="url(#a)"/><rect x="286" y="8.0" width="126" height="46" rx="7" class="n"/><text x="349.0" y="36.0" class="lb">Point fort</text><path d="M248,62.0 C270,62.0 264,93.0 281,93.0" class="e" marker-end="url(#a)"/><rect x="286" y="70.0" width="126" height="46" rx="7" class="n"/><text x="349.0" y="98.0" class="lb">Point faible</text><rect x="124" y="163.0" width="124" height="46" rx="7" class="n"/><text x="186.0" y="191.0" class="lb">Magasin B</text><path d="M248,186.0 C270,186.0 264,155.0 281,155.0" class="e" marker-end="url(#a)"/><rect x="286" y="132.0" width="126" height="46" rx="7" class="n"/><text x="349.0" y="160.0" class="lb">Point fort</text><path d="M248,186.0 C270,186.0 264,217.0 281,217.0" class="e" marker-end="url(#a)"/><rect x="286" y="194.0" width="126" height="46" rx="7" class="n"/><text x="349.0" y="222.0" class="lb">Point faible</text><path d="M90,124.0 C110,124.0 104,62.0 119,62.0" class="e" marker-end="url(#a)"/><path d="M90,124.0 C110,124.0 104,186.0 119,186.0" class="e" marker-end="url(#a)"/></svg></figure>
 
-  <h3>« Comparez les performances. Points forts et points faibles. »</h3>
+  <h3>« Points forts et points faibles »</h3>
   <ol class="steps">
-    <li><b>Fais le schéma du CA pour chaque magasin</b>, avec les flèches.</li>
-    <li><b>Calcule l'évolution des clients</b> de chacun (multiplication des coefficients).</li>
-    <li><b>Point fort = ce qui monte</b>, point faible = ce qui baisse. Toujours avec le chiffre.</li>
-    <li><b>Conclus en une phrase</b> : l'un est bon sur quoi, l'autre sur quoi.<p class="why">fréquentation = savoir attirer ; transformation et panier = savoir vendre.</p></li>
+    <li>Calcule les clients de chaque magasin.</li>
+    <li>Ce qui monte = point fort. Ce qui baisse = point faible.</li>
   </ol>
-  <div class="say"><b><span class="b">Magasin A</span></b> a pour point fort <span class="b">ce qui monte</span> (<span class="b">chiffre</span>), ce qui lui donne <span class="b">effet sur les clients ou le CA</span>. Son point faible est <span class="b">ce qui baisse</span> (<span class="b">chiffre</span>).<br><b><span class="b">Magasin B</span></b> a pour point fort <span class="b">…</span> (<span class="b">chiffre</span>). Son point faible est <span class="b">…</span> (<span class="b">chiffre</span>).<br>En résumé, <span class="b">A</span> sait <span class="b">attirer / vendre</span> mais <span class="b">…</span> ; <span class="b">B</span> sait <span class="b">…</span> mais <span class="b">…</span>.</div>
+  <div class="say"><span class="b">A</span> sait <span class="b">attirer / vendre</span> (<span class="b">chiffre</span>) mais <span class="b">point faible</span> (<span class="b">chiffre</span>). <span class="b">B</span> sait <span class="b">…</span> mais <span class="b">…</span>.</div>
+  <p class="muted">Fréquentation = attirer. Transformation et panier = vendre.</p>
 
-  <h3>« Proposez des actions pour un magasin en s'inspirant de l'autre »</h3>
-  <ol class="steps">
-    <li><b>Prends le point faible du magasin à améliorer.</b></li>
-    <li><b>Regarde ce que l'autre fait bien sur ce point</b> : c'est ton inspiration.</li>
-    <li><b>Ne casse pas son point fort</b> : dis qu'il faut le garder.</li>
-  </ol>
-  <div class="say"><b>Action 1 :</b> <span class="b">ce qu'on fait</span>, pour améliorer <span class="b">point faible</span>, comme le fait <span class="b">l'autre magasin</span>.<br><b>Action 2 :</b> <span class="b">ce qu'on fait</span>, pour <span class="b">…</span>.<br><span class="b">Magasin</span> doit garder <span class="b">son point fort</span> pour profiter de ces actions.</div>
+  <h3>« Actions en s'inspirant de l'autre »</h3>
+  <div class="say">Pour améliorer <span class="b">point faible</span>, <span class="b">magasin</span> peut <span class="b">action</span>, comme <span class="b">l'autre magasin</span>.</div>
 
-  <h3>« Quels indicateurs suivre pour évaluer l'impact des actions ? »</h3>
-  <ol class="steps">
-    <li><b>Donne des indicateurs</b>, pas des actions.<p class="why">un indicateur = un chiffre qu'on regarde. Une action = quelque chose qu'on fait.</p></li>
-    <li><b>Un indicateur pour chaque action</b>, plus le point fort (pour vérifier qu'il ne baisse pas), plus le résultat final (CA).</li>
-  </ol>
-  <div class="say">Pour mesurer l'impact des actions, il faut suivre :<br>– <span class="b">indicateur 1</span>, pour voir si <span class="b">action 1 marche</span> ;<br>– <span class="b">indicateur 2</span>, pour vérifier que <span class="b">le point fort reste bon</span> ;<br>– le <b>nombre de clients et le CA</b>, pour voir le résultat final.</div>
+  <h3>« Indicateurs à suivre »</h3>
+  <p>Des <b>indicateurs</b>, pas des actions.</p>
+  <div class="say">Il faut suivre <span class="b">indicateur</span> pour voir si l'action marche, et le CA pour le résultat final.</div>
 
-  <h2>Les erreurs à ne pas faire</h2>
-  <p>❌ Additionner des pourcentages au lieu de les multiplier.</p>
+  <h2>Les erreurs à éviter</h2>
+  <p>❌ Additionner des pourcentages.</p>
   <p>❌ Compter les passifs dans le NPS.</p>
-  <p>❌ Écrire un NPS en %, au lieu de points.</p>
-  <p>❌ Accuser les vendeurs quand le taux de transformation monte.</p>
+  <p>❌ Écrire le NPS en %.</p>
   <p>❌ Donner une action quand on demande un indicateur.</p>
-  <p>❌ Présenter une cause comme sûre : on dit « peut venir de ».</p>
 </div>
