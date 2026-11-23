@@ -147,7 +147,9 @@ for i,(a,b) in enumerate([("SCAMPER","fait évoluer un produit existant ; nous c
     y=Inches(2.4)+i*Inches(1.33)
     box(s,Inches(4.9),y,Inches(3.4),Inches(1.2),fill=BLANC)
     text(s,Inches(5.1),y+Inches(0.12),Inches(3.0),Inches(1.0),[[(a,{'bold':True,'size':15})],[(b,{'color':GRIS})]],size=13,spacing=1.0)
-placeholder(s,Inches(8.55),Inches(2.0),Inches(3.95),Inches(4.4),"Photo de nos post-it\n(trace de la séance)")
+box(s,Inches(8.55),Inches(2.0),Inches(3.95),Inches(4.4),fill=BRUN)
+lbl(s,Inches(8.8),Inches(2.2),Inches(3.5),"Les idées de la séance")
+text(s,Inches(8.8),Inches(2.65),Inches(3.5),Inches(3.7),["Formule midi à prix fixe","Galettes street-food","Mini-pizzas à partager","Gâteaux trompe-l'œil","Recette du mois sur Instagram","Borne de commande","Précommande QR code","Créneau étudiants 11h45-13h30","Carte de fidélité numérique","Packaging kraft","Instagram + affiches","Coin goûter / révisions"],size=12,color=CREME,spacing=1.0)
 
 # 6 Idées & tri
 s=new("Étape 3 · Imaginer","Nos idées, triées avec 3 critères")
