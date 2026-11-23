@@ -188,7 +188,7 @@ for i,(h_,d) in enumerate(st):
 
 # 8 Prototype
 s=new("Étape 4 · Prototyper","Un prototype en 3 éléments, un frein chacun")
-for k,(img,f,t,d) in enumerate([("viennoiseries.jpg",0.5,"Instagram & visuels","Contre l'image « traditionnelle »"),("packaging-kraft.jpg",0.75,"Packaging kraft","Contre le manque de visibilité"),("borne-boutique.jpg",0.45,"Borne + commande en ligne","Contre la file et le manque de temps")]):
+for k,(img,f,t,d) in enumerate([("instagram.jpg",1.0,"Instagram & visuels","Contre l'image « traditionnelle »"),("packaging-kraft.jpg",0.75,"Packaging kraft","Contre le manque de visibilité"),("borne-boutique.jpg",0.45,"Borne + commande en ligne","Contre la file et le manque de temps")]):
     x=Inches(0.8)+k*Inches(3.98)
     pic(s,img,x,Inches(2.0),Inches(3.75),Inches(3.3),f)
     text(s,x,Inches(5.45),Inches(3.75),Inches(0.4),t,size=18,bold=True)
