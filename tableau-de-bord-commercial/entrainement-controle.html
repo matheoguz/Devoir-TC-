@@ -1,46 +1,50 @@
 <title>Entraînement contrôle R3.08</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;600;700&display=swap">
 <style>
-/* Mise en page : une colonne type fiche bristol. Pour chaque cas : les données, le schéma, puis chaque question avec « comment répondre » et la phrase à écrire. */
+/* Mise en page : fiche noir et blanc, une colonne. Couleur seulement pour ce qui monte (vert) ou baisse (rouge). Schémas en arbre comme sur la copie. */
 :root{
-  --bg:#fffdf7; --ink:#1d2330; --muted:#6b7280; --line:#e6dfcc; --card:#ffffff;
-  --hl:#ffe680; --accent:#2f6fde; --ok:#16803c; --up:#16803c; --down:#c2341b;
-  --f:"Nunito",system-ui,sans-serif;
+  --bg:#ffffff; --ink:#111111; --muted:#666666; --line:#111111; --soft:#f2f2f2; --hair:#d4d4d4;
+  --up:#13803a; --down:#c62a1c;
+  --fh:"Space Grotesk",system-ui,sans-serif; --fb:"Inter",system-ui,sans-serif;
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16181d;--ink:#eceef2;--muted:#a0a7b4;--line:#2f343e;--card:#1e2128;--hl:#6b5a12;--accent:#7aa7ff;--ok:#5fd38a;--up:#5fd38a;--down:#ff8b75;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#16181d;--ink:#eceef2;--muted:#a0a7b4;--line:#2f343e;--card:#1e2128;--hl:#6b5a12;--accent:#7aa7ff;--ok:#5fd38a;--up:#5fd38a;--down:#ff8b75;color-scheme:dark}
-body{background:var(--bg);color:var(--ink);font-family:var(--f);font-size:18px;line-height:1.6}
-.wrap{max-width:680px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:32px 64px}
-h1{font-size:30px;line-height:1.2;margin:0 0 6px;font-weight:800}
-h2{font-size:25px;margin:48px 0 4px;font-weight:800}
-h2 span{color:var(--accent)}
-h3{font-size:19px;margin:26px 0 4px;font-weight:800}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d0d0d;--ink:#f2f2f2;--muted:#a3a3a3;--line:#f2f2f2;--soft:#1c1c1c;--hair:#3a3a3a;--up:#4fd07c;--down:#ff7a6b;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0d0d0d;--ink:#f2f2f2;--muted:#a3a3a3;--line:#f2f2f2;--soft:#1c1c1c;--hair:#3a3a3a;--up:#4fd07c;--down:#ff7a6b;color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--fb);font-size:17px;line-height:1.6}
+.wrap{max-width:680px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:36px 64px}
+h1{font-family:var(--fh);font-size:32px;line-height:1.15;margin:0 0 8px;font-weight:700;text-wrap:balance}
+h2{font-family:var(--fh);font-size:24px;margin:52px 0 6px;font-weight:700;padding-bottom:6px;border-bottom:3px solid var(--line)}
+h2 span{background:var(--ink);color:var(--bg);padding:0 8px;margin-right:4px}
+h3{font-family:var(--fh);font-size:18px;margin:28px 0 4px;font-weight:700}
 p{margin:8px 0}
 ul{padding-left:22px;margin:6px 0}
 .muted{color:var(--muted)}
-mark{background:var(--hl);color:inherit;padding:0 4px;border-radius:4px}
-.data{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:10px 14px;margin:10px 0}
-.big{font-size:20px;font-weight:800;margin:12px 0;padding:12px 14px;border:2px solid var(--line);border-radius:14px;text-align:center}
-.how{margin:6px 0}
-.how::before{content:"Comment répondre : ";font-weight:800;color:var(--accent)}
-.say{border-left:4px solid var(--ok);background:var(--card);padding:8px 12px;margin:10px 0;border-radius:0 10px 10px 0}
-.say::before{content:"Ce que tu écris";display:block;font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ok)}
-hr{border:none;border-top:2px dashed var(--line);margin:44px 0 0}
-/* Schéma */
-.schema{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:14px;margin:14px 0;display:grid;gap:10px}
-.schema .title{font-size:13px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
-.br{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
-.br.sub{padding-left:22px;border-left:3px solid var(--line);margin-left:12px}
-.bx{border:2px solid var(--line);border-radius:10px;padding:6px 10px;font-weight:700;background:var(--bg);line-height:1.3}
-.bx small{display:block;font-weight:800;font-size:15px}
-.bx.root{border-color:var(--accent)}
-.op{font-weight:800;color:var(--muted)}
+mark{background:var(--ink);color:var(--bg);padding:0 5px}
+.data{border:2px solid var(--line);padding:10px 14px;margin:12px 0}
+.big{font-family:var(--fh);font-size:20px;font-weight:700;margin:12px 0;padding:12px 14px;border:2px solid var(--line);text-align:center}
+.how{margin:6px 0;color:var(--muted)}
+.how::before{content:"Comment répondre → ";font-weight:700;color:var(--ink)}
+.say{border-left:4px solid var(--line);background:var(--soft);padding:10px 14px;margin:10px 0}
+.say::before{content:"Ce que tu écris";display:block;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+hr{border:none;margin:0}
 .up{color:var(--up)} .down{color:var(--down)} .eq{color:var(--muted)}
 .tbl{overflow-x:auto;margin:10px 0}
-table{border-collapse:collapse;width:100%;font-size:16px}
+table{border-collapse:collapse;width:100%;font-size:15px}
 th,td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
-th{background:var(--card)}
+th{background:var(--soft)}
+/* Schéma SVG */
+.schema{margin:16px 0;border:2px solid var(--line);padding:12px 8px}
+.sct{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.schema svg{display:block;width:100%;height:auto;margin:0 auto;font-family:var(--fb)}
+.schema .n{fill:var(--bg);stroke:var(--ink);stroke-width:1.5}
+.schema .nr{fill:var(--soft);stroke:var(--ink);stroke-width:3}
+.schema .lb{fill:var(--ink);font-size:13px;font-weight:700;text-anchor:middle}
+.schema .v{font-size:13px;font-weight:700;text-anchor:middle;fill:var(--muted)}
+.schema .v.up{fill:var(--up)} .schema .v.down{fill:var(--down)}
+.schema .e{fill:none;stroke:var(--ink);stroke-width:1.5}
+.schema .ah{fill:var(--ink)}
+.schema .op{fill:var(--ink);font-size:18px;font-weight:700;text-anchor:middle}
+.schema .eqs{fill:var(--ink);font-size:16px;font-weight:700}
 </style>
 
 <div class="wrap">
@@ -49,11 +53,7 @@ th{background:var(--card)}
 
   <h2>La base : le schéma du CA</h2>
   <p>Presque tout le contrôle tourne autour de ce schéma. Fais-le au brouillon à chaque fois.</p>
-  <div class="schema">
-    <div class="br"><span class="bx root">Chiffre d'affaires</span></div>
-    <div class="br sub"><span class="bx">Nb de clients</span><span class="op">=</span><span class="bx">Fréquentation</span><span class="op">×</span><span class="bx">Taux de transformation</span></div>
-    <div class="br sub"><span class="bx">Panier moyen</span><span class="op">=</span><span class="bx">Indice des ventes</span><span class="op">×</span><span class="bx">Prix moyen</span></div>
-  </div>
+  <figure class="schema"><svg viewBox="0 0 414 248" style="max-width:538px" role="img" aria-label="CA"><defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="ah"/></marker></defs><rect x="2" y="101.0" width="88" height="46" rx="7" class="nr"/><text x="46.0" y="129.0" class="lb">CA</text><rect x="124" y="39.0" width="124" height="46" rx="7" class="n"/><text x="186.0" y="67.0" class="lb">Nb de clients</text><path d="M248,62.0 C270,62.0 264,31.0 281,31.0" class="e" marker-end="url(#a)"/><rect x="286" y="8.0" width="126" height="46" rx="7" class="n"/><text x="349.0" y="36.0" class="lb">Trafic</text><path d="M248,62.0 C270,62.0 264,93.0 281,93.0" class="e" marker-end="url(#a)"/><rect x="286" y="70.0" width="126" height="46" rx="7" class="n"/><text x="349.0" y="98.0" class="lb">Tx transformation</text><text x="349.0" y="68.0" class="op">×</text><rect x="124" y="163.0" width="124" height="46" rx="7" class="n"/><text x="186.0" y="191.0" class="lb">Panier moyen</text><path d="M248,186.0 C270,186.0 264,155.0 281,155.0" class="e" marker-end="url(#a)"/><rect x="286" y="132.0" width="126" height="46" rx="7" class="n"/><text x="349.0" y="160.0" class="lb">Indice des ventes</text><path d="M248,186.0 C270,186.0 264,217.0 281,217.0" class="e" marker-end="url(#a)"/><rect x="286" y="194.0" width="126" height="46" rx="7" class="n"/><text x="349.0" y="222.0" class="lb">Prix moyen</text><text x="349.0" y="192.0" class="op">×</text><path d="M90,124.0 C110,124.0 104,62.0 119,62.0" class="e" marker-end="url(#a)"/><path d="M90,124.0 C110,124.0 104,186.0 119,186.0" class="e" marker-end="url(#a)"/></svg></figure>
   <div class="big">CA = nb de clients × panier moyen</div>
   <p><b>Le calcul qui sert tout le temps.</b> Quand on te donne des évolutions en %, tu les <mark>multiplies</mark> :</p>
   <ul>
@@ -66,12 +66,7 @@ th{background:var(--card)}
   <h2><span>Cas 1.</span> Analyser un point de vente</h2>
   <div class="data">Fréquentation <b class="up">+20 %</b> · Taux de transformation <b class="down">−10 %</b> · Panier moyen <b>50 €</b> · CA <b class="up">+8 %</b><br><span class="muted">Contexte : campagne de pub locale + nouvelle gamme de produits.</span></div>
 
-  <div class="schema">
-    <div class="title">Le schéma rempli</div>
-    <div class="br"><span class="bx root">CA <small class="up">+8 %</small></span></div>
-    <div class="br sub"><span class="bx">Nb de clients <small class="up">+8 %</small></span><span class="op">=</span><span class="bx">Fréquentation <small class="up">+20 %</small></span><span class="op">×</span><span class="bx">Tx transformation <small class="down">−10 %</small></span></div>
-    <div class="br sub"><span class="bx">Panier moyen <small class="eq">50 €, stable</small></span><span class="op">=</span><span class="bx">Indice des ventes</span><span class="op">×</span><span class="bx">Prix moyen</span></div>
-  </div>
+  <figure class="schema"><div class="sct">Cas 1 rempli</div><svg viewBox="0 0 414 248" style="max-width:538px" role="img" aria-label="Cas 1 rempli"><defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="ah"/></marker></defs><rect x="2" y="101.0" width="88" height="46" rx="7" class="nr"/><text x="46.0" y="121.0" class="lb">CA</text><text x="46.0" y="139.0" class="v up">+8 %</text><rect x="124" y="39.0" width="124" height="46" rx="7" class="n"/><text x="186.0" y="59.0" class="lb">Nb de clients</text><text x="186.0" y="77.0" class="v up">+8 %</text><path d="M248,62.0 C270,62.0 264,31.0 281,31.0" class="e" marker-end="url(#a)"/><rect x="286" y="8.0" width="126" height="46" rx="7" class="n"/><text x="349.0" y="28.0" class="lb">Trafic</text><text x="349.0" y="46.0" class="v up">+20 %</text><path d="M248,62.0 C270,62.0 264,93.0 281,93.0" class="e" marker-end="url(#a)"/><rect x="286" y="70.0" width="126" height="46" rx="7" class="n"/><text x="349.0" y="90.0" class="lb">Tx transformation</text><text x="349.0" y="108.0" class="v down">−10 %</text><text x="349.0" y="68.0" class="op">×</text><rect x="124" y="163.0" width="124" height="46" rx="7" class="n"/><text x="186.0" y="183.0" class="lb">Panier moyen</text><text x="186.0" y="201.0" class="v eq">50 € · stable</text><path d="M248,186.0 C270,186.0 264,155.0 281,155.0" class="e" marker-end="url(#a)"/><rect x="286" y="132.0" width="126" height="46" rx="7" class="n"/><text x="349.0" y="160.0" class="lb">Indice des ventes</text><path d="M248,186.0 C270,186.0 264,217.0 281,217.0" class="e" marker-end="url(#a)"/><rect x="286" y="194.0" width="126" height="46" rx="7" class="n"/><text x="349.0" y="222.0" class="lb">Prix moyen</text><text x="349.0" y="192.0" class="op">×</text><path d="M90,124.0 C110,124.0 104,62.0 119,62.0" class="e" marker-end="url(#a)"/><path d="M90,124.0 C110,124.0 104,186.0 119,186.0" class="e" marker-end="url(#a)"/></svg></figure>
 
   <h3>Q1. Identifiez les relations entre les indicateurs et analysez la situation.</h3>
   <p class="how">tu recopies le schéma, tu calcules les clients (1,20 × 0,90), puis tu compares au CA pour savoir ce qu'a fait le panier.</p>
@@ -91,11 +86,7 @@ th{background:var(--card)}
   <h2><span>Cas 2.</span> La satisfaction client</h2>
   <div class="data">200 clients : <b>80 promoteurs</b> (notes 9-10), <b>70 passifs</b> (7-8), <b>50 détracteurs</b> (0-6).<br>Secteur : <b>10</b> · Concurrents : <b>15</b> et <b>20</b>.</div>
 
-  <div class="schema">
-    <div class="title">Le schéma du NPS</div>
-    <div class="br"><span class="bx root">NPS <small>+15 points</small></span><span class="op">=</span><span class="bx">% promoteurs <small class="up">40 %</small></span><span class="op">−</span><span class="bx">% détracteurs <small class="down">25 %</small></span></div>
-    <div class="br sub"><span class="bx">Passifs <small class="eq">35 %, on ne les compte pas</small></span></div>
-  </div>
+  <figure class="schema"><div class="sct">NPS = promoteurs − détracteurs</div><svg viewBox="0 0 250 186" style="max-width:325px" role="img" aria-label="NPS = promoteurs − détracteurs"><defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="ah"/></marker></defs><rect x="2" y="70.0" width="88" height="46" rx="7" class="nr"/><text x="46.0" y="90.0" class="lb">NPS</text><text x="46.0" y="108.0" class="v ">+15 pts</text><rect x="124" y="8.0" width="124" height="46" rx="7" class="n"/><text x="186.0" y="28.0" class="lb">Promoteurs 9-10</text><text x="186.0" y="46.0" class="v up">40 %</text><rect x="124" y="70.0" width="124" height="46" rx="7" class="n"/><text x="186.0" y="90.0" class="lb">Détracteurs 0-6</text><text x="186.0" y="108.0" class="v down">25 %</text><rect x="124" y="132.0" width="124" height="46" rx="7" class="n"/><text x="186.0" y="152.0" class="lb">Passifs 7-8</text><text x="186.0" y="170.0" class="v eq">35 % · on ignore</text><path d="M90,93.0 C110,93.0 104,31.0 119,31.0" class="e" marker-end="url(#a)"/><path d="M90,93.0 C110,93.0 104,93.0 119,93.0" class="e" marker-end="url(#a)"/><path d="M90,93.0 C110,93.0 104,155.0 119,155.0" class="e" marker-end="url(#a)"/></svg></figure>
 
   <h3>Q1. Quel est le nom de l'indicateur ? À quoi sert-il ?</h3>
   <p class="how">tu donnes le nom complet, ce qu'il mesure, et à quoi il sert pour l'entreprise.</p>
@@ -124,13 +115,7 @@ th{background:var(--card)}
   <div class="data">Objectifs : <b>CA +10 %</b> · <b>réduire le taux d'attrition de 5 %</b> · <b>CSAT &gt; 90 %</b><br>Indicateurs disponibles : fréquentation, taux de transformation, panier moyen, taux de fidélisation, NPS, taux de digitalisation.</div>
   <p class="muted">Taux d'attrition = la part des clients qu'on perd. C'est le contraire du taux de fidélisation : 85 % de clients fidèles = 15 % d'attrition.</p>
 
-  <div class="schema">
-    <div class="title">Le schéma : un objectif → ses indicateurs</div>
-    <div class="br"><span class="bx root">CA +10 %</span><span class="op">→</span><span class="bx">Taux de transformation</span><span class="op">+</span><span class="bx">Panier moyen</span></div>
-    <div class="br"><span class="bx root">Attrition −5 %</span><span class="op">→</span><span class="bx">Taux de fidélisation</span></div>
-    <div class="br"><span class="bx root">CSAT &gt; 90 %</span><span class="op">→</span><span class="bx">NPS</span></div>
-    <div class="br"><span class="bx">Taux de digitalisation</span><span class="op">→</span><span class="muted">aucun objectif, on l'enlève</span></div>
-  </div>
+  <figure class="schema"><div class="sct">Un objectif → ses indicateurs (le taux de digitalisation ne sert à rien : on l'enlève)</div><svg viewBox="0 0 414 248" style="max-width:538px" role="img" aria-label="Un objectif → ses indicateurs (le taux de digitalisation ne sert à rien : on l'enlève)"><defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="ah"/></marker></defs><rect x="2" y="121.66666666666666" width="88" height="46" rx="7" class="nr"/><text x="46.0" y="149.66666666666666" class="lb">Objectifs</text><rect x="124" y="39.0" width="124" height="46" rx="7" class="n"/><text x="186.0" y="59.0" class="lb">CA</text><text x="186.0" y="77.0" class="v ">+10 %</text><path d="M248,62.0 C270,62.0 264,31.0 281,31.0" class="e" marker-end="url(#a)"/><rect x="286" y="8.0" width="126" height="46" rx="7" class="n"/><text x="349.0" y="36.0" class="lb">Tx transformation</text><path d="M248,62.0 C270,62.0 264,93.0 281,93.0" class="e" marker-end="url(#a)"/><rect x="286" y="70.0" width="126" height="46" rx="7" class="n"/><text x="349.0" y="98.0" class="lb">Panier moyen</text><text x="349.0" y="68.0" class="op">+</text><rect x="124" y="132.0" width="124" height="46" rx="7" class="n"/><text x="186.0" y="152.0" class="lb">Attrition</text><text x="186.0" y="170.0" class="v ">−5 %</text><path d="M248,155.0 C270,155.0 264,155.0 281,155.0" class="e" marker-end="url(#a)"/><rect x="286" y="132.0" width="126" height="46" rx="7" class="n"/><text x="349.0" y="160.0" class="lb">Tx fidélisation</text><rect x="124" y="194.0" width="124" height="46" rx="7" class="n"/><text x="186.0" y="214.0" class="lb">Satisfaction</text><text x="186.0" y="232.0" class="v ">CSAT &gt; 90 %</text><path d="M248,217.0 C270,217.0 264,217.0 281,217.0" class="e" marker-end="url(#a)"/><rect x="286" y="194.0" width="126" height="46" rx="7" class="n"/><text x="349.0" y="222.0" class="lb">NPS</text><path d="M90,144.66666666666666 C110,144.66666666666666 104,62.0 119,62.0" class="e" marker-end="url(#a)"/><path d="M90,144.66666666666666 C110,144.66666666666666 104,155.0 119,155.0" class="e" marker-end="url(#a)"/><path d="M90,144.66666666666666 C110,144.66666666666666 104,217.0 119,217.0" class="e" marker-end="url(#a)"/></svg></figure>
 
   <h3>Q1. Sélectionnez les 4 indicateurs les plus pertinents. Justifiez.</h3>
   <p class="how">un indicateur = une phrase : « je retiens X pour suivre l'objectif Y, parce que… ». Puis tu dis lesquels tu enlèves et pourquoi.</p>
@@ -152,18 +137,8 @@ th{background:var(--card)}
   <div class="data"><b>Conforama</b> : fréquentation <b class="up">+15 %</b> · transformation <b class="down">−5 %</b> · panier <b>40 €</b> · CA <b class="up">+5 %</b><br>
   <b>But</b> : fréquentation <b class="down">−10 %</b> · transformation <b class="up">+8 %</b> · panier <b>45 €</b> · CA <b class="up">+2 %</b></div>
 
-  <div class="schema">
-    <div class="title">Conforama</div>
-    <div class="br"><span class="bx root">CA <small class="up">+5 %</small></span></div>
-    <div class="br sub"><span class="bx">Nb de clients <small class="up">+9 %</small></span><span class="op">=</span><span class="bx">Fréquentation <small class="up">+15 %</small></span><span class="op">×</span><span class="bx">Tx transformation <small class="down">−5 %</small></span></div>
-    <div class="br sub"><span class="bx">Panier moyen <small class="down">40 €, en baisse</small></span></div>
-  </div>
-  <div class="schema">
-    <div class="title">But</div>
-    <div class="br"><span class="bx root">CA <small class="up">+2 %</small></span></div>
-    <div class="br sub"><span class="bx">Nb de clients <small class="down">−3 %</small></span><span class="op">=</span><span class="bx">Fréquentation <small class="down">−10 %</small></span><span class="op">×</span><span class="bx">Tx transformation <small class="up">+8 %</small></span></div>
-    <div class="br sub"><span class="bx">Panier moyen <small class="up">45 €, en hausse</small></span></div>
-  </div>
+  <figure class="schema"><div class="sct">Conforama</div><svg viewBox="0 0 414 186" style="max-width:538px" role="img" aria-label="Conforama"><defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="ah"/></marker></defs><rect x="2" y="85.5" width="88" height="46" rx="7" class="nr"/><text x="46.0" y="105.5" class="lb">CA</text><text x="46.0" y="123.5" class="v up">+5 %</text><rect x="124" y="39.0" width="124" height="46" rx="7" class="n"/><text x="186.0" y="59.0" class="lb">Nb de clients</text><text x="186.0" y="77.0" class="v up">+9 %</text><path d="M248,62.0 C270,62.0 264,31.0 281,31.0" class="e" marker-end="url(#a)"/><rect x="286" y="8.0" width="126" height="46" rx="7" class="n"/><text x="349.0" y="28.0" class="lb">Trafic</text><text x="349.0" y="46.0" class="v up">+15 %</text><path d="M248,62.0 C270,62.0 264,93.0 281,93.0" class="e" marker-end="url(#a)"/><rect x="286" y="70.0" width="126" height="46" rx="7" class="n"/><text x="349.0" y="90.0" class="lb">Tx transformation</text><text x="349.0" y="108.0" class="v down">−5 %</text><text x="349.0" y="68.0" class="op">×</text><rect x="124" y="132.0" width="124" height="46" rx="7" class="n"/><text x="186.0" y="152.0" class="lb">Panier moyen</text><text x="186.0" y="170.0" class="v down">40 € · baisse</text><path d="M90,108.5 C110,108.5 104,62.0 119,62.0" class="e" marker-end="url(#a)"/><path d="M90,108.5 C110,108.5 104,155.0 119,155.0" class="e" marker-end="url(#a)"/></svg></figure>
+  <figure class="schema"><div class="sct">But</div><svg viewBox="0 0 414 186" style="max-width:538px" role="img" aria-label="But"><defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" class="ah"/></marker></defs><rect x="2" y="85.5" width="88" height="46" rx="7" class="nr"/><text x="46.0" y="105.5" class="lb">CA</text><text x="46.0" y="123.5" class="v up">+2 %</text><rect x="124" y="39.0" width="124" height="46" rx="7" class="n"/><text x="186.0" y="59.0" class="lb">Nb de clients</text><text x="186.0" y="77.0" class="v down">−3 %</text><path d="M248,62.0 C270,62.0 264,31.0 281,31.0" class="e" marker-end="url(#a)"/><rect x="286" y="8.0" width="126" height="46" rx="7" class="n"/><text x="349.0" y="28.0" class="lb">Trafic</text><text x="349.0" y="46.0" class="v down">−10 %</text><path d="M248,62.0 C270,62.0 264,93.0 281,93.0" class="e" marker-end="url(#a)"/><rect x="286" y="70.0" width="126" height="46" rx="7" class="n"/><text x="349.0" y="90.0" class="lb">Tx transformation</text><text x="349.0" y="108.0" class="v up">+8 %</text><text x="349.0" y="68.0" class="op">×</text><rect x="124" y="132.0" width="124" height="46" rx="7" class="n"/><text x="186.0" y="152.0" class="lb">Panier moyen</text><text x="186.0" y="170.0" class="v up">45 € · hausse</text><path d="M90,108.5 C110,108.5 104,62.0 119,62.0" class="e" marker-end="url(#a)"/><path d="M90,108.5 C110,108.5 104,155.0 119,155.0" class="e" marker-end="url(#a)"/></svg></figure>
   <p class="muted">Calculs : Conforama 1,15 × 0,95 = 1,09 → +9 % de clients. But 0,90 × 1,08 = 0,97 → −3 % de clients. Conforama a plus de clients mais son CA monte moins vite (+5 %) : son panier baisse. But a moins de clients mais son CA monte quand même (+2 %) : son panier monte.</p>
 
   <h3>Q1. Comparez les deux magasins. Points forts et points faibles de chacun.</h3>
