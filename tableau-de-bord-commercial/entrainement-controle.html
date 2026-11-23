@@ -1,0 +1,314 @@
+<title>Entraînement contrôle R3.08</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;700&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Mise en page : une colonne de lecture type cahier de révision, sommaire collant en haut, blocs « formule », « piège » et « à retenir » repérables d'un coup d'œil */
+:root{
+  --bg:#f6f7f9; --paper:#ffffff; --ink:#18212b; --muted:#5a6573; --line:#dde2e8;
+  --accent:#0f6e74; --accent-soft:#e2f1f1;
+  --ok:#1f7a3d; --ok-soft:#e3f3e8; --warn:#9a5b00; --warn-soft:#fbefd9; --bad:#b3261e; --bad-soft:#fbe4e2;
+  --f-head:"Sora",system-ui,sans-serif; --f-body:"Source Sans 3",system-ui,sans-serif; --f-mono:"JetBrains Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#11161c; --paper:#1a2129; --ink:#e6ebf0; --muted:#9aa6b3; --line:#2c3640;
+  --accent:#5cc3c9; --accent-soft:#16363a;
+  --ok:#6fd08f; --ok-soft:#173426; --warn:#f0b65a; --warn-soft:#3a2c14; --bad:#ff8a80; --bad-soft:#3d1c1a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11161c; --paper:#1a2129; --ink:#e6ebf0; --muted:#9aa6b3; --line:#2c3640;
+  --accent:#5cc3c9; --accent-soft:#16363a;
+  --ok:#6fd08f; --ok-soft:#173426; --warn:#f0b65a; --warn-soft:#3a2c14; --bad:#ff8a80; --bad-soft:#3d1c1a; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.55}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+.wrap{max-width:860px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:8px 64px}
+header.top{padding-block:28px 12px}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+h1{font-family:var(--f-head);font-size:clamp(28px,6vw,40px);line-height:1.15;margin:6px 0 10px;text-wrap:balance}
+h2{font-family:var(--f-head);font-size:24px;margin:0 0 4px;text-wrap:balance}
+h3{font-family:var(--f-head);font-size:18px;margin:22px 0 6px}
+p{margin:8px 0}
+.lead{color:var(--muted);max-width:65ch}
+nav.toc{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-bottom:1px solid var(--line);margin-inline:calc(-1*max(16px,env(safe-area-inset-left,0px)))}
+nav.toc .in{display:flex;gap:6px;overflow-x:auto;padding:10px max(16px,env(safe-area-inset-left,0px));scrollbar-width:none}
+nav.toc a{flex:none;font-size:14px;font-weight:600;color:var(--ink);text-decoration:none;padding:6px 12px;border:1px solid var(--line);border-radius:999px;white-space:nowrap}
+nav.toc a:hover,nav.toc a:focus-visible{border-color:var(--accent);color:var(--accent);outline:none}
+section{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:22px clamp(16px,4vw,28px);margin-top:20px;scroll-margin-top:64px}
+.sub{color:var(--muted);margin:0 0 12px}
+ul,ol{padding-left:22px;margin:8px 0}
+li{margin:3px 0}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:12px 0}
+.box{border:1px solid var(--line);border-radius:10px;padding:12px 14px;min-width:0}
+.box b.t{display:block;font-family:var(--f-head);font-size:15px;margin-bottom:4px}
+.formula{font-family:var(--f-mono);font-size:15px;background:var(--accent-soft);border-left:3px solid var(--accent);border-radius:6px;padding:10px 12px;margin:8px 0;overflow-x:auto;white-space:nowrap}
+.formula small{font-family:var(--f-body);color:var(--muted);display:block;white-space:normal;font-size:14px;margin-top:2px}
+.trap{background:var(--warn-soft);border-radius:8px;padding:10px 12px;margin:10px 0}
+.trap::before{content:"Piège";display:block;font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--warn);margin-bottom:2px}
+.key{background:var(--ok-soft);border-radius:8px;padding:10px 12px;margin:10px 0}
+.key::before{content:"À retenir";display:block;font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--ok);margin-bottom:2px}
+.ex{border:1px dashed var(--line);border-radius:8px;padding:10px 12px;margin:10px 0}
+.ex::before{content:"Exemple";display:block;font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:2px}
+.tbl{overflow-x:auto;margin:10px 0;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:15px;font-variant-numeric:tabular-nums}
+th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:13px;color:var(--muted);font-weight:600;background:var(--bg);white-space:nowrap}
+tr:last-child td{border-bottom:none}
+.pill{display:inline-block;font-size:12px;font-weight:700;padding:2px 8px;border-radius:999px;white-space:nowrap}
+.p-ok{background:var(--ok-soft);color:var(--ok)} .p-warn{background:var(--warn-soft);color:var(--warn)} .p-bad{background:var(--bad-soft);color:var(--bad)} .p-info{background:var(--accent-soft);color:var(--accent)}
+.tree{display:grid;gap:10px;margin:14px 0}
+.tree .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.node{border:1px solid var(--line);border-radius:10px;padding:10px 12px;text-align:center;background:var(--paper)}
+.node b{display:block;font-family:var(--f-head);font-size:15px}
+.node span{font-family:var(--f-mono);font-size:13px;color:var(--muted)}
+.node.root{border-color:var(--accent);background:var(--accent-soft)}
+.op{text-align:center;font-family:var(--f-mono);color:var(--accent);font-size:14px}
+details{border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin:8px 0}
+details summary{cursor:pointer;font-weight:600}
+details summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+details[open] summary{margin-bottom:6px}
+.muted{color:var(--muted)}
+.mono{font-family:var(--f-mono);font-size:14px}
+footer{color:var(--muted);font-size:14px;margin-top:24px}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <div class="eyebrow">BUT TC 2 · R3.08 · Contrôle tableau de bord</div>
+  <h1>Entraînement au contrôle : les 4 cas types</h1>
+  <p class="lead">Le sujet de l'an dernier contient 4 exercices, chacun d'un type différent. Pour chaque type : la méthode, le corrigé, et ce qu'il faut améliorer dans ta copie. Tout en haut, l'essentiel à savoir par cœur.</p>
+</header>
+
+<nav class="toc" aria-label="Sommaire"><div class="in">
+  <a href="#essentiel">L'essentiel</a>
+  <a href="#cas1">Cas 1 : analyser</a>
+  <a href="#cas2">Cas 2 : NPS</a>
+  <a href="#cas3">Cas 3 : construire</a>
+  <a href="#cas4">Cas 4 : comparer</a>
+  <a href="#copie">Rédiger</a>
+  <a href="#test">Test</a>
+</div></nav>
+
+<section id="essentiel">
+  <h2>L'essentiel à savoir par cœur</h2>
+  <div class="tree" aria-label="Décomposition du chiffre d'affaires">
+    <div class="node root"><b>Chiffre d'affaires</b><span>= nb de clients × panier moyen</span></div>
+    <div class="row">
+      <div class="node"><b>Nb de clients</b><span>= fréquentation × taux de transformation</span></div>
+      <div class="node"><b>Panier moyen</b><span>= indice des ventes × prix moyen</span></div>
+    </div>
+  </div>
+
+  <div class="formula">Taux de transformation = clients ÷ visiteurs × 100</div>
+  <div class="formula">Panier moyen = CA ÷ nb de clients</div>
+  <div class="formula">Indice des ventes = articles vendus ÷ nb de clients</div>
+  <div class="formula">NPS = % promoteurs (9-10) − % détracteurs (0-6)<small>Les passifs (7-8) ne comptent pas. Résultat en points, de −100 à +100.</small></div>
+  <div class="formula">CSAT = clients satisfaits ÷ total des réponses × 100</div>
+  <div class="formula">Taux d'attrition = clients perdus ÷ clients en début de période × 100<small>C'est le contraire du taux de fidélisation : attrition = 100 % − fidélisation.</small></div>
+
+  <h3>La règle qui sert dans 2 exercices sur 4</h3>
+  <div class="formula">Si A = B × C, alors (1 + évol. A) = (1 + évol. B) × (1 + évol. C)
+    <small>Les évolutions se <strong>multiplient</strong>, elles ne s'additionnent pas.</small></div>
+  <div class="ex">Fréquentation +20 % et taux de transformation −10 % : nb de clients = 1,20 × 0,90 = 1,08, soit <strong>+8 % de clients</strong>.</div>
+
+  <div class="grid2">
+    <div class="box"><b class="t">Le fil rouge</b>Objectif → plan d'action → KPI → écart → décision.</div>
+    <div class="box"><b class="t">Un bon objectif</b>Clair, mesurable, maîtrisable, daté.</div>
+    <div class="box"><b class="t">Les 4 familles</b>Résultat (CA), moyens (budget), avancement (% formés), environnement (trafic).</div>
+    <div class="box"><b class="t">Les 4 rôles du TDB</b>Suivre, comprendre, alerter, corriger.</div>
+  </div>
+  <p class="muted">Le cours complet est dans la <a href="https://claude.ai/artifact/WwgUK4zAwB9Spku9gkS3tk">fiche R3.08 Tableau de bord</a>.</p>
+</section>
+
+<section id="cas1">
+  <div class="eyebrow">Type 1</div>
+  <h2>Analyser les indicateurs d'un point de vente</h2>
+  <p class="sub">Données : fréquentation +20 %, taux de transformation −10 %, panier moyen 50 €, CA +8 %. Contexte : campagne de pub locale et nouvelle gamme de produits.</p>
+
+  <h3>La méthode</h3>
+  <ol>
+    <li>Dessiner le schéma CA = clients × panier, clients = fréquentation × transformation.</li>
+    <li><strong>Calculer</strong> l'évolution du nombre de clients avec la règle de multiplication.</li>
+    <li>En déduire ce qui s'est passé pour le panier moyen.</li>
+    <li>Relier les chiffres au contexte (pub, nouvelle gamme), en parlant d'hypothèses.</li>
+  </ol>
+
+  <h3>Corrigé</h3>
+  <p><strong>1. Relations et analyse.</strong> Nb de clients = 1,20 × 0,90 = 1,08, donc +8 % de clients. Le CA progresse aussi de 8 % : le panier moyen est donc <strong>stable</strong> à 50 €. Toute la hausse du CA vient du nombre de clients, donc de la fréquentation.</p>
+  <p><strong>2. Pourquoi le CA monte malgré la baisse du taux de transformation ?</strong> Parce que la hausse de la fréquentation (+20 %) est plus forte que la baisse du taux de transformation (−10 %) : il y a plus de visiteurs, et même si une plus petite part achète, le nombre d'acheteurs augmente de 8 %. La campagne de pub a attiré du monde, mais le magasin transforme moins bien ces visiteurs. Hypothèses : visiteurs moins décidés (curieux venus grâce à la pub), équipe débordée par l'affluence, vendeurs qui maîtrisent mal la nouvelle gamme.</p>
+  <div class="ex">Avec des chiffres simples : 100 visiteurs × 30 % = 30 clients. Après : 120 visiteurs × 27 % = 32,4 clients, soit +8 %.</div>
+  <p><strong>3. Deux actions pour améliorer la transformation sans perdre la fréquentation.</strong></p>
+  <ul>
+    <li><strong>Renforcer l'équipe aux heures d'affluence</strong> (planning, renfort temporaire) pour accueillir et conseiller tous les visiteurs attirés par la pub. KPI : taux de transformation.</li>
+    <li><strong>Former les vendeurs à la nouvelle gamme</strong> et la mettre en avant en magasin (PLV, démonstrations), pour mieux répondre aux visiteurs qui viennent la découvrir. KPI : taux de transformation, ventes de la nouvelle gamme.</li>
+  </ul>
+  <p class="muted">Justification stratégique : l'entreprise a investi dans la pub et la nouvelle gamme pour faire croître son CA. Ces actions rentabilisent cet investissement : le trafic est déjà là, il faut le transformer.</p>
+
+  <h3>Ta copie</h3>
+  <ul>
+    <li><span class="pill p-ok">Bien</span> Le schéma de la question 1 est juste.</li>
+    <li><span class="pill p-ok">Bien</span> L'idée de la question 3 (l'équipe peut-elle accueillir le surplus de clients ? recruter, former) est la bonne.</li>
+    <li><span class="pill p-warn">À améliorer</span> La question 2 répète l'énoncé. Il manque le calcul 1,20 × 0,90 = 1,08, qui montre pourquoi le CA monte, et la conclusion : le panier moyen est stable.</li>
+    <li><span class="pill p-warn">À améliorer</span> Donne aussi le KPI de suivi de chaque action, et relie-la aux objectifs stratégiques (le sujet le demande).</li>
+  </ul>
+</section>
+
+<section id="cas2">
+  <div class="eyebrow">Type 2</div>
+  <h2>Diagnostiquer la satisfaction client (NPS)</h2>
+  <p class="sub">Enquête auprès de 200 clients : 80 promoteurs, 70 passifs, 50 détracteurs. Secteur : 10. Concurrents : 15 et 20.</p>
+
+  <h3>Corrigé</h3>
+  <p><strong>1. L'indicateur :</strong> le <strong>NPS</strong> (Net Promoter Score). Il mesure la propension des clients à recommander l'entreprise. Il sert à mesurer la fidélité et le bouche-à-oreille, et à se comparer au secteur et aux concurrents.</p>
+  <p><strong>2. Le calcul :</strong></p>
+  <div class="tbl"><table>
+    <tr><th>Groupe</th><th>Notes</th><th>Clients</th><th>%</th></tr>
+    <tr><td>Promoteurs</td><td>9-10</td><td>80</td><td>80 ÷ 200 = 40 %</td></tr>
+    <tr><td>Passifs</td><td>7-8</td><td>70</td><td>70 ÷ 200 = 35 %</td></tr>
+    <tr><td>Détracteurs</td><td>0-6</td><td>50</td><td>50 ÷ 200 = 25 %</td></tr>
+  </table></div>
+  <div class="formula">NPS = 40 − 25 = <strong>+15 points</strong></div>
+  <p>Comparaison : 5 points au-dessus de la moyenne du secteur (10), au même niveau que le premier concurrent (15), 5 points en dessous du meilleur (20). C'est correct, mais l'entreprise n'est pas leader : un quart de ses clients sont détracteurs.</p>
+  <p><strong>3. Deux axes d'amélioration :</strong></p>
+  <ul>
+    <li><strong>Réduire les détracteurs (25 %)</strong> en comprenant et en corrigeant leurs motifs d'insatisfaction.</li>
+    <li><strong>Transformer les passifs (35 %) en promoteurs</strong> en leur donnant une raison de recommander (fidélité, parrainage, service en plus).</li>
+  </ul>
+  <p><strong>4. Plan d'action (axe 1)</strong></p>
+  <div class="tbl"><table>
+    <tr><th>Étape</th><th>Action</th></tr>
+    <tr><td>Objectif</td><td>Passer de 25 % à 15 % de détracteurs, et le NPS de +15 à +20 ou plus, en 6 mois</td></tr>
+    <tr><td>Actions</td><td>Rappeler chaque détracteur sous 48 h pour connaître ses motifs ; classer les motifs (prix, attente, conseil, SAV) ; corriger les 2 plus fréquents ; former l'équipe</td></tr>
+    <tr><td>Responsable</td><td>Responsable du magasin ou du service client</td></tr>
+    <tr><td>Échéance</td><td>Premier bilan à 3 mois, objectif à 6 mois</td></tr>
+    <tr><td>KPI de suivi</td><td>NPS, % de détracteurs, nb de réclamations</td></tr>
+  </table></div>
+
+  <h3>Ta copie</h3>
+  <ul>
+    <li><span class="pill p-ok">Bien</span> Calcul juste (40 − 25 = 15 points) et comparaison au secteur et aux concurrents.</li>
+    <li><span class="pill p-ok">Bien</span> Les deux axes (détracteurs → passifs, passifs → promoteurs) et rappeler les détracteurs.</li>
+    <li><span class="pill p-warn">À améliorer</span> En question 1, ajoute à quoi il sert (fidélité, bouche-à-oreille, comparaison). Ne pas l'appeler « indice » : c'est un score, en points.</li>
+    <li><span class="pill p-warn">À améliorer</span> Un plan d'action complet a toujours : objectif chiffré, actions, responsable, échéance, KPI de suivi.</li>
+  </ul>
+</section>
+
+<section id="cas3">
+  <div class="eyebrow">Type 3</div>
+  <h2>Construire un tableau de bord</h2>
+  <p class="sub">Objectifs : CA +10 %, taux d'attrition −5 %, CSAT &gt; 90 %. Indicateurs disponibles : fréquentation, taux de transformation, panier moyen, taux de fidélisation, NPS, taux de digitalisation.</p>
+
+  <h3>La méthode</h3>
+  <p>Prendre chaque objectif un par un, et chercher l'indicateur qui le mesure ou qui l'explique. Un indicateur qui ne sert aucun objectif est éliminé.</p>
+
+  <h3>Corrigé : les 4 indicateurs</h3>
+  <div class="tbl"><table>
+    <tr><th>Indicateur retenu</th><th>Objectif suivi</th><th>Justification</th></tr>
+    <tr><td><strong>Taux de transformation</strong></td><td>CA +10 %</td><td>Levier du nombre de clients, maîtrisable par l'équipe de vente</td></tr>
+    <tr><td><strong>Panier moyen</strong></td><td>CA +10 %</td><td>L'autre levier du CA (CA = clients × panier)</td></tr>
+    <tr><td><strong>Taux de fidélisation</strong></td><td>Attrition −5 %</td><td>C'est l'inverse de l'attrition : attrition = 100 % − fidélisation</td></tr>
+    <tr><td><strong>NPS</strong></td><td>CSAT &gt; 90 %</td><td>Le CSAT n'est pas disponible ; le NPS est l'indicateur de satisfaction le plus proche</td></tr>
+  </table></div>
+  <p><strong>Écartés :</strong> le taux de digitalisation (aucun objectif ne le concerne) et la fréquentation (elle dépend surtout de l'environnement ; on peut la garder à la place du taux de transformation si on justifie que le CA dépend du trafic).</p>
+  <div class="trap">Le NPS ne mesure pas exactement la satisfaction : il mesure la recommandation. Dis-le dans ta copie, et propose d'ajouter un vrai CSAT au tableau de bord.</div>
+  <div class="trap">« Réduire le taux d'attrition de 5 % » peut vouloir dire −5 points ou −5 % en relatif. Précise ce que tu retiens.</div>
+
+  <h3>Corrigé : la structure visuelle</h3>
+  <div class="tbl"><table>
+    <tr><th>Indicateur</th><th>Objectif</th><th>Réalisé</th><th>Période précédente</th><th>Écart à l'objectif</th><th>Évolution</th><th>Signal</th><th>Action</th></tr>
+    <tr><td>Taux de transformation</td><td>…</td><td>…</td><td>…</td><td>en points</td><td>en points</td><td><span class="pill p-ok">vert</span></td><td>…</td></tr>
+    <tr><td>Panier moyen</td><td>…</td><td>…</td><td>…</td><td>en €</td><td>en %</td><td><span class="pill p-warn">orange</span></td><td>…</td></tr>
+    <tr><td>Taux de fidélisation</td><td>…</td><td>…</td><td>…</td><td>en points</td><td>en points</td><td><span class="pill p-bad">rouge</span></td><td>…</td></tr>
+    <tr><td>NPS</td><td>…</td><td>…</td><td>…</td><td>en points</td><td>en points</td><td><span class="pill p-ok">vert</span></td><td>…</td></tr>
+  </table></div>
+  <ul>
+    <li><strong>Un indicateur par ligne</strong>, regroupés par objectif (CA, fidélité, satisfaction).</li>
+    <li><strong>Un signal visuel</strong> : feu vert (atteint), orange (proche), rouge (loin de l'objectif).</li>
+    <li><strong>Un ou deux graphiques</strong> : courbe d'évolution du CA mois par mois avec la ligne d'objectif, et jauge du NPS.</li>
+    <li><strong>Une zone « alertes et actions »</strong> pour les écarts en rouge.</li>
+  </ul>
+
+  <h3>Ta copie</h3>
+  <ul>
+    <li><span class="pill p-ok">Bien</span> Tu as vu que le CSAT ne peut pas être calculé faute de données, et que l'attrition est le contraire de la fidélisation.</li>
+    <li><span class="pill p-warn">À améliorer</span> Ton tableau a 7 colonnes d'indicateurs : il en faut exactement 4, avec la justification de chacun.</li>
+    <li><span class="pill p-warn">À améliorer</span> La structure visuelle, ce ne sont pas les indicateurs en colonnes : ce sont les indicateurs en lignes, et en colonnes objectif, réalisé, écart, évolution, signal.</li>
+  </ul>
+</section>
+
+<section id="cas4">
+  <div class="eyebrow">Type 4</div>
+  <h2>Comparer deux unités commerciales</h2>
+  <p class="sub">Conforama : fréquentation +15 %, taux de transformation −5 %, panier moyen 40 €, CA +5 %. But : fréquentation −10 %, taux de transformation +8 %, panier moyen 45 €, CA +2 %.</p>
+
+  <h3>Le calcul qui fait la différence</h3>
+  <div class="tbl"><table>
+    <tr><th></th><th>Conforama</th><th>But</th></tr>
+    <tr><td>Nb de clients</td><td>1,15 × 0,95 = 1,0925 → <strong>+9,3 %</strong></td><td>0,90 × 1,08 = 0,972 → <strong>−2,8 %</strong></td></tr>
+    <tr><td>Panier moyen (déduit)</td><td>1,05 ÷ 1,0925 = 0,961 → <strong>−3,9 %</strong></td><td>1,02 ÷ 0,972 = 1,049 → <strong>+4,9 %</strong></td></tr>
+  </table></div>
+  <p class="muted">Pour retrouver l'évolution du panier : (1 + évol. CA) ÷ (1 + évol. clients) − 1.</p>
+
+  <h3>Corrigé</h3>
+  <p><strong>1. Points forts et points faibles</strong></p>
+  <div class="grid2">
+    <div class="box"><b class="t">Conforama</b>
+      <span class="pill p-ok">Forts</span> attire du monde (fréquentation +15 %), plus de clients (+9,3 %), meilleure croissance du CA (+5 %).<br>
+      <span class="pill p-bad">Faibles</span> transforme moins bien (−5 %), panier plus bas (40 €) et en baisse d'environ 4 %.</div>
+    <div class="box"><b class="t">But</b>
+      <span class="pill p-ok">Forts</span> vendeurs efficaces (transformation +8 %), panier plus élevé (45 €) et en hausse d'environ 5 %.<br>
+      <span class="pill p-bad">Faibles</span> attire moins (fréquentation −10 %), donc moins de clients (−2,8 %), CA qui progresse peu (+2 %).</div>
+  </div>
+  <p>Conclusion : Conforama est fort sur l'attractivité, But sur l'efficacité commerciale. Le problème de But est le trafic, pas la vente.</p>
+
+  <p><strong>2. Deux actions pour But, inspirées de Conforama</strong></p>
+  <ul>
+    <li><strong>Relancer la fréquentation par la communication locale</strong> (campagne locale, réseaux sociaux, promotions, événements en magasin), comme Conforama.</li>
+    <li><strong>Rendre le magasin plus attractif de l'extérieur</strong> (vitrine, devanture, opérations commerciales visibles).</li>
+  </ul>
+  <p class="muted">Bonus : garder l'avance sur la vente (former, motiver les vendeurs) pour transformer le nouveau trafic, sans baisser le panier comme Conforama.</p>
+
+  <p><strong>3. Les indicateurs pour suivre ces actions</strong></p>
+  <ul>
+    <li><strong>Fréquentation</strong> (et taux d'attractivité) : les actions font-elles venir du monde ?</li>
+    <li><strong>Taux de transformation</strong> : reste-t-il élevé avec plus de visiteurs ?</li>
+    <li><strong>Panier moyen</strong> : ne baisse-t-il pas avec les promotions ?</li>
+    <li><strong>Nombre de clients et CA</strong> : le résultat final.</li>
+  </ul>
+
+  <h3>Ta copie</h3>
+  <ul>
+    <li><span class="pill p-ok">Bien</span> Tu as bien vu : Conforama fait venir du monde mais convertit mal ; But convertit bien mais attire moins.</li>
+    <li><span class="pill p-warn">À corriger</span> Tu as écrit « taux de fréquentation −5 % » pour Conforama : c'est le <strong>taux de transformation</strong>.</li>
+    <li><span class="pill p-warn">À corriger</span> Dans tes causes, « vendeurs pas sympas, pas de bons conseils » ne colle pas : chez But, le taux de transformation monte de 8 %, donc les vendeurs sont efficaces. Cherche les causes du côté de l'attractivité (prix, communication, emplacement, vitrine).</li>
+    <li><span class="pill p-warn">À corriger</span> En question 3, il faut des <strong>indicateurs</strong> (fréquentation, transformation, panier, CA), pas des actions comme « prime au vendeur ».</li>
+    <li><span class="pill p-warn">À améliorer</span> Fais le calcul des clients et du panier : c'est ce qui prouve ton analyse.</li>
+  </ul>
+</section>
+
+<section id="copie">
+  <h2>Rédiger une bonne réponse le jour du contrôle</h2>
+  <ol>
+    <li><strong>Chiffre d'abord</strong>, puis interprète : « +8 % de clients (1,20 × 0,90), donc… ».</li>
+    <li><strong>Relie les indicateurs</strong> entre eux avec le schéma. Ne commente jamais un indicateur seul.</li>
+    <li><strong>Distingue faits et hypothèses</strong> : « on observe… », « cela peut s'expliquer par… », « il faudrait vérifier… ».</li>
+    <li><strong>Une action complète</strong> = problème, action, responsable, échéance, KPI de suivi.</li>
+    <li><strong>Justifie chaque choix</strong> d'indicateur par l'objectif qu'il suit.</li>
+    <li><strong>Les bonnes unités</strong> : € pour le CA et le panier, points pour un écart entre taux et pour le NPS.</li>
+  </ol>
+  <div class="trap">Une hausse du CA ne veut pas dire que tout va bien : regarde toujours d'où elle vient (trafic, transformation ou panier).</div>
+</section>
+
+<section id="test">
+  <h2>Teste-toi</h2>
+  <p class="sub">Réponds dans ta tête, puis ouvre la réponse.</p>
+  <details><summary>Fréquentation +10 %, taux de transformation −10 %. Évolution du nombre de clients ?</summary><p>1,10 × 0,90 = 0,99 → −1 %. Ce n'est pas 0 % : les évolutions se multiplient.</p></details>
+  <details><summary>Clients +5 % et CA +5 %. Que dire du panier moyen ?</summary><p>Il est stable : 1,05 ÷ 1,05 = 1.</p></details>
+  <details><summary>Clients +10 % et CA +2 %. Évolution du panier moyen ?</summary><p>1,02 ÷ 1,10 = 0,927 → environ −7,3 %.</p></details>
+  <details><summary>300 réponses : 120 promoteurs, 90 passifs, 90 détracteurs. NPS ?</summary><p>40 % − 30 % = +10 points.</p></details>
+  <details><summary>Taux de fidélisation de 85 %. Taux d'attrition ?</summary><p>100 − 85 = 15 %.</p></details>
+  <details><summary>Objectif : CSAT &gt; 90 %, mais le CSAT n'est pas disponible. Que faire ?</summary><p>Prendre le NPS comme indicateur le plus proche, en précisant qu'il mesure la recommandation et pas la satisfaction, et proposer de mettre en place un CSAT.</p></details>
+  <details><summary>Un magasin a une fréquentation en baisse mais un taux de transformation en hausse. Où est le problème ?</summary><p>Dans l'attractivité (communication, vitrine, prix, emplacement), pas dans la vente : les vendeurs transforment bien.</p></details>
+  <details><summary>Quelles colonnes mettre dans un tableau de bord ?</summary><p>Indicateur, objectif, réalisé, période précédente, écart à l'objectif, évolution, signal visuel, action.</p></details>
+</section>
+
+<footer>Sources : le sujet « TD : Entraînement à l'évaluation finale » donné par ta prof et ta copie. Calculs vérifiés.</footer>
+</div>
