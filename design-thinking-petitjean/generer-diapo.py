@@ -67,6 +67,14 @@ def new(kicker=None,titre=None,dark=False):
     else: header(s,n[0],kicker,titre)
     return s
 
+from PIL import Image as _I
+import os as _os
+VIS=_os.path.join(_os.path.dirname(_os.path.abspath(sys.argv[2])),'visuels')
+def pic(s,name,x,y,w,h,focus=0.5):
+    im=_I.open(_os.path.join(VIS,name)); W0,H0=im.size; r=w/h
+    if W0/H0>r: nw=int(H0*r); l=int((W0-nw)*focus); im=im.crop((l,0,l+nw,H0))
+    else: nh=int(W0/r); t=int((H0-nh)*focus); im=im.crop((0,t,W0,t+nh))
+    tmp='/tmp/_crop_%s'%name; im.save(tmp,quality=92); s.shapes.add_picture(tmp,x,y,w,h)
 def lbl(s,x,y,w,t): text(s,x,y,w,Inches(0.35),t.upper(),size=13,color=FEU,bold=True)
 
 # 1 Titre
@@ -144,7 +152,7 @@ placeholder(s,Inches(8.55),Inches(2.0),Inches(3.95),Inches(4.4),"Photo de nos po
 # 6 Idées & tri
 s=new("Étape 3 · Imaginer","Nos idées, triées avec 3 critères")
 crit=["Répond au frein de Léa","Valorise le four à bois","Faisable par un artisan seul"]
-ideas=[("Formule midi à prix fixe",[1,1,1]),("Galette garnie au feu de bois",[1,1,1]),("Précommande QR code + retrait sans file",[1,0,1]),("Carte de fidélité numérique",[1,0,1]),("Recette du mois votée sur Instagram",[0,1,1]),("Packaging kraft « cuit au feu de bois »",[0,1,1]),("Borne de commande en boutique",[1,0,0]),("Gâteaux trompe-l'œil",[0,0,1]),("Coin goûter / révisions",[0,0,0])]
+ideas=[("Formule midi à prix fixe",[1,1,1]),("Galette garnie au feu de bois",[1,1,1]),("Borne de commande en boutique",[1,0,1]),("Précommande en ligne (QR code)",[1,0,1]),("Carte de fidélité numérique",[1,0,1]),("Recette du mois votée sur Instagram",[0,1,1]),("Packaging kraft « cuit au feu de bois »",[0,1,1]),("Gâteaux trompe-l'œil",[0,0,1]),("Coin goûter / révisions",[0,0,0])]
 x0=Inches(0.8); cwid=[Inches(5.0),Inches(2.25),Inches(2.25),Inches(2.2)]
 xs=[x0]
 for w in cwid[:-1]: xs.append(xs[-1]+w)
@@ -163,7 +171,7 @@ text(s,Inches(0.8),Inches(6.4),Inches(11.7),Inches(0.35),"En gras : au moins 2 c
 s=new(dark=True)
 text(s,Inches(0.8),Inches(0.5),Inches(9),Inches(0.4),"LE CONCEPT RETENU",size=13,color=FEU,bold=True)
 text(s,Inches(0.8),Inches(0.85),Inches(7),Inches(1.0),"Le P'tit Feu",size=48,color=CREME,font=TITRE)
-text(s,Inches(0.8),Inches(1.75),Inches(8.2),Inches(0.9),"Galette au feu de bois (3 recettes dont 1 votée sur Instagram) + boisson + mini-dessert maison, précommandée sur téléphone. La 10e est offerte.",size=16,color=KRAFT)
+text(s,Inches(0.8),Inches(1.75),Inches(8.2),Inches(0.9),"Galette au feu de bois (3 recettes dont 1 votée sur Instagram) + boisson + mini-dessert maison. Commande sur la borne en boutique ou à l'avance en ligne. La 10e est offerte.",size=16,color=KRAFT)
 r=box(s,Inches(9.5),Inches(0.6),Inches(3.0),Inches(1.6),fill=FEU,shape=MSO_SHAPE.ROUNDED_RECTANGLE); r.adjustments[0]=0.1
 text(s,Inches(9.5),Inches(0.65),Inches(3.0),Inches(1.1),"6,50 €",size=46,color=BLANC,font=TITRE,align=PP_ALIGN.CENTER,anchor=MSO_ANCHOR.MIDDLE)
 text(s,Inches(9.5),Inches(1.7),Inches(3.0),Inches(0.4),"la formule complète",size=13,color=BLANC,align=PP_ALIGN.CENTER)
@@ -178,16 +186,16 @@ for i,(h_,d) in enumerate(st):
 
 # 8 Prototype
 s=new("Étape 4 · Prototyper","Un prototype en 3 éléments, un frein chacun")
-for k,(t,lab,d) in enumerate([("Affiche & Instagram","Votre visuel affiche / Instagram","Contre l'image « traditionnelle »"),("Packaging kraft","Votre visuel packaging","Contre le manque de visibilité"),("Écran de précommande","Votre maquette d'écran téléphone","Contre la file et le manque de temps")]):
+for k,(img,f,t,d) in enumerate([("viennoiseries.jpg",0.5,"Instagram & visuels","Contre l'image « traditionnelle »"),("packaging-kraft.jpg",0.75,"Packaging kraft","Contre le manque de visibilité"),("borne-boutique.jpg",0.45,"Borne + commande en ligne","Contre la file et le manque de temps")]):
     x=Inches(0.8)+k*Inches(3.98)
-    placeholder(s,x,Inches(2.0),Inches(3.75),Inches(3.3),lab)
+    pic(s,img,x,Inches(2.0),Inches(3.75),Inches(3.3),f)
     text(s,x,Inches(5.45),Inches(3.75),Inches(0.4),t,size=18,bold=True)
     text(s,x,Inches(5.85),Inches(3.75),Inches(0.5),d,size=14,color=FEU,bold=True)
 
 # 9 Tester
 s=new("Étape 5 · Tester","Les objections de L. Petitjean")
-ob=[("« C'est rentable, à 6,50 € ? »","Proche du panier moyen (6,33 €). Four déjà chaud, mini-dessert, 3 recettes seulement : peu de pertes."),
-    ("« Je n'ai pas le temps de gérer une appli. »","On a abandonné la borne et l'appli : un simple formulaire en ligne + QR code."),
+ob=[("« C'est rentable, à 6,50 € ? »","Proche du panier moyen (6,33 €). Four déjà chaud, 3 recettes seulement. La borne est un investissement courant dans le métier."),
+    ("« Je n'ai pas le temps de gérer une appli. »","Pas d'appli à créer : une borne et une page de commande prêtes à l'emploi, avec le même menu de 3 recettes."),
     ("« Ça ne va pas abîmer mon image ? »","Le four à bois et les classiques revisités sont au centre de tout."),
     ("« Comment les jeunes vont le savoir ? »","Affiches avec QR code au lycée et à l'IUT, Instagram, vote de la recette du mois.")]
 for i,(a,b) in enumerate(ob):
@@ -195,7 +203,7 @@ for i,(a,b) in enumerate(ob):
     box(s,x,y,Inches(5.75),Inches(2.05),fill=BLANC); box(s,x,y,Inches(0.08),Inches(2.05),fill=FEU)
     text(s,x+Inches(0.3),y+Inches(0.2),Inches(5.25),Inches(0.5),a,size=16,bold=True,font=TITRE)
     text(s,x+Inches(0.3),y+Inches(0.95),Inches(5.25),Inches(1.05),b,size=15,color=GRIS)
-text(s,Inches(0.8),Inches(6.4),Inches(11.7),Inches(0.35),"Chaque objection a fait évoluer le prototype : c'est pour ça qu'il n'y a plus de borne.",size=13,color=GRIS)
+text(s,Inches(0.8),Inches(6.4),Inches(11.7),Inches(0.35),"Ce que le test a changé : pas d'application dédiée, un menu réduit à 3 recettes, et la commande en ligne ajoutée à la borne.",size=13,color=GRIS)
 
 # 10 Bénéfices + conclusion
 s=new(dark=True)
